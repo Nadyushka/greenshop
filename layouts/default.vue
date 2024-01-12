@@ -12,7 +12,7 @@
 
 <style scoped>
 .default {
-  max-width: 1440px;
+  max-width: 1202px;
   margin: 0 auto;
 }
 </style>

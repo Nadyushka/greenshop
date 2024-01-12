@@ -143,11 +143,11 @@ const aboutUsItems: { title: string, text: string, img: string }[] = [
 .footer__contact {
   background-color: rgba(70, 163, 88, 0.1);
   display: flex;
-  gap: 53px;
   padding: 25px 0 25px 25px;
   border-top: 1px solid #46A358;
   border-bottom: 1px solid #46A358;
   align-items: center;
+  gap: 10px;
 }
 
 .footer__logo {
@@ -166,6 +166,7 @@ const aboutUsItems: { title: string, text: string, img: string }[] = [
   font-family: 'CeraPro-Regular', sans-serif;
   background-repeat: no-repeat;
   background-position: 0 center;
+  width: 236px;
 }
 
 .footer__address {
@@ -190,7 +191,7 @@ const aboutUsItems: { title: string, text: string, img: string }[] = [
 }
 
 .footer__bottom {
-  width: 283px;
+  width: 236px;
 }
 
 .footer__bottom-title,
@@ -249,5 +250,6 @@ const aboutUsItems: { title: string, text: string, img: string }[] = [
   color: #3D3D3D;
   font-size: 14px;
   font-family: 'CeraPro-Regular', sans-serif;
+  margin-bottom: 10px;
 }
 </style>
