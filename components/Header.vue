@@ -19,12 +19,44 @@ const linkTransformer = (link: string) => {
     return link
   }
 }
+
+const route = useRoute()
+const router = useRouter()
+
+const openToMainPage = () => {
+  if (route.path === '/') return
+
+  router.push('/')
+}
+
+const setCorrectHeaderActiveItem = () => {
+  if (activeListItem.value.toLowerCase() !== route.path.slice(1).toLowerCase()) {
+    const activeHeaderItem = [...headerListItems].filter(item => item.includes(route.path.slice(2, 4)))
+    activeListItem.value = activeHeaderItem[0]
+  }
+}
+
+watch(
+    () => route.path,
+    () => {
+      setCorrectHeaderActiveItem()
+    }
+)
+
+onMounted(() => {
+  setCorrectHeaderActiveItem()
+})
 </script>
 
 <template>
   <header class="header">
     <div class="header__wrapper">
-      <img src="@/assets/svg/logo.svg" alt="logo" class="header__logo"/>
+      <img
+          src="@/assets/svg/logo.svg"
+          alt="logo"
+          class="header__logo"
+          @click="openToMainPage"
+      />
       <nav class="header__nav">
         <ul class="header__list">
           <li
@@ -58,6 +90,10 @@ const linkTransformer = (link: string) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.header__logo {
+  cursor: pointer;
 }
 
 .header__list {

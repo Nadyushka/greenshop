@@ -13,7 +13,9 @@ defineEmits<{ (emit: 'btnClick'): void }>()
 </script>
 
 <template>
-  <button class="button">
+  <button
+      class="button"
+      @click="$emit('btnClick')">
 
     <svg v-if="leftIcon === 'login'" class="button__left-icon" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M17.1601 9.10057H7.12598" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>

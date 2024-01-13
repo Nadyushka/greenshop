@@ -191,7 +191,9 @@ const aboutUsItems: { title: string, text: string, img: string }[] = [
 }
 
 .footer__bottom {
-  width: 236px;
+  padding-right: 34px;
+  display: inline-block;
+  width: 204px;
 }
 
 .footer__bottom-title,

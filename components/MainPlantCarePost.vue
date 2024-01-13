@@ -10,7 +10,7 @@ interface PropsType {
   fullText: string
 }
 
-const {title, text, id, shortForm} = defineProps<PropsType>()
+const {title, text, id, shortForm, fullText, img} = defineProps<PropsType>()
 
 const router = useRouter()
 
@@ -23,15 +23,17 @@ const openPlantCarePost = () => router.push(`/plantCare/${id}`)
       <img src="@/assets/png/main_plant-care.png" class="care-block__left-img"/>
       <img :src="`_nuxt/assets/png/${img}`" class="care-block__plant-img"/>
       <div class="care-block__data">
-        <h3>{{ title }}</h3>
-        <p> {{ text }}</p>
-        <NButton
-            v-if="shortForm"
-            btn-title="Find More"
-            right-icon="arrow"
-            @btn-click="openPlantCarePost"
-        />
+        <h3 class="care-block__title">{{ title }}</h3>
+        <p class="care-block__text"> {{ text }}</p>
+        <div class="care-block__btn-wrapper" v-if="shortForm">
+          <NButton
+              btn-title="Find More"
+              right-icon="arrow"
+              @btn-click="openPlantCarePost"
+          />
+        </div>
         <p
+            class="care-block__full-text"
             v-if="!shortForm"
         > {{ fullText }}</p>
       </div>
@@ -52,6 +54,7 @@ const openPlantCarePost = () => router.push(`/plantCare/${id}`)
   position: relative;
   display: flex;
   min-height: 250px;
+  padding-right: 30px;
 }
 
 .care-block__left-img {
@@ -68,5 +71,31 @@ const openPlantCarePost = () => router.push(`/plantCare/${id}`)
 
 .care-block__data {
   padding-left: 50%;
+  padding-top: 37px;
+  text-align: right;
+}
+
+.care-block__title {
+  padding-left: 45%;
+  font-size: 18px;
+  font-family: 'CeraPro-Black', sans-serif;
+  font-weight: 900;
+  line-height: 24px;
+  text-align: right;
+  text-transform: uppercase;
+  margin-bottom: 9px;
+}
+
+.care-block__text {
+  font-size: 14px;
+  font-family: 'CeraPro-Regular', sans-serif;
+  line-height: 24px;
+  color: #727272;
+  margin-bottom: 25px;
+}
+
+.care-block__btn-wrapper {
+ display: flex;
+  justify-content: flex-end;
 }
 </style>

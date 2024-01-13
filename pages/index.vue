@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import NButton from "~/components/ui/NButton.vue";
+
 const blogPostsData = [
   {
     id: '1',
@@ -56,10 +58,27 @@ const plantCareData = [
     fullText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
   }
 ]
+
+const router = useRouter()
+
+const openShopPage = () => router.push('shop')
 </script>
 
 <template>
-  <div class="main">
+  <main class="main">
+    <section class="main__intro">
+      <div class="main__intro-data">
+        <h3 class="main__intro-title">Welcome to GreenShop</h3>
+        <h1 class="main__main-title">Let’s Make a Better <span>Planet</span></h1>
+        <p class="main__main-text">We are an online plant shop offering a wide range of cheap and trendy plants. Use our
+          plants to create an
+          unique Urban Jungle. Order your favorite plants!</p>
+        <NButton
+            btn-title="SHOP NOW"
+            @btn-click="openShopPage"/>
+      </div>
+      <img src="@/assets/png/main_intro.png" alt="plant picture"/>
+    </section>
     <section class="main__plant-care">
       <MainPlantCarePost
           v-for="post in plantCareData"
@@ -91,13 +110,55 @@ const plantCareData = [
         />
       </div>
     </section>
-  </div>
+  </main>
 </template>
 
 <style scoped>
 .main {
   max-width: 1202px;
   margin: 0 auto 100px;
+}
+
+.main__intro {
+  display: flex;
+  justify-content: space-between;
+  background: linear-gradient(97.77deg, rgba(245, 245, 245, 0.5) -23.46%, rgba(245, 245, 245, 0.5) 107.51%);
+  padding-left: 40px;
+}
+
+.main__intro-data {
+  padding-top: 68px;
+}
+
+.main__intro-title {
+  font-size: 14px;
+  font-family: 'CeraPro-Medium', sans-serif;
+  color: #3D3D3D;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+  letter-spacing: 1.4px;
+}
+
+.main__main-title {
+  font-size: 70px;
+  font-family: 'CeraPro-Black', sans-serif;
+  line-height: 70px;
+  max-width: 530px;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.main__main-text {
+  max-width: 557px;
+  color: #727272;
+  font-family: 'CeraPro-Regular', sans-serif;
+  line-height: 24px;
+  margin-bottom: 55px;
+  font-size: 14px;
+}
+
+.main__main-title span {
+  color: #46A358;
 }
 
 .main__plant-care {
