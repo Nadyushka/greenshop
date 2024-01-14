@@ -11,12 +11,12 @@ interface PropsType {
 }
 
 const {id, img, date, length, title, text, shortForm, fullText} = defineProps<PropsType>()
-
 </script>
 
 <template>
-  <div class="blog">
-    <img :src="`_nuxt/assets/png/${img}`" class="blog__img" alt="blog img"/>
+  <div class="blog" :class="{'blog-post_active': !shortForm}">
+<!--    <NuxtImg :src="`/images/${img}`" class="blog__img" alt="blog img"/>-->
+    <img :src="`/blogs/images/${img}`" class="blog__img" alt="blog img" />
     <div class="blog__wrapper">
       <div class="blog__date-length">
         <div class="blog__date">{{ date }}</div>
@@ -44,6 +44,11 @@ const {id, img, date, length, title, text, shortForm, fullText} = defineProps<Pr
   width: 268px;
   background-color: #FBFBFB;
   padding-bottom: 13px;
+}
+
+.blog-post_active {
+  width: auto;
+  margin: 0 auto 16px;
 }
 
 .blog__img {

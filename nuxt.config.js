@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
-import { resolve } from "path"
+import {resolve} from "path"
+import * as path from "path";
 
 export default defineNuxtConfig({
     devtools: {enabled: true},
@@ -11,15 +12,20 @@ export default defineNuxtConfig({
             title: 'GREENSHOP',
         }
     },
-    // modules: [
-    //     '@pinia/nuxt',
-    //     '@vueuse/nuxt',
-    // ],
-    alias: {
-        '@': resolve(__dirname, './'),
-    },
+    modules: [
+        '@nuxt/image',
+        //     '@pinia/nuxt',
+        //     '@vueuse/nuxt',
+    ],
+    // alias: {
+    //     '@': resolve(__dirname, './'),
+    // },
     css: [
         "~/assets/css/main.css",
         "normalize.css/normalize.css"
     ],
+    router: {
+        base: './',
+        //  middleware: 'redirect',
+    },
 })
