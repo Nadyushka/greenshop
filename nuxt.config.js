@@ -17,15 +17,14 @@ export default defineNuxtConfig({
         //     '@pinia/nuxt',
         //     '@vueuse/nuxt',
     ],
-    // alias: {
-    //     '@': resolve(__dirname, './'),
-    // },
+    alias: {
+        '@': resolve(__dirname, './'),
+    },
     css: [
         "~/assets/css/main.css",
         "normalize.css/normalize.css"
     ],
     router: {
-        base: './',
-        //  middleware: 'redirect',
+        base: '/',
     },
 })
