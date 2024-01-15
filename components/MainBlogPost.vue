@@ -15,8 +15,11 @@ const {id, img, date, length, title, text, shortForm, fullText} = defineProps<Pr
 
 <template>
   <div class="blog" :class="{'blog-post_active': !shortForm}">
-<!--    <NuxtImg :src="`/images/${img}`" class="blog__img" alt="blog img"/>-->
-    <img :src="`_nuxt/assets/png/${img}`" class="blog__img" alt="blog img" />
+    <img
+        v-if="shortForm"
+        :src="`_nuxt/assets/png/${img}`"
+        class="blog__img" alt="blog img"
+        />
     <div class="blog__wrapper">
       <div class="blog__date-length">
         <div class="blog__date">{{ date }}</div>

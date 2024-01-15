@@ -11,12 +11,13 @@ const setActiveListItem = (itemTitle: string) => {
 const headerListItems = ['Home', 'Shop', 'Plant Care', 'Blogs']
 
 const linkTransformer = (link: string) => {
+  setCorrectHeaderActiveItem()
   if (link === 'Home') {
-    return '/'
+    router.push('/')
   } else if (link === 'Plant Care') {
-    return '/plantCare'
+    router.push('/plantCare')
   } else {
-    return link
+    router.push(`/${link.toLowerCase()}`)
   }
 }
 
@@ -62,10 +63,9 @@ onMounted(() => {
           <li
               v-for="list in headerListItems"
               class="header__item" :class="{'header__item_active': activeListItem === list}"
-              @click="setActiveListItem(list)">
-            <NuxtLink :to="linkTransformer(list)">
-              {{ list }}
-            </NuxtLink>
+              @click="linkTransformer(list)"
+          >
+            {{ list }}
           </li>
         </ul>
       </nav>

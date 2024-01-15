@@ -93,21 +93,19 @@ const blogPostsData: PostData[] = [
   },
 ]
 
-
 const route = useRoute()
 const postId = route.params.id
 
-const openPost = ref({})
+const openPost = blogPostsData.find(post => post.id === postId)
 
-onMounted(() => {
-  openPost.value = blogPostsData.find(post => post.id === postId)
-})
+// onMounted(() => {
+//   openPost.value = blogPostsData.find(post => post.id === postId)
+// })
 
 </script>
 
 <template>
   <MainBlogPost
-      :key="openPost.id"
       :short-form="false"
       :id="openPost.id"
       :date="openPost.date"

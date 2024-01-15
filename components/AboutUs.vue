@@ -7,7 +7,7 @@ interface PropsType {
 }
 
 const {title, text, img, lastItem} = defineProps<PropsType>()
-const imgUrl = () => `_nuxt/assets/svg/${img}.svg`
+const imgUrl = () => `http://localhost:3000/_nuxt/assets/svg/${img}.svg`
 </script>
 
 <template>

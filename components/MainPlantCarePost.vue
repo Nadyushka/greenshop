@@ -18,11 +18,17 @@ const openPlantCarePost = () => router.push(`/plantCare/${id}`)
 </script>
 
 <template>
-  <div class="care-block">
+  <div
+      class="care-block"
+
+      :class="{'care-block__full-text': !shortForm}">
     <div class="care-block__wrapper">
       <img src="@/assets/png/main_plant-care.png" class="care-block__left-img"/>
-      <img :src="`_nuxt/assets/png/${img}`" class="care-block__plant-img"/>
-      <div class="care-block__data">
+      <img :src="`http://localhost:3000/_nuxt/assets/png/${img}`" class="care-block__plant-img"/>
+      <div
+          class="care-block__data"
+          :class="{'care-block__data__full-text': !shortForm}"
+      >
         <h3 class="care-block__title">{{ title }}</h3>
         <p class="care-block__text"> {{ text }}</p>
         <div class="care-block__btn-wrapper" v-if="shortForm">
@@ -66,7 +72,7 @@ const openPlantCarePost = () => router.push(`/plantCare/${id}`)
 .care-block__plant-img {
   position: absolute;
   left: 50px;
-  bottom: 15px;
+  bottom: 50px;
 }
 
 .care-block__data {
@@ -74,6 +80,11 @@ const openPlantCarePost = () => router.push(`/plantCare/${id}`)
   padding-top: 37px;
   text-align: right;
 }
+
+.care-block__data__full-text {
+  padding-left: 30%;
+}
+
 
 .care-block__title {
   padding-left: 45%;
@@ -86,16 +97,23 @@ const openPlantCarePost = () => router.push(`/plantCare/${id}`)
   margin-bottom: 9px;
 }
 
-.care-block__text {
+.care-block__text,
+.care-block__full-text {
   font-size: 14px;
   font-family: 'CeraPro-Regular', sans-serif;
   line-height: 24px;
-  color: #727272;
+
   margin-bottom: 25px;
 }
 
+.care-block__full-text {
+  max-width: 100%;
+  margin: 0 auto;
+  color: #3D3D3D;
+}
+
 .care-block__btn-wrapper {
- display: flex;
+  display: flex;
   justify-content: flex-end;
 }
 </style>
