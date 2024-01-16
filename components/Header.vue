@@ -5,9 +5,7 @@ const isLoginModalOpen = ref<boolean>(false)
 const activeListItem = ref('Home')
 
 const openLoginModal = (isLoginModalOpened: boolean) => isLoginModalOpen.value = isLoginModalOpened
-const setActiveListItem = (itemTitle: string) => {
-  activeListItem.value = itemTitle
-}
+
 const headerListItems = ['Home', 'Shop', 'Plant Care', 'Blogs']
 
 const linkTransformer = (link: string) => {
@@ -31,6 +29,11 @@ const openToMainPage = () => {
 }
 
 const setCorrectHeaderActiveItem = () => {
+  if (route.path.slice(1) === 'personalArea') {
+    activeListItem.value = ''
+    return
+  }
+
   if (activeListItem.value.toLowerCase() !== route.path.slice(1).toLowerCase()) {
     const activeHeaderItem = [...headerListItems].filter(item => item.includes(route.path.slice(2, 4)))
     activeListItem.value = activeHeaderItem[0]
@@ -47,6 +50,8 @@ watch(
 onMounted(() => {
   setCorrectHeaderActiveItem()
 })
+
+const openPersonalArea = () => router.push('/personalArea')
 </script>
 
 <template>
@@ -74,6 +79,12 @@ onMounted(() => {
           <img src="@/assets/svg/cart-icon.svg" alt="cart icon"/>
           <div class="header__purchases"> 6</div>
         </div>
+        <img
+            class="header__home"
+            src="@/assets/svg/home-icon.svg"
+            alt="home icon"
+            @click="openPersonalArea"
+        />
         <NButton btn-title="Login" left-icon="login" @btn-click="openLoginModal(true)"/>
       </div>
     </div>
@@ -143,6 +154,13 @@ onMounted(() => {
 .header__cart {
   position: relative;
   z-index: 10;
+  cursor: pointer;
+}
+
+.header__home {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
 }
 
 .header__purchases {

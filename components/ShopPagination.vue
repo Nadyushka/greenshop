@@ -40,7 +40,7 @@ const setPage = (page: number) => {
         v-if="currentPage >= 5"
         @click="setPrevPage"
     ></div>
-    <div class="pagination__page" v-if="currentPage >= 5 ">...</div>
+<!--    <div class="pagination__page" v-if="currentPage >= 5 ">...</div>-->
     <div
         class="pagination__page"
         :class="{
@@ -52,10 +52,10 @@ const setPage = (page: number) => {
     >
       {{ page }}
     </div>
-    <div class="pagination__page"
-         v-if="currentPage <= pagesTotal.length - 4">
-      ...
-    </div>
+<!--    <div class="pagination__page"-->
+<!--         v-if="currentPage <= pagesTotal.length - 4">-->
+<!--      ...-->
+<!--    </div>-->
     <div class="pagination__next"
          v-if="currentPage <= pagesTotal.length - 4"
          @click="setNextPage"

@@ -130,6 +130,7 @@ const setSelectedType = (type: string) => selectedType.value = type
 <style scoped>
 .main__shop {
   margin-bottom: 94px;
+  padding-top: 20px;
 }
 
 .main__shop-wrapper {
