@@ -11,6 +11,8 @@ interface PropsType {
   isTouched: boolean
 }
 
+const emit = defineEmits<{ (emit: 'toggleFavoritePlant'): void }>()
+
 const {img, title, discount, saved, addedToCart, price, id, isTouched} = defineProps<PropsType>()
 const currentPrice = computed(() => discount ? (price * (100 - discount) / 100).toFixed(0) : price)
 
@@ -22,6 +24,8 @@ const openPlantItemPage = () => {
   }, 500)
 
 }
+
+const toggleFavoriteItem = () => emit('toggleFavoritePlant')
 </script>
 
 <template>
@@ -43,7 +47,10 @@ const openPlantItemPage = () => {
           </svg>
         </div>
 
-        <div class="plant__selected">
+        <div
+            class="plant__selected"
+            @click="toggleFavoriteItem"
+        >
           <svg
               width="20"
               height="20"

@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import NButton from "~/components/ui/NButton.vue";
+
+import PersonalData from "~/components/PersonalData.vue";
 
 const breadCrumbs = ['Personal Data', 'Addresses', 'Favorites']
 const selectedBreadCrumb = ref('Personal Data')
 
 const setSelectedBreadCrumb = (breadCrumb: string) => selectedBreadCrumb.value = breadCrumb
+
 </script>
 
 <template>
@@ -21,38 +23,15 @@ const setSelectedBreadCrumb = (breadCrumb: string) => selectedBreadCrumb.value =
     </div>
 
     <div v-if="selectedBreadCrumb === 'Personal Data'" class="data">
-      <div class="personal__row">
-        <div>
-          <div class="personal__label">First Name</div>
-          <input class="personal__input"/>
-        </div>
-        <div>
-          <div class="personal__label">Last Name</div>
-          <input class="personal__input"/>
-        </div>
-      </div>
-      <div class="personal__row">
-        <div>
-          <div class="personal__label">Email</div>
-          <input class="personal__input"/>
-        </div>
-        <div>
-          <div class="personal__label">Phone</div>
-          <input class="personal__input"/>
-        </div>
-      </div>
-      <div class="personal__label">Password</div>
-      <input class="personal__input"/>
-
-      <NButton btn-title="Save Personal Data" style="margin-bottom: 16px"/>
+     <PersonalData/>
     </div>
 
     <div v-if="selectedBreadCrumb === 'Addresses'" class="addresses">
-      Addresses
+      <PersonalAddresses/>
     </div>
 
     <div v-if="selectedBreadCrumb === 'Favorites'" class="addresses">
-      Favorites
+      <FavoritesPlants/>
     </div>
 
   </main>
@@ -85,22 +64,4 @@ const setSelectedBreadCrumb = (breadCrumb: string) => selectedBreadCrumb.value =
   transition: 0s all;
 }
 
-.personal__row {
-  display: flex;
-  gap: 10px;
-}
-
-.personal__label {
-  font-size: 15px;
-  font-family: 'CeraPro-Regular', sans-serif;
-  font-weight: 400;
-  color: #3D3D3D;
-  margin-bottom: 10px;
-}
-
-.personal__input {
-  border-radius: 3px;
-  border: 1px solid #EAEAEA;
-  margin-bottom: 10px;
-}
 </style>

@@ -11,6 +11,7 @@ const headerListItems = ['Home', 'Shop', 'Plant Care', 'Blogs']
 const linkTransformer = (link: string) => {
   setCorrectHeaderActiveItem()
   if (link === 'Home') {
+    activeListItem.value = 'Home'
     router.push('/')
   } else if (link === 'Plant Care') {
     router.push('/plantCare')
