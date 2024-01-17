@@ -50,6 +50,7 @@ defineEmits<{ (emit: 'btnClick'): void }>()
   font-family: 'CeraPro-Medium', sans-serif;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 button:hover {
