@@ -53,15 +53,10 @@ defineEmits<{ (emit: 'btnClick'): void }>()
   justify-content: center;
 }
 
-button:hover {
+button:active {
   background-color: #fff;
   border: 1px solid #46A358;
   color: #46A358;
-}
-
-button:active {
-  background-color: #46A358;
-  color: #fff;
 }
 
 .button__left-icon {
@@ -78,13 +73,8 @@ button:active {
   transition: 0.5s all;
 }
 
-.button:hover .button__left-icon path,
-.button:hover .button__right-icon path {
-  stroke: #46A358;
-}
-
 .button:active .button__left-icon path,
 .button:active .button__right-icon path {
-  stroke: #fff;
+  stroke: #46A358;
 }
 </style>
