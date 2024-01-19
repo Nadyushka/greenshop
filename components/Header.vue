@@ -1,12 +1,25 @@
 <script setup lang="ts">
 import NButton from "@/components/ui/NButton.vue"
+import {useAuthStore} from "~/store/auth";
+
+const authStore = useAuthStore()
+const {isAuth, userRole, authError} = storeToRefs(authStore)
+
+const route = useRoute()
+const router = useRouter()
 
 const isLoginModalOpen = ref<boolean>(false)
-const activeListItem = ref('Home')
-
-const openLoginModal = (isLoginModalOpened: boolean) => isLoginModalOpen.value = isLoginModalOpened
 
 const headerListItems = ['Home', 'Shop', 'Plant Care', 'Blogs']
+const activeListItem = ref('Home')
+
+const roles = ['Buyer', 'Admin']
+const selectedRole = ref('Buyer')
+
+const email = ref('buyer@gmail.com')
+const password = ref('buyer123')
+
+const loginBtnData = computed(() => !isAuth.value ? 'Login' : 'Logout')
 
 const linkTransformer = (link: string) => {
   setCorrectHeaderActiveItem()
@@ -14,23 +27,30 @@ const linkTransformer = (link: string) => {
     activeListItem.value = 'Home'
     router.push('/')
   } else if (link === 'Plant Care') {
-    router.push('/plantCare')
+    router.push('/plant-care')
   } else {
     router.push(`/${link.toLowerCase()}`)
   }
 }
 
-const route = useRoute()
-const router = useRouter()
+const openPage = (page: string) => {
+  if (route.path != '/' && page == '/') {
+    router.push('/')
+  } else if (page == '/personal-area') {
 
-const openToMainPage = () => {
-  if (route.path === '/') return
-
-  router.push('/')
+    if (isAuth.value && userRole.value === 'buyer') {
+      router.push('/personal-area')
+    } else {
+      toggleModal(true)
+    }
+  } else {
+    router.push(page)
+  }
 }
 
+
 const setCorrectHeaderActiveItem = () => {
-  if (route.path.slice(1) === 'personalArea') {
+  if (route.path.slice(1) === 'personal-area') {
     activeListItem.value = ''
     return
   }
@@ -38,6 +58,43 @@ const setCorrectHeaderActiveItem = () => {
   if (activeListItem.value.toLowerCase() !== route.path.slice(1).toLowerCase()) {
     const activeHeaderItem = [...headerListItems].filter(item => item.includes(route.path.slice(2, 4)))
     activeListItem.value = activeHeaderItem[0]
+  }
+}
+
+const toggleModal = (isOpen: boolean) => isLoginModalOpen.value = isOpen
+
+const changeRole = (role: string) => {
+  selectedRole.value = role
+
+  if (role === 'Buyer') {
+    email.value = 'buyer@gmail.com'
+    password.value = 'buyer123'
+  } else {
+    email.value = 'admin@gmail.com'
+    password.value = 'admin123'
+  }
+}
+
+
+const loginUser = async () => {
+  if (isAuth.value) {
+    await authStore.logout()
+    if (route.path === '/personal-area') {
+      await router.push('/')
+    }
+  } else {
+    const res = await authStore.login({email: email.value, password: password.value})
+    if (!res) {
+      toggleModal(false)
+    }
+  }
+}
+
+const openModalAndLogout = () => {
+  if (!isAuth.value) {
+    toggleModal(true)
+  } else {
+    loginUser()
   }
 }
 
@@ -51,8 +108,6 @@ watch(
 onMounted(() => {
   setCorrectHeaderActiveItem()
 })
-
-const openPersonalArea = () => router.push('/personalArea')
 </script>
 
 <template>
@@ -62,7 +117,7 @@ const openPersonalArea = () => router.push('/personalArea')
           src="@/assets/svg/logo.svg"
           alt="logo"
           class="header__logo"
-          @click="openToMainPage"
+          @click="openPage('/')"
       />
       <nav class="header__nav">
         <ul class="header__list">
@@ -76,7 +131,7 @@ const openPersonalArea = () => router.push('/personalArea')
         </ul>
       </nav>
       <div class="header__login">
-        <div class="header__cart">
+        <div class="header__cart" @click="openPage('/shop/cart')">
           <img src="@/assets/svg/cart-icon.svg" alt="cart icon"/>
           <div class="header__purchases"> 6</div>
         </div>
@@ -84,12 +139,43 @@ const openPersonalArea = () => router.push('/personalArea')
             class="header__home"
             src="@/assets/svg/home-icon.svg"
             alt="home icon"
-            @click="openPersonalArea"
+            @click="openPage('/personal-area')"
         />
-        <NButton btn-title="Login" left-icon="login" @btn-click="openLoginModal(true)"/>
+        <NButton :btn-title="loginBtnData" :left-icon="loginBtnData.toLocaleLowerCase()" @btn-click="openModalAndLogout"/>
       </div>
     </div>
     <div class="header__line"/>
+
+    <div class="modal" v-if="isLoginModalOpen && !isAuth">
+      <div class="modal__body">
+        <img
+            src="@/assets/svg/close-icon.svg"
+            class="modal__close"
+            @click="toggleModal(false)"/>
+        <h2 class="modal__title">Login</h2>
+        <p class="modal__text">Enter your email and password to login.</p>
+        <div class="modal__roles">
+          <div
+              v-for="role in roles"
+              class="modal__role "
+              :class="{'modal__role_active': selectedRole === role}"
+              @click="changeRole(role)"
+          >
+            {{ role }}
+          </div>
+        </div>
+
+        <div class="modal__label">Email</div>
+        <input class="modal__input" v-model="email"/>
+
+        <div class="modal__label">Password</div>
+        <input class="modal__input" v-model="password"/>
+
+        <div class="modal__error"> {{ authError }}</div>
+
+        <NButton btn-title="Login" style="width: 100%; margin-top: 20px" @btn-click="loginUser"/>
+      </div>
+    </div>
   </header>
 </template>
 
@@ -180,5 +266,114 @@ const openPersonalArea = () => router.push('/personalArea')
   border-radius: 100%;
   font-size: 10px;
   font-family: 'CeraPro-Medium', sans-serif
+}
+
+.modal {
+  position: fixed;
+  background-color: rgba(10, 13, 18, 0.2);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+}
+
+.modal__body {
+  position: relative;
+  width: 400px;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  padding: 32px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transition: 0.5s all;
+}
+
+.modal__close:hover {
+  scale: 1.1;
+}
+
+.modal__title {
+  color: #3D3D3D;
+  font-family: 'CeraPro-Medium', sans-serif;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.modal__text,
+.modal__error {
+  color: #3D3D3D;
+  font-family: 'CeraPro-Regular', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 16px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.modal__roles {
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.modal__role {
+  padding: 10px 16px;
+  color: #46A358;
+  cursor: pointer;
+  border: 1px solid #46A358;
+  transition: 0.2s all;
+}
+
+.modal__role:first-of-type {
+  border-radius: 8px 0 0 8px;
+}
+
+.modal__role:last-of-type {
+  border-radius: 0 8px 8px 0;
+}
+
+.modal__role_active {
+  background-color: #46A358;
+  color: #fff;
+}
+
+.modal__label {
+  font-size: 15px;
+  font-family: 'CeraPro-Regular', sans-serif;
+  font-weight: 400;
+  color: #3D3D3D;
+  margin-bottom: 10px;
+  background-repeat: no-repeat;
+  background-position: right top;
+  display: block;
+  align-self: flex-start;
+}
+
+.modal__input {
+  border: 1px solid #EAEAEA;
+  border-radius: 5px;
+  width: 95%;
+  margin-bottom: 10px;
+  color: #3D3D3D;
+}
+
+.modal__error {
+  color: red;
 }
 </style>

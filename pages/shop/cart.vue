@@ -44,6 +44,10 @@ const deleteProduct = (id: string) => {
 }
 
 const totalWithoutShipping = computed(() => cartItemsData.value.reduce((acc, next) => acc + (next.pcs * next.price), 0));
+
+const router = useRouter()
+
+const openPage = (page: string) =>  router.push(page)
 </script>
 
 <template>
@@ -102,9 +106,9 @@ const totalWithoutShipping = computed(() => cartItemsData.value.reduce((acc, nex
           <div> ${{ 16 + totalWithoutShipping }},00</div>
         </div>
 
-        <NButton btn-title="Proceed To Checkout" style="width: 100%; margin-bottom:14px"/>
+        <NButton btn-title="Proceed To Checkout" style="width: 100%; margin-bottom:14px" @btn-click="openPage('/shop/checkout')"/>
 
-        <div class="cart__continue">Continue Shopping</div>
+        <div class="cart__continue" @click="openPage('shop')">Continue Shopping</div>
       </div>
     </div>
 

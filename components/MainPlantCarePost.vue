@@ -14,7 +14,7 @@ const {title, text, id, shortForm, fullText, img} = defineProps<PropsType>()
 
 const router = useRouter()
 
-const openPlantCarePost = () => router.push(`/plantCare/${id}`)
+const openPlantCarePost = () => router.push(`/plant-care/${id}`)
 </script>
 
 <template>

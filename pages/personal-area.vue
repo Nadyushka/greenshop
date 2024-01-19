@@ -2,7 +2,7 @@
 
 import PersonalData from "~/components/PersonalData.vue";
 
-const breadCrumbs = ['Personal Data', 'Addresses', 'Favorites']
+const breadCrumbs = ['Personal Data', 'Addresses', 'Wishlist']
 const selectedBreadCrumb = ref('Personal Data')
 
 const setSelectedBreadCrumb = (breadCrumb: string) => selectedBreadCrumb.value = breadCrumb
@@ -30,7 +30,7 @@ const setSelectedBreadCrumb = (breadCrumb: string) => selectedBreadCrumb.value =
       <PersonalAddresses/>
     </div>
 
-    <div v-if="selectedBreadCrumb === 'Favorites'" class="addresses">
+    <div v-if="selectedBreadCrumb === 'Wishlist'" class="addresses">
       <FavoritesPlants/>
     </div>
 
