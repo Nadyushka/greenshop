@@ -1,146 +1,9 @@
 <script setup lang="ts">
 import NButton from "~/components/ui/NButton.vue";
+import {usePlantsStore} from "~/store/plants";
 
-const blogPostsData = [
-  {
-    id: '1',
-    date: 'September 12',
-    length: 'Read in 6 minutes',
-    img: 'main__post-one.png',
-    title: 'Cactus & Succulent Care Tips',
-    text: 'Cacti are succulents are easy care plants for any home or patio.',
-    fullText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-
-  },
-  {
-    id: '2',
-    date: 'September 13',
-    length: 'Read in 2 minutes',
-    img: 'main__post-two.png',
-    title: 'Top 10 Succulents for Your Home',
-    text: 'Best in hanging baskets. Prefers medium to high light.',
-    fullText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-
-  },
-  {
-    id: '3',
-    date: 'September 15',
-    length: 'Read in 3 minutes',
-    img: 'main__post-three.png',
-    title: 'Cacti & Succulent Care Tips',
-    text: 'Cacti and succulents thrive in containers and because most are.',
-    fullText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-
-  },
-  {
-    id: '4',
-    date: 'September 15',
-    length: 'Read in 2 minutes',
-    img: 'main__post-four.png',
-    title: 'Best Houseplants Room by Room',
-    text: 'The benefits of houseplants are endless. In addition to.',
-    fullText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-
-  }]
-const plantCareData = [
-  {
-    id: '1',
-    title: 'Summer cactus & succulents',
-    text: 'We are an online plant shop offering a wide range of cheap and trendy plants',
-    img: 'main_care-one.png',
-    fullText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-  },
-  {
-    id: '2',
-    title: 'Styling Trends & much more',
-    text: 'We are an online plant shop offering a wide range of cheap and trendy plants',
-    img: 'main_care-two.png',
-    fullText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-  }
-]
-const plantsData = [
-  {
-    id: '1',
-    title: 'Barberton Daisy',
-    price: 119,
-    discount: 0,
-    addedToCart: false,
-    saved: false,
-    img: 'plant_one.png',
-  },
-  {
-    id: '2',
-    title: 'Angel Wing Begonia',
-    price: 169,
-    discount: 0,
-    addedToCart: true,
-    saved: false,
-    img: 'plant_two.png',
-  },
-  {
-    id: '3',
-    title: 'African Violet',
-    price: 229,
-    discount: 13,
-    addedToCart: false,
-    saved: false,
-    img: 'plant_three.png',
-  },
-  {
-    id: '4',
-    title: 'Bird\'s Nest Fern',
-    price: 99,
-    discount: 0,
-    addedToCart: false,
-    saved: false,
-    img: 'plant_four.png',
-  },
-  {
-    id: '5',
-    title: 'Broadleaf Lady Palm',
-    price: 59,
-    discount: 0,
-    addedToCart: false,
-    saved: false,
-    img: 'plant_five.png',
-  },
-  {
-    id: '6',
-    title: 'Chinese Evergreen',
-    price: 39,
-    discount: 0,
-    addedToCart: false,
-    saved: false,
-    img: 'plant_six.png',
-  },
-  {
-    id: '7',
-    title: 'Bird\'s Nest Fern',
-    price: 99,
-    discount: 0,
-    addedToCart: false,
-    saved: false,
-    img: 'plant_seven.png',
-  },
-  {
-    id: '8',
-    title: 'Broadleaf Lady Palm',
-    price: 59,
-    discount: 0,
-    addedToCart: false,
-    saved: false,
-    img: 'plant_eight.png',
-  },
-  {
-    id: '9',
-    title: 'Chinese Evergreen',
-    price: 39,
-    discount: 0,
-    addedToCart: false,
-    saved: false,
-    img: 'plant_nine.png',
-  }
-]
+const plantsStore = usePlantsStore()
+const {shownPlants, plantCareData, blogPostsData} = storeToRefs(plantsStore)
 
 const router = useRouter()
 
@@ -151,7 +14,12 @@ const setTouchedPlant = (id: string) => isTouchedPlant.value = id
 
 const types = ['All Plants', 'New Arrivals', 'Sale']
 const selectedType = ref('All Plants')
-const setSelectedType = (type: string) => selectedType.value = type
+
+const setSelectedType = async (type: string) => {
+  await plantsStore.setPage(1)
+  await plantsStore.setProductStatus(type)
+  selectedType.value = type
+}
 </script>
 
 <template>
@@ -160,9 +28,10 @@ const setSelectedType = (type: string) => selectedType.value = type
       <div class="main__intro-data">
         <h3 class="main__intro-title">Welcome to GreenShop</h3>
         <h1 class="main__main-title">Let’s Make a Better <span>Planet</span></h1>
-        <p class="main__main-text">We are an online plant shop offering a wide range of cheap and trendy plants. Use our
-          plants to create an
-          unique Urban Jungle. Order your favorite plants!</p>
+        <p class="main__main-text">
+          We are an online plant shop offering a wide range of cheap and trendy plants. Use our
+          plants to create an unique Urban Jungle. Order your favorite plants!
+        </p>
         <NButton
             btn-title="SHOP NOW"
             @btn-click="openShopPage"/>
@@ -184,7 +53,7 @@ const setSelectedType = (type: string) => selectedType.value = type
           </div>
           <div class="main__plants-wrapper">
             <PlantItem
-                v-for="plant in plantsData"
+                v-for="plant in shownPlants.plants"
                 :key="plant.id"
                 :title="plant.title"
                 :price="plant.price"
@@ -204,7 +73,7 @@ const setSelectedType = (type: string) => selectedType.value = type
     </section>
     <section class="main__plant-care">
       <MainPlantCarePost
-          v-for="post in plantCareData"
+          v-for="post in plantCareData.slice(0,2)"
           :short-form="true"
           :key="post.id"
           :title="post.title"
@@ -220,7 +89,7 @@ const setSelectedType = (type: string) => selectedType.value = type
         plants. </p>
       <div class="main__blogs-block">
         <MainBlogPost
-            v-for="post in blogPostsData"
+            v-for="post in blogPostsData.slice(0, 4)"
             :key="post.id"
             :short-form="true"
             :id="post.id"

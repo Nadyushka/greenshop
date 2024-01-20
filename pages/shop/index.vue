@@ -1,94 +1,19 @@
 <script setup lang="ts">
-const plantsData = [
-  {
-    id: '1',
-    title: 'Barberton Daisy',
-    price: 119,
-    discount: 0,
-    addedToCart: false,
-    saved: false,
-    img: 'plant_one.png',
-  },
-  {
-    id: '2',
-    title: 'Angel Wing Begonia',
-    price: 169,
-    discount: 0,
-    addedToCart: true,
-    saved: false,
-    img: 'plant_two.png',
-  },
-  {
-    id: '3',
-    title: 'African Violet',
-    price: 229,
-    discount: 13,
-    addedToCart: false,
-    saved: false,
-    img: 'plant_three.png',
-  },
-  {
-    id: '4',
-    title: 'Bird\'s Nest Fern',
-    price: 99,
-    discount: 0,
-    addedToCart: false,
-    saved: false,
-    img: 'plant_four.png',
-  },
-  {
-    id: '5',
-    title: 'Broadleaf Lady Palm',
-    price: 59,
-    discount: 0,
-    addedToCart: false,
-    saved: false,
-    img: 'plant_five.png',
-  },
-  {
-    id: '6',
-    title: 'Chinese Evergreen',
-    price: 39,
-    discount: 0,
-    addedToCart: false,
-    saved: false,
-    img: 'plant_six.png',
-  },
-  {
-    id: '7',
-    title: 'Bird\'s Nest Fern',
-    price: 99,
-    discount: 0,
-    addedToCart: false,
-    saved: false,
-    img: 'plant_seven.png',
-  },
-  {
-    id: '8',
-    title: 'Broadleaf Lady Palm',
-    price: 59,
-    discount: 0,
-    addedToCart: false,
-    saved: false,
-    img: 'plant_eight.png',
-  },
-  {
-    id: '9',
-    title: 'Chinese Evergreen',
-    price: 39,
-    discount: 0,
-    addedToCart: false,
-    saved: false,
-    img: 'plant_nine.png',
-  }
-]
+import { usePlantsStore } from "~/store/plants";
 
-const isTouchedPlant = ref('2')
+const plantsStore = usePlantsStore()
+const { shownPlants } = storeToRefs(plantsStore)
+
+const isTouchedPlant = ref('0')
 const setTouchedPlant = (id: string) => isTouchedPlant.value = id
 
 const types = ['All Plants', 'New Arrivals', 'Sale']
 const selectedType = ref('All Plants')
-const setSelectedType = (type: string) => selectedType.value = type
+const setSelectedType = async (type: string) => {
+  await plantsStore.setPage(1)
+  await plantsStore.setProductStatus(type)
+  selectedType.value = type
+}
 </script>
 
 <template>
@@ -107,7 +32,7 @@ const setSelectedType = (type: string) => selectedType.value = type
         </div>
         <div class="main__plants-wrapper">
           <PlantItem
-              v-for="plant in plantsData"
+              v-for="plant in shownPlants.plants"
               :key="plant.id"
               :title="plant.title"
               :price="plant.price"

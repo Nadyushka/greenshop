@@ -1,46 +1,13 @@
 <script setup lang="ts">
 import NButton from "~/components/ui/NButton.vue";
+import {usePlantsStore} from "~/store/plants";
 
-const cartItemsData = ref([
-  {
-    id: '1',
-    title: 'Barberton Daisy',
-    img: 'cart-item-one.png',
-    price: 119,
-    pcs: 2,
-  },
-  {
-    id: '2',
-    title: 'Blushing Bromeliad',
-    img: 'cart-item-two.png',
-    price: 139,
-    pcs: 3,
-  },
-  {
-    id: '3',
-    title: 'Aluminum Plant',
-    img: 'cart-item-three.png',
-    price: 179,
-    pcs: 1,
-  }
-])
-const paymentMethods = [
-  {
-    id: 1,
-    title: '',
-  },
-  {
-    id: 2,
-    title: 'Direct bank transfer',
-  },
-  {
-    id: 3,
-    title: 'Cash on delivery',
-  }
-]
+const plantsStore = usePlantsStore()
+const { cartItemsData, paymentMethodId, paymentMethods } =  storeToRefs(plantsStore)
 
-const paymentMethod = ref('Cash on delivery')
-const setPaymentMethod = (selectedPayment: string) => paymentMethod.value = selectedPayment
+const setPaymentMethod = (selectedPaymentId: number) => {
+  plantsStore.setPaymentMethod(selectedPaymentId)
+}
 
 const totalWithoutShipping = computed(() => cartItemsData.value.reduce((acc, next) => acc + (next.pcs * next.price), 0));
 
@@ -149,7 +116,7 @@ watch(() => isModalConfirmedOrderOpen.value,
             v-for="product in cartItemsData"
         >
           <div class="checkout__product">
-            <img :src="`http://localhost:3000/_nuxt/assets/png/cart/${product.img}`"/>
+            <img :src="`http://localhost:3000/_nuxt/assets/png/plants/${product.img}`" class="checkout__img"/>
             <div class="checkout__data">
               <div class="checkout__title">{{ product.title }}</div>
               <div class="checkout__sku">SKU: <span> {{ product.id }} </span></div>
@@ -177,14 +144,14 @@ watch(() => isModalConfirmedOrderOpen.value,
         <div v-for="payment in paymentMethods"
              :key="payment.id"
              class="checkout__payment-type"
-             :class="{'checkout__payment-type_active': payment.title == paymentMethod}"
-             @click="setPaymentMethod(payment.title)"
+             :class="{'checkout__payment-type_active': payment.id == paymentMethodId}"
+             @click="setPaymentMethod(payment.id)"
         >
           <div
               class="checkout__payment-radio"
-              :class="{'checkout__payment-radio_active': payment.title == paymentMethod}"
+              :class="{'checkout__payment-radio_active': payment.id == paymentMethodId}"
           />
-          <div v-if="payment.title"> {{ payment.title }}</div>
+          <div v-if="payment.title !== 'Card'"> {{ payment.title }}</div>
           <img src="@/assets/png/payments.png" v-else/>
         </div>
 
@@ -391,6 +358,7 @@ watch(() => isModalConfirmedOrderOpen.value,
   justify-content: space-between;
   align-self: flex-end;
   margin-bottom: 15px;
+  flex-direction: row;
 }
 
 .checkout__additional div {
@@ -506,5 +474,11 @@ watch(() => isModalConfirmedOrderOpen.value,
   background-color: rgba(10, 13, 18, 0.2);
   z-index: 1;
   overflow-y: auto;
+}
+
+.checkout__img {
+  width:70px;
+  height: 70px;
+  object-fit: contain;
 }
 </style>

@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import NButton from "@/components/ui/NButton.vue"
 import {useAuthStore} from "~/store/auth";
+import {usePlantsStore} from "~/store/plants";
+import {storeToRefs} from "pinia";
 
 const authStore = useAuthStore()
-const {isAuth, userRole, authError} = storeToRefs(authStore)
+const { isAuth, userRole, authError } = storeToRefs(authStore)
+
+const plantStore = usePlantsStore()
+const { cartItemsData } = storeToRefs(plantStore)
 
 const route = useRoute()
 const router = useRouter()
@@ -19,10 +24,9 @@ const selectedRole = ref('Buyer')
 const email = ref('buyer@gmail.com')
 const password = ref('buyer123')
 
-const loginBtnData = computed(() => !isAuth.value ? 'Login' : 'Logout')
+const loginBtnData = computed<'Login' | 'Logout'>(() => !isAuth.value ? 'Login' : 'Logout')
 
 const linkTransformer = (link: string) => {
-  setCorrectHeaderActiveItem()
   if (link === 'Home') {
     activeListItem.value = 'Home'
     router.push('/')
@@ -47,7 +51,6 @@ const openPage = (page: string) => {
     router.push(page)
   }
 }
-
 
 const setCorrectHeaderActiveItem = () => {
   if (route.path.slice(1) === 'personal-area') {
@@ -75,8 +78,7 @@ const changeRole = (role: string) => {
   }
 }
 
-
-const loginUser = async () => {
+const loginLogout = async () => {
   if (isAuth.value) {
     await authStore.logout()
     if (route.path === '/personal-area') {
@@ -90,11 +92,11 @@ const loginUser = async () => {
   }
 }
 
-const openModalAndLogout = () => {
+const  openModalAndLogout = async () => {
   if (!isAuth.value) {
     toggleModal(true)
   } else {
-    loginUser()
+    await loginLogout()
   }
 }
 
@@ -133,7 +135,7 @@ onMounted(() => {
       <div class="header__login">
         <div class="header__cart" @click="openPage('/shop/cart')">
           <img src="@/assets/svg/cart-icon.svg" alt="cart icon"/>
-          <div class="header__purchases"> 6</div>
+          <div class="header__purchases"> {{cartItemsData.length}} </div>
         </div>
         <img
             class="header__home"
@@ -141,7 +143,9 @@ onMounted(() => {
             alt="home icon"
             @click="openPage('/personal-area')"
         />
-        <NButton :btn-title="loginBtnData" :left-icon="loginBtnData.toLocaleLowerCase()" @btn-click="openModalAndLogout"/>
+        <NButton :btn-title="loginBtnData"
+                 :left-icon="loginBtnData.toLocaleLowerCase()"
+                 @btn-click="openModalAndLogout"/>
       </div>
     </div>
     <div class="header__line"/>
@@ -173,7 +177,10 @@ onMounted(() => {
 
         <div class="modal__error"> {{ authError }}</div>
 
-        <NButton btn-title="Login" style="width: 100%; margin-top: 20px" @btn-click="loginUser"/>
+        <NButton
+            btn-title="Login"
+            class="modal__btn"
+            @btn-click="loginLogout"/>
       </div>
     </div>
   </header>
@@ -375,5 +382,10 @@ onMounted(() => {
 
 .modal__error {
   color: red;
+}
+
+.modal__btn {
+  width: 100%;
+  margin-top: 20px
 }
 </style>

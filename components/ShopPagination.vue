@@ -1,5 +1,22 @@
 <script setup lang="ts">
-const pagesTotal = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+import {usePlantsStore} from "~/store/plants";
+import {storeToRefs} from "pinia";
+
+const plantsStore = usePlantsStore()
+const {shownPlants, limit, currentPage: page} = storeToRefs(plantsStore)
+
+
+const pagesTotal = computed(() => {
+  const totalPages = Math.ceil(shownPlants.value.length / limit.value)
+  const pagesArray = []
+
+  for (let i = 1; i <= totalPages; i++) {
+    pagesArray.push(i)
+  }
+
+  return pagesArray
+})
+
 const currentPage = ref(1)
 
 const visiblePageStart = ref(0)
@@ -7,29 +24,32 @@ const visiblePageFinish = ref(5)
 
 
 const setNextPage = () => {
-  setPage( currentPage.value + 1)
+  setPage(currentPage.value + 1)
 }
 
 const setPrevPage = () => {
-  setPage( currentPage.value - 1)
+  setPage(currentPage.value - 1)
 }
 
 const setPage = (page: number) => {
+  plantsStore.setPage(page)
+  currentPage.value = page
   if (page < 5) {
-    currentPage.value = page
     visiblePageStart.value = 0
     visiblePageFinish.value = 5
-  }  else if (page > pagesTotal.length - 4) {
-    visiblePageStart.value = pagesTotal.length - 5
-    visiblePageFinish.value = pagesTotal.length + 1
-    currentPage.value = page
-  } else if (page >= 5 && page <= pagesTotal.length - 4) {
-    currentPage.value = page
-    visiblePageStart.value = pagesTotal[page] - 4
-    visiblePageFinish.value = pagesTotal[page] + 1
+  } else if (page > pagesTotal.value.length - 4) {
+    visiblePageStart.value = pagesTotal.value.length - 5
+    visiblePageFinish.value = pagesTotal.value.length + 1
+  } else if (page >= 5 && page <= pagesTotal.value.length - 4) {
+    visiblePageStart.value = pagesTotal.value[page] - 4
+    visiblePageFinish.value = pagesTotal.value[page] + 1
   }
-
 }
+
+watch(() => page.value,
+    (value) => {
+      currentPage.value = value
+    })
 
 </script>
 
@@ -37,10 +57,10 @@ const setPage = (page: number) => {
   <div class="pagination">
     <div
         class="pagination__prev"
-        v-if="currentPage >= 5"
+        v-if="currentPage >= 5 && pagesTotal.length > 5"
         @click="setPrevPage"
     ></div>
-<!--    <div class="pagination__page" v-if="currentPage >= 5 ">...</div>-->
+
     <div
         class="pagination__page"
         :class="{
@@ -52,12 +72,9 @@ const setPage = (page: number) => {
     >
       {{ page }}
     </div>
-<!--    <div class="pagination__page"-->
-<!--         v-if="currentPage <= pagesTotal.length - 4">-->
-<!--      ...-->
-<!--    </div>-->
+
     <div class="pagination__next"
-         v-if="currentPage <= pagesTotal.length - 4"
+         v-if="currentPage <= pagesTotal.length - 4 && pagesTotal.length > 5"
          @click="setNextPage"
     ></div>
   </div>

@@ -1,47 +1,10 @@
 <script setup lang="ts">
 import NButton from "~/components/ui/NButton.vue";
 import RelatedProducts from "~/components/RelatedProducts.vue";
+import {usePlantsStore} from "~/store/plants";
 
-const cartItemsData = ref([
-  {
-    id: '1',
-    title: 'Barberton Daisy',
-    img: 'cart-item-one.png',
-    price: 119,
-    pcs: 2,
-  },
-  {
-    id: '2',
-    title: 'Blushing Bromeliad',
-    img: 'cart-item-two.png',
-    price: 139,
-    pcs: 3,
-  },
-  {
-    id: '3',
-    title: 'Aluminum Plant',
-    img: 'cart-item-three.png',
-    price: 179,
-    pcs: 1,
-  }
-])
-
-const changePcs = (id: string, increment: boolean) => {
-  cartItemsData.value = [...cartItemsData.value].map(product => {
-    if (product.id == id) {
-      return {
-        ...product,
-        pcs: increment ? product.pcs + 1 : product.pcs - 1,
-      }
-    } else {
-      return product
-    }
-  })
-}
-
-const deleteProduct = (id: string) => {
-  cartItemsData.value = [...cartItemsData.value].filter(product => product.id !== id)
-}
+const plantsStore = usePlantsStore()
+const { cartItemsData } =  storeToRefs(plantsStore)
 
 const totalWithoutShipping = computed(() => cartItemsData.value.reduce((acc, next) => acc + (next.pcs * next.price), 0));
 
@@ -68,7 +31,7 @@ const openPage = (page: string) =>  router.push(page)
             v-for="product in cartItemsData"
         >
           <div class="cart__product">
-            <img :src="`http://localhost:3000/_nuxt/assets/png/cart/${product.img}`"/>
+            <img class="cart__img" :src="`http://localhost:3000/_nuxt/assets/png/plants/${product.img}`"/>
             <div class="cart__data">
               <div class="cart__title">{{ product.title }}</div>
               <div class="cart__sku">SKU: <span> {{ product.id }} </span></div>
@@ -76,13 +39,13 @@ const openPage = (page: string) =>  router.push(page)
           </div>
           <div class="cart__price cart__price-item"> ${{ product.price }}.00</div>
           <div class="cart__quantity">
-            <div class="cart__less" @click="changePcs(product.id, false)">-</div>
+            <div class="cart__less" @click="plantsStore.changePcsInCart(product.id, false)">-</div>
             <div class="cart__pcs">{{ product.pcs }}</div>
-            <div class="cart__more" @click="changePcs(product.id, true)">+</div>
+            <div class="cart__more" @click="plantsStore.changePcsInCart(product.id, true)">+</div>
           </div>
           <div class="cart__total cart__total-item">${{ product.price * product.pcs }}.00</div>
           <img
-              @click="deleteProduct(product.id)"
+              @click="plantsStore.deleteProductFromCart(product.id)"
               class="cart__delete cart__delete-item"
               src="@/assets/svg/delete-icon.svg"/>
         </div>
@@ -108,7 +71,7 @@ const openPage = (page: string) =>  router.push(page)
 
         <NButton btn-title="Proceed To Checkout" style="width: 100%; margin-bottom:14px" @btn-click="openPage('/shop/checkout')"/>
 
-        <div class="cart__continue" @click="openPage('shop')">Continue Shopping</div>
+        <div class="cart__continue" @click="openPage('/shop')">Continue Shopping</div>
       </div>
     </div>
 
@@ -341,5 +304,11 @@ const openPage = (page: string) =>  router.push(page)
 
 .cart__continue:active {
   background-color: rgba(70, 163, 88, 0.1);
+}
+
+.cart__img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
 }
 </style>

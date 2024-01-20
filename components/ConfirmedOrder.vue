@@ -1,36 +1,25 @@
 <script setup lang="ts">
-const shortDataTitles = ['Order Number', 'Date', 'Total', 'Payment Method']
-const data = [19586687, '15 Sep, 2021', '2,699.00', 'Cash on delivery']
+import {usePlantsStore} from "~/store/plants";
 
-const cartItemsData = [
-  {
-    id: '1',
-    title: 'Barberton Daisy',
-    img: 'cart-item-one.png',
-    price: 119,
-    pcs: 2,
-  },
-  {
-    id: '2',
-    title: 'Blushing Bromeliad',
-    img: 'cart-item-two.png',
-    price: 139,
-    pcs: 3,
-  },
-  {
-    id: '3',
-    title: 'Aluminum Plant',
-    img: 'cart-item-three.png',
-    price: 179,
-    pcs: 1,
-  }
-]
+const plantsStore = usePlantsStore()
+const {cartItemsData, paymentMethodId, paymentMethods} = storeToRefs(plantsStore)
 
-const totalWithoutShipping = computed(() => cartItemsData.reduce((acc, next) => acc + (next.pcs * next.price), 0));
+const totalWithoutShipping = computed(() => cartItemsData.value.reduce((acc, next) => acc + (next.pcs * next.price), 0));
 
 const emit = defineEmits<{ (emit: 'close-modal'): void }>()
 
 const closeModal = () => emit('close-modal')
+
+const today = new Date()
+const options = { day: 'numeric', month: 'short', year: 'numeric' }
+const formattedDate = today.toLocaleDateString('en-US', options)
+
+const shortDataTitles = ['Order Number', 'Date', 'Total', 'Payment Method']
+const data = ref([
+  195866,
+  formattedDate,
+  `$${totalWithoutShipping.value + 16},00`,
+  paymentMethods.value[paymentMethodId.value - 1].title])
 </script>
 
 <template>
@@ -64,7 +53,7 @@ const closeModal = () => emit('close-modal')
             v-for="product in cartItemsData"
         >
           <div class="confirmed__product">
-            <img :src="`http://localhost:3000/_nuxt/assets/png/cart/${product.img}`"/>
+            <img :src="`http://localhost:3000/_nuxt/assets/png/plants/${product.img}`" class="confirmed__img"/>
             <div class="checkout__data">
               <div class="confirmed__item-title">{{ product.title }}</div>
               <div class="confirmed__sku">SKU: <span> {{ product.id }} </span></div>
@@ -324,5 +313,11 @@ const closeModal = () => emit('close-modal')
 .bottom {
   height: 50px;
   background-color: transparent;
+}
+
+.confirmed__img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
 }
 </style>

@@ -1,33 +1,65 @@
 <script setup lang="ts">
 
 import NButton from "~/components/ui/NButton.vue";
+import { usePlantsStore } from "~/store/plants";
+
+const plantsStore = usePlantsStore()
 
 const categories = [
-  {title: "House Plants", total: 33},
-  {title: "Potter Plants", total: 12},
-  {title: "Seeds", total: 65},
-  {title: "Small Plants", total: 39},
-  {title: "Big Plants", total: 23},
-  {title: "Succulents", total: 17},
-  {title: "Trerrariums", total: 19},
-  {title: "Gardening", total: 23},
-  {title: "Accessories", total: 18},
+  {title: "House Plants", total: plantsStore.filteredPlants({filterType: 'type', filterValue: 'House Plants'})},
+  {title: "Potter Plants", total: plantsStore.filteredPlants({filterType: 'type', filterValue: 'Potter Plants'})},
+  {title: "Seeds", total: plantsStore.filteredPlants({filterType: 'type' , filterValue : 'Seeds'})},
+  {title: "Small Plants", total: plantsStore.filteredPlants({filterType: 'type', filterValue : 'Small Plants'})},
+  {title: "Big Plants", total: plantsStore.filteredPlants({filterType: 'type', filterValue: 'Big Plants'})},
+  {title: "Succulents", total: plantsStore.filteredPlants({filterType: 'type', filterValue: 'Succulents'})},
+  {title: "Trerrariums", total: plantsStore.filteredPlants({filterType: 'type', filterValue: 'Trerrariums'})},
 ]
 
 const sizes = [
-  {size: 'Small', total: 19},
-  {size: 'Medium', total: 86},
-  {size: 'Large', total: 78},
+  {size: 'Small',  total: plantsStore.filteredPlants({filterType: 'size', filterValue: 'small'})},
+  {size: 'Medium',  total: plantsStore.filteredPlants({filterType: 'size', filterValue: 'medium'})},
+  {size: 'Large',  total: plantsStore.filteredPlants({filterType: 'size', filterValue: 'large'})},
 ]
 
-const selectedCategory = ref(0)
 const setSelectedCategory = (idx: number) => selectedCategory.value = idx
 
+const minPrice = ref<number | null | undefined>()
+const maxPrice = ref<number | null | undefined>()
+const selectedCategory = ref(-1)
 const selectedSize = ref(-1)
-const setSelectedSize = (idx: number) => selectedSize.value = idx
 
-const minPrice = ref<null | undefined>()
-const maxPrice = ref<null | undefined>()
+const setSelectedSize = async (idx: number) => {
+  selectedSize.value = idx
+}
+
+const setFilters = () => {
+  const sizeName: string | null = sizes[selectedSize.value]?.size ?? null
+
+  plantsStore.setPage(1)
+
+  plantsStore.setPlantsFilters({
+    minPrice: minPrice.value ?? 0,
+    maxPrice: maxPrice.value ?? 10000,
+    plantType: categories[selectedCategory.value]?.title ?? null,
+    plantSize: sizeName ?? null,
+  })
+}
+
+const clearFilters = () => {
+  minPrice.value = null
+  maxPrice.value = null
+  selectedCategory.value = -1
+  selectedSize.value = -1
+
+  plantsStore.setPage(1)
+
+  plantsStore.setPlantsFilters({
+    minPrice: 0,
+    maxPrice: 10000,
+    plantType: '',
+    plantSize: '',
+  })
+}
 </script>
 
 <template>
@@ -65,8 +97,6 @@ const maxPrice = ref<null | undefined>()
             type="number"/>
       </div>
 
-      <NButton btn-title="Filter" style="margin-bottom: 46px"/>
-
       <h3 class="filters__title">Size</h3>
       <div
           v-for="(size,idx) in sizes"
@@ -84,12 +114,23 @@ const maxPrice = ref<null | undefined>()
         >({{ size.total }})
         </div>
       </div>
+
+      <div class="filters__btns">
+        <button @click="clearFilters" class="filters__clear">Clear</button>
+        <NButton btn-title="Filter" @btn-click="setFilters"/>
+      </div>
+
+
     </div>
     <img src="~/assets/png/sale_baner.png" alt="sale image"/>
   </div>
 </template>
 
 <style scoped>
+
+.filters {
+  max-width: 304px;
+}
 
 .filters__wrapper {
   padding: 14px 18px 14px 24px;
@@ -138,6 +179,12 @@ const maxPrice = ref<null | undefined>()
   width: calc(50% - 5px);
 }
 
+.filters__btns {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 46px;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -146,5 +193,25 @@ input::-webkit-inner-spin-button {
 
 input[type=number] {
   -moz-appearance: textfield;
+}
+
+.filters__clear {
+  background-color: #fff;
+  border-radius: 6px;
+  padding: 10px 17px;
+  border: 1px solid #46A358;
+  transition: 0.5s all;
+  cursor: pointer;
+  color: #46A358;
+  font-family: 'CeraPro-Medium', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filters__clear:active {
+  background-color: #46A358;
+  border: 1px solid #46A358;
+  color: #fff;
 }
 </style>
