@@ -4,20 +4,26 @@ import RelatedProducts from "~/components/RelatedProducts.vue";
 import {usePlantsStore} from "~/store/plants";
 
 const plantsStore = usePlantsStore()
-const { cartItemsData } =  storeToRefs(plantsStore)
+const {cartItemsData} = storeToRefs(plantsStore)
 
 const totalWithoutShipping = computed(() => cartItemsData.value.reduce((acc, next) => acc + (next.pcs * next.price), 0));
 
 const router = useRouter()
 
-const openPage = (page: string) =>  router.push(page)
+const openPage = (page: string) => router.push(page)
 </script>
 
 <template>
   <main class="cart">
     <div class="cart__bread-crumbs"><span>Home</span> / Shop / Shopping Cart</div>
 
-    <div class="cart__info">
+    <div v-if="!cartItemsData.length" class="cart__empty-cart">
+      <img src="@/assets/png/empty-cart.png"/>
+      <p>Your cart is empty</p>
+      <NButton btn-title="Go shopping" @btn-click="openPage('/shop')"/>
+    </div>
+
+    <div class="cart__info" v-if="cartItemsData.length">
       <div class="cart__products">
         <div class="cart__row cart__titles">
           <div class="cart__product">Products</div>
@@ -69,7 +75,8 @@ const openPage = (page: string) =>  router.push(page)
           <div> ${{ 16 + totalWithoutShipping }},00</div>
         </div>
 
-        <NButton btn-title="Proceed To Checkout" style="width: 100%; margin-bottom:14px" @btn-click="openPage('/shop/checkout')"/>
+        <NButton btn-title="Proceed To Checkout" style="width: 100%; margin-bottom:14px"
+                 @btn-click="openPage('/shop/checkout')"/>
 
         <div class="cart__continue" @click="openPage('/shop')">Continue Shopping</div>
       </div>
@@ -269,14 +276,14 @@ const openPage = (page: string) =>  router.push(page)
   margin-bottom: 15px;
 }
 
-.cart__total-amount  div {
+.cart__total-amount div {
   color: #3D3D3D;
   font-size: 16px;
   font-family: 'CeraPro-Bold', sans-serif;
   font-weight: 700;
 }
 
-.cart__total-amount  div:last-of-type {
+.cart__total-amount div:last-of-type {
   font-family: 'CeraPro-Bold', sans-serif;
   font-weight: 700;
   font-size: 18px;
@@ -299,7 +306,7 @@ const openPage = (page: string) =>  router.push(page)
 }
 
 .cart__continue:hover {
-  border: 1px solid  #46A358;
+  border: 1px solid #46A358;
 }
 
 .cart__continue:active {
@@ -310,5 +317,21 @@ const openPage = (page: string) =>  router.push(page)
   width: 70px;
   height: 70px;
   object-fit: contain;
+}
+
+.cart__empty-cart {
+  font-size: 20px;
+  font-family: 'CeraPro-Regular', sans-serif;
+  font-weight: 400;
+  color: #3D3D3D;
+  margin-bottom: 60px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cart__empty-cart p {
+  margin-bottom: 20px;
 }
 </style>

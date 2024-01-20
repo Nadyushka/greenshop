@@ -7,15 +7,18 @@ export const useAuthStore = defineStore('auth', {
             userRole: null as null | 'admin' | 'buyer',
             authError: null as null | string,
             users: {
-                'admin': {
+                admin: {
                     email: 'admin@gmail.com',
                     password: 'admin123',
                     role: 'admin'
                 },
-                'buyer': {
+                buyer: {
                     email: 'buyer@gmail.com',
                     password: 'buyer123',
                     role: 'buyer',
+                    firstName: 'John',
+                    secondName: 'Doe',
+                    phone: 6848448564,
                 }
             }
         }
@@ -41,6 +44,22 @@ export const useAuthStore = defineStore('auth', {
         async logout() {
             this.isAuth = false
             this.userRole = null
+        },
+
+        async savePersonalData (payload: {
+            firstName: string
+            secondName: string
+            password: string
+            email: string
+            phone: number
+        }) {
+            this.users = {
+                ... this.users,
+                buyer: {
+                    ... this.users.buyer,
+                    ...payload
+                }
+            }
         }
     }
 })

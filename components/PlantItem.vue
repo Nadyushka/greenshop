@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import {usePlantsStore} from "~/store/plants";
 
 interface PropsType {
@@ -15,8 +14,6 @@ interface PropsType {
 
 const plantsStore = usePlantsStore()
 
-const emit = defineEmits<{ (emit: 'toggleFavoritePlant'): void }>()
-
 const props = defineProps<PropsType>()
 const {img, title, discount, saved, addedToCart, price, id, isTouched} = toRefs(props)
 
@@ -30,8 +27,6 @@ const openPlantItemPage = () => {
   }, 500)
 
 }
-
-const toggleFavoriteItem = () => emit('toggleFavoritePlant')
 
 const addRemoverProductToCart = async () => {
   if (addedToCart.value) {
@@ -48,7 +43,14 @@ const addRemoverProductToCart = async () => {
     }
     await plantsStore.addProductToCart(productData)
   }
+}
 
+const addRemoverProductToWishlist = async () => {
+  if (saved.value) {
+    await plantsStore.removeProductFromWishlist(id.value)
+  } else {
+    await plantsStore.addProductToWishlist(id.value)
+  }
 }
 </script>
 
@@ -77,7 +79,7 @@ const addRemoverProductToCart = async () => {
 
         <div
             class="plant__selected"
-            @click="toggleFavoriteItem"
+            @click="addRemoverProductToWishlist"
         >
           <svg
               width="20"

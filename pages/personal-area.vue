@@ -1,11 +1,30 @@
 <script setup lang="ts">
 
 import PersonalData from "~/components/PersonalData.vue";
+import {useAuthStore} from "~/store/auth";
 
 const breadCrumbs = ['Personal Data', 'Addresses', 'Wishlist']
 const selectedBreadCrumb = ref('Personal Data')
 
 const setSelectedBreadCrumb = (breadCrumb: string) => selectedBreadCrumb.value = breadCrumb
+
+const authStore = useAuthStore()
+const {isAuth, userRole} = storeToRefs(authStore)
+
+const router = useRouter()
+
+const checkIfUserAuthorised = () => {
+  if (!isAuth.value || userRole.value !== 'buyer') {
+    router.push('/')
+  }
+}
+
+watch(() => [userRole.value, isAuth.value],
+    () => {
+      checkIfUserAuthorised()
+})
+
+onMounted(()=> checkIfUserAuthorised())
 
 </script>
 
@@ -23,7 +42,7 @@ const setSelectedBreadCrumb = (breadCrumb: string) => selectedBreadCrumb.value =
     </div>
 
     <div v-if="selectedBreadCrumb === 'Personal Data'" class="data">
-     <PersonalData/>
+      <PersonalData/>
     </div>
 
     <div v-if="selectedBreadCrumb === 'Addresses'" class="addresses">

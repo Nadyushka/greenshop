@@ -1,12 +1,37 @@
 <script setup lang="ts">
 
 import NButton from "~/components/ui/NButton.vue";
+import {useAuthStore} from "~/store/auth";
 
-const firstName = ref('')
-const secondName = ref('')
-const password = ref('')
-const email = ref('')
-const phone = ref('')
+const authStore = useAuthStore()
+const { users, isAuth, userRole } = storeToRefs(authStore)
+
+const firstName = ref()
+const secondName = ref()
+const password = ref()
+const email = ref()
+const phone = ref()
+
+onMounted(()=> {
+  if (  isAuth.value  && userRole.value === 'buyer') {
+    firstName.value = users.value.buyer.firstName
+    secondName.value = users.value.buyer.secondName
+    password.value = users.value.buyer.password
+    email.value = users.value.buyer.email
+    phone.value = users.value.buyer.phone
+  }
+})
+
+const savePersonalData = () => {
+  const data = {
+    firstName: firstName.value,
+    secondName: secondName.value,
+    password: password.value,
+    email: email.value,
+    phone: phone.value,
+  }
+  authStore.savePersonalData(data)
+}
 </script>
 
 <template>
@@ -36,7 +61,10 @@ const phone = ref('')
       </div>
     </div>
 
-    <NButton btn-title="Save Personal Data" style="margin-bottom: 16px"/>
+    <NButton
+        btn-title="Save Personal Data"
+        style="margin-bottom: 16px"
+        @btn-click="savePersonalData"/>
   </div>
 </template>
 

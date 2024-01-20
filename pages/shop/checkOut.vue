@@ -23,8 +23,16 @@ const orderNotes = ref('')
 const email = ref('')
 const phone = ref('')
 
+const router = useRouter()
+
 const isModalConfirmedOrderOpen = ref(false)
-const toggleModalConfirmedOrder = (isModalOpen: boolean) => isModalConfirmedOrderOpen.value = isModalOpen
+const toggleModalConfirmedOrder = async (isModalOpen: boolean) => {
+  isModalConfirmedOrderOpen.value = isModalOpen
+  if (!isModalOpen) {
+    await plantsStore.clearCart()
+    await router.push('/shop')
+  }
+}
 
 watch(() => isModalConfirmedOrderOpen.value,
     (value) => {

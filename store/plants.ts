@@ -167,7 +167,7 @@ export const usePlantsStore = defineStore('plants', {
                     price: 119,
                     discount: 0,
                     addedToCart: true,
-                    saved: false,
+                    saved: true,
                     img: 'plant_one.png',
                     type: 'House Plants',
                     size: 'small',
@@ -383,7 +383,7 @@ export const usePlantsStore = defineStore('plants', {
                     price: 229,
                     discount: 20,
                     addedToCart: false,
-                    saved: false,
+                    saved: true,
                     img: 'plant_two.png',
                     type: 'Small Plants',
                     size: 'large',
@@ -617,12 +617,11 @@ export const usePlantsStore = defineStore('plants', {
                     productStatus: 'All Plants',
                 },
             ],
-
         }
     },
 
     getters: {
-        wishlist: (state) => [...state.plants].filter(plant => plant.saved),
+        wishlist: (state) => state.plants.filter(plant => plant.saved),
         shownPlants: (state) => {
             const totalAndFilteredPlants = {
                 length: 0,
@@ -746,8 +745,38 @@ export const usePlantsStore = defineStore('plants', {
             })
         },
 
+        async clearCart () {
+          this.cartItemsData = []
+        },
+
         async setPaymentMethod (paymentMethodId: number) {
             this.paymentMethodId = paymentMethodId
-        }
+        },
+
+        async addProductToWishlist( id: string) {
+            this.plants = this.plants.map(plant => {
+                if (plant.id === id) {
+                    return {
+                        ...plant,
+                        saved: true
+                    }
+                } else {
+                    return plant
+                }
+            })
+        },
+
+        async removeProductFromWishlist(id: string) {
+            this.plants = this.plants.map(plant => {
+                if (plant.id === id) {
+                    return {
+                        ...plant,
+                        saved: false
+                    }
+                } else {
+                    return plant
+                }
+            })
+        },
     }
 })

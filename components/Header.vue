@@ -5,10 +5,10 @@ import {usePlantsStore} from "~/store/plants";
 import {storeToRefs} from "pinia";
 
 const authStore = useAuthStore()
-const { isAuth, userRole, authError } = storeToRefs(authStore)
+const {isAuth, userRole, authError} = storeToRefs(authStore)
 
 const plantStore = usePlantsStore()
-const { cartItemsData } = storeToRefs(plantStore)
+const {cartItemsData} = storeToRefs(plantStore)
 
 const route = useRoute()
 const router = useRouter()
@@ -37,7 +37,12 @@ const linkTransformer = (link: string) => {
   }
 }
 
-const openPage = (page: string) => {
+const wasPressOnIcon = ref(false)
+
+const openPage = (page: string, pressOnIcon?: boolean) => {
+
+  pressOnIcon && (wasPressOnIcon.value = pressOnIcon)
+
   if (route.path != '/' && page == '/') {
     router.push('/')
   } else if (page == '/personal-area') {
@@ -89,10 +94,13 @@ const loginLogout = async () => {
     if (!res) {
       toggleModal(false)
     }
+    if (wasPressOnIcon.value) {
+      await router.push('/personal-area')
+    }
   }
 }
 
-const  openModalAndLogout = async () => {
+const openModalAndLogout = async () => {
   if (!isAuth.value) {
     toggleModal(true)
   } else {
@@ -135,13 +143,13 @@ onMounted(() => {
       <div class="header__login">
         <div class="header__cart" @click="openPage('/shop/cart')">
           <img src="@/assets/svg/cart-icon.svg" alt="cart icon"/>
-          <div class="header__purchases"> {{cartItemsData.length}} </div>
+          <div class="header__purchases"> {{ cartItemsData.length }}</div>
         </div>
         <img
             class="header__home"
             src="@/assets/svg/home-icon.svg"
             alt="home icon"
-            @click="openPage('/personal-area')"
+            @click="openPage('/personal-area', true)"
         />
         <NButton :btn-title="loginBtnData"
                  :left-icon="loginBtnData.toLocaleLowerCase()"
