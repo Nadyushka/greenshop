@@ -12,7 +12,7 @@ const { plantCareData } = storeToRefs(plantsStore)
     <h1 class="main__blogs-title">Our Plant Care Advices</h1>
     <p class="main__blogs-description">We are an online plant shop sharing our deep knowledge in plant care. </p>
     <div class="main__blogs-block">
-      <MainPlantCarePost
+      <PlantCarePost
           v-for="post in plantCareData"
           :short-form="true"
           :key="post.id"

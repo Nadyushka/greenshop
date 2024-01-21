@@ -10,11 +10,12 @@ interface PropsType {
   fullText: string
 }
 
-const {title, text, id, shortForm, fullText, img} = defineProps<PropsType>()
+const props = defineProps<PropsType>()
+const { title, text, id, shortForm, fullText, img } = toRefs(props)
 
 const router = useRouter()
 
-const openPlantCarePost = () => router.push(`/plant-care/${id}`)
+const openPlantCarePost = () => router.push(`/plant-care/${id.value}`)
 </script>
 
 <template>
@@ -23,7 +24,7 @@ const openPlantCarePost = () => router.push(`/plant-care/${id}`)
 
       :class="{'care-block__full-text': !shortForm}">
     <div class="care-block__wrapper">
-      <img src="@/assets/png/main_plant-care.png" class="care-block__left-img"/>
+      <img src="../assets/png/main_plant-care.png" class="care-block__left-img"/>
       <img :src="`http://localhost:3000/_nuxt/assets/png/${img}`" class="care-block__plant-img"/>
       <div
           class="care-block__data"

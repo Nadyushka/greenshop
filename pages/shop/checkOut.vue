@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import NButton from "~/components/ui/NButton.vue";
 import {usePlantsStore} from "~/store/plants";
+import {useAuthStore} from "~/store/auth";
 
 const plantsStore = usePlantsStore()
-const { cartItemsData, paymentMethodId, paymentMethods } =  storeToRefs(plantsStore)
+const {cartItemsData, paymentMethodId, paymentMethods} = storeToRefs(plantsStore)
+
+const authStore = useAuthStore()
+const {isAuth, userRole, users} = storeToRefs(authStore)
 
 const setPaymentMethod = (selectedPaymentId: number) => {
   plantsStore.setPaymentMethod(selectedPaymentId)
@@ -11,17 +15,17 @@ const setPaymentMethod = (selectedPaymentId: number) => {
 
 const totalWithoutShipping = computed(() => cartItemsData.value.reduce((acc, next) => acc + (next.pcs * next.price), 0));
 
-const firstName = ref('')
-const lastName = ref('')
-const country = ref('')
-const town = ref('')
-const street = ref('')
-const additionalAddress = ref('')
-const state = ref('')
-const zip = ref('')
-const orderNotes = ref('')
-const email = ref('')
-const phone = ref('')
+const firstName = ref()
+const lastName = ref()
+const country = ref()
+const town = ref()
+const street = ref()
+const additionalAddress = ref()
+const state = ref()
+const zip = ref()
+const orderNotes = ref()
+const email = ref()
+const phone = ref()
 
 const router = useRouter()
 
@@ -34,6 +38,46 @@ const toggleModalConfirmedOrder = async (isModalOpen: boolean) => {
   }
 }
 
+const selectedAddress = ref('Use another address')
+
+const clearAddress = () => {
+  country.value = ''
+  town.value = ''
+  street.value = ''
+  additionalAddress.value = ''
+  state.value = ''
+  zip.value = ''
+}
+
+const setAddress = (addressType: string) => {
+  selectedAddress.value = addressType
+  if (addressType !== 'Use another address') {
+    const address = users.value.buyer.savedAddresses.find(address => address.addressName === selectedAddress.value)
+
+    country.value = address.country
+    town.value = address.city
+    street.value = address.streetHouse
+    additionalAddress.value = address.appartment
+    state.value = address.state
+    zip.value = address.zip
+  } else {
+    clearAddress()
+  }
+}
+
+const setUserData = () => {
+  if (isAuth.value && userRole.value === 'buyer') {
+    firstName.value = users.value.buyer.firstName
+    lastName.value = users.value.buyer.secondName
+    email.value = users.value.buyer.email
+    phone.value = users.value.buyer.phone
+  }
+}
+
+onMounted(() => {
+  setUserData()
+})
+
 watch(() => isModalConfirmedOrderOpen.value,
     (value) => {
       const body = document.body
@@ -44,6 +88,18 @@ watch(() => isModalConfirmedOrderOpen.value,
       }
     })
 
+watch(() => isAuth.value,
+    () => {
+      setUserData()
+    })
+
+const imageAddressUrl = computed(() => {
+  if (selectedAddress.value === 'Use another address') {
+    return 'http://localhost:3000/_nuxt/assets/svg/radio-icon_active.svg'
+  } else {
+    return 'http://localhost:3000/_nuxt/assets/svg/radio-icon.svg'
+  }
+})
 </script>
 
 <template>
@@ -102,15 +158,27 @@ watch(() => isModalConfirmedOrderOpen.value,
             <input v-model="phone" class="checkout__input"/>
           </div>
         </div>
-        <!--        <div class="checkout__different">-->
-        <!--          <div class="checkout__different-address checkout__different-address_active"/>-->
-        <!--          <div>Ship to a different address?</div>-->
-        <!--        </div>-->
-        <div class="checkout__additional">
+
+        <div
+            v-if="isAuth && userRole === 'buyer'"
+            class="checkout__address"
+            @click="setAddress('Use another address')">
+          <img :src="imageAddressUrl"/>
+          <span>Use another address</span>
+        </div>
+
+        <SavedAddresses
+            v-if="isAuth && userRole === 'buyer'"
+            :selected-address="selectedAddress"
+            @set-selected-address="address => setAddress(address)"/>
+
+        <div class="checkout__additional checkout__additional-textarea">
           <div class="checkout__additional-label">Order notes (optional)</div>
           <textarea class="checkout__additional-text" v-model="orderNotes"/>
         </div>
+
       </div>
+
       <div class="checkout__order">
         <div class="checkout__title">Your Order</div>
 
@@ -369,6 +437,10 @@ watch(() => isModalConfirmedOrderOpen.value,
   flex-direction: row;
 }
 
+.checkout__additional-textarea {
+  flex-direction: column;
+}
+
 .checkout__additional div {
   color: #3D3D3D;
   font-size: 15px;
@@ -485,8 +557,33 @@ watch(() => isModalConfirmedOrderOpen.value,
 }
 
 .checkout__img {
-  width:70px;
+  width: 70px;
   height: 70px;
   object-fit: contain;
+}
+
+.checkout__address {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.checkout__address span {
+  font-family: 'CeraPro-Medium', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  color: #3D3D3D;
+}
+
+.checkout__address img {
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  transition: 0.5s all;
+}
+
+.checkout__address img:hover {
+  scale: 1.1;
 }
 </style>

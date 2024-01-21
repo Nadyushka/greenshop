@@ -12,7 +12,7 @@ const { blogPostsData } = storeToRefs(plantsStore)
     <p class="main__blogs-description">We are an online plant shop offering a wide range of cheap and trendy
       plants. </p>
     <div class="main__blogs-block">
-      <MainBlogPost
+      <BlogPost
           style="margin-bottom: 10px"
           v-for="post in blogPostsData"
           :key="post.id"

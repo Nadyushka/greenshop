@@ -745,15 +745,19 @@ export const usePlantsStore = defineStore('plants', {
             })
         },
 
-        async clearCart () {
-          this.cartItemsData = []
+        async clearCart() {
+            this.cartItemsData = []
+            this.plants = this.plants.map(plant => ({
+                ...plant,
+                addedToCart: false
+            }))
         },
 
-        async setPaymentMethod (paymentMethodId: number) {
+        async setPaymentMethod(paymentMethodId: number) {
             this.paymentMethodId = paymentMethodId
         },
 
-        async addProductToWishlist( id: string) {
+        async addProductToWishlist(id: string) {
             this.plants = this.plants.map(plant => {
                 if (plant.id === id) {
                     return {

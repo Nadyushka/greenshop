@@ -1,7 +1,8 @@
 <script setup lang="ts">
 
-import PersonalData from "~/components/PersonalData.vue";
+import PersonalData from "~/components/personal/PersonalData.vue";
 import {useAuthStore} from "~/store/auth";
+import FavoritesPlants from "~/components/personal/FavoritesPlants.vue";
 
 const breadCrumbs = ['Personal Data', 'Addresses', 'Wishlist']
 const selectedBreadCrumb = ref('Personal Data')

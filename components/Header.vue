@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import NButton from "@/components/ui/NButton.vue"
+import NButton from "~/components/ui/NButton.vue"
 import {useAuthStore} from "~/store/auth";
 import {usePlantsStore} from "~/store/plants";
 import {storeToRefs} from "pinia";
@@ -124,7 +124,7 @@ onMounted(() => {
   <header class="header">
     <div class="header__wrapper">
       <img
-          src="@/assets/svg/logo.svg"
+          src="../assets/svg/logo.svg"
           alt="logo"
           class="header__logo"
           @click="openPage('/')"
@@ -142,12 +142,12 @@ onMounted(() => {
       </nav>
       <div class="header__login">
         <div class="header__cart" @click="openPage('/shop/cart')">
-          <img src="@/assets/svg/cart-icon.svg" alt="cart icon"/>
+          <img src="../assets/svg/cart-icon.svg" alt="cart icon"/>
           <div class="header__purchases"> {{ cartItemsData.length }}</div>
         </div>
         <img
             class="header__home"
-            src="@/assets/svg/home-icon.svg"
+            src="../assets/svg/home-icon.svg"
             alt="home icon"
             @click="openPage('/personal-area', true)"
         />
@@ -161,7 +161,7 @@ onMounted(() => {
     <div class="modal" v-if="isLoginModalOpen && !isAuth">
       <div class="modal__body">
         <img
-            src="@/assets/svg/close-icon.svg"
+            src="../assets/svg/close-icon.svg"
             class="modal__close"
             @click="toggleModal(false)"/>
         <h2 class="modal__title">Login</h2>

@@ -6,7 +6,6 @@ const { wishlist } = storeToRefs(plantsStore)
 
 const isTouchedPlant = ref('2')
 const setTouchedPlant = (id: string) => isTouchedPlant.value = id
-console.log(wishlist.value)
 </script>
 
 <template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import NButton from "~/components/ui/NButton.vue";
-import {usePlantsStore} from "~/store/plants";
+import NButton from "~/components/ui/NButton.vue"
+import { usePlantsStore } from "~/store/plants"
 
 const plantsStore = usePlantsStore()
 const {shownPlants, plantCareData, blogPostsData} = storeToRefs(plantsStore)
@@ -72,7 +72,7 @@ const setSelectedType = async (type: string) => {
 
     </section>
     <section class="main__plant-care">
-      <MainPlantCarePost
+      <PlantCarePost
           v-for="post in plantCareData.slice(0,2)"
           :short-form="true"
           :key="post.id"
@@ -88,7 +88,7 @@ const setSelectedType = async (type: string) => {
       <p class="main__blogs-description">We are an online plant shop offering a wide range of cheap and trendy
         plants. </p>
       <div class="main__blogs-block">
-        <MainBlogPost
+        <BlogPost
             v-for="post in blogPostsData.slice(0, 4)"
             :key="post.id"
             :short-form="true"
