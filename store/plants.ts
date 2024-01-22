@@ -172,6 +172,7 @@ export const usePlantsStore = defineStore('plants', {
                     type: 'House Plants',
                     size: 'small',
                     productStatus: 'All Plants',
+                    rate: 5,
                 },
                 {
                     id: '2',
@@ -184,6 +185,7 @@ export const usePlantsStore = defineStore('plants', {
                     type: 'House Plants',
                     size: 'small',
                     productStatus: 'New Arrivals',
+                    rate: 4,
                 },
                 {
                     id: '3',
@@ -196,6 +198,7 @@ export const usePlantsStore = defineStore('plants', {
                     type: 'House Plants',
                     size: 'small',
                     productStatus: 'New Arrivals',
+                    rate: 5,
                 },
                 {
                     id: '4',
@@ -208,6 +211,7 @@ export const usePlantsStore = defineStore('plants', {
                     type: 'House Plants',
                     size: 'small',
                     productStatus: 'New Arrivals',
+                    rate: 5,
                 },
                 {
                     id: '5',
@@ -220,6 +224,7 @@ export const usePlantsStore = defineStore('plants', {
                     type: 'House Plants',
                     size: 'small',
                     productStatus: 'New Arrivals',
+                    rate: 4,
                 },
                 {
                     id: '6',
@@ -232,6 +237,7 @@ export const usePlantsStore = defineStore('plants', {
                     type: 'House Plants',
                     size: 'small',
                     productStatus: 'All Plants',
+                    rate: 4,
                 },
                 {
                     id: '7',
@@ -244,6 +250,7 @@ export const usePlantsStore = defineStore('plants', {
                     type: 'House Plants',
                     size: 'small',
                     productStatus: 'All Plants',
+                    rate: 4,
                 },
                 {
                     id: '8',
@@ -255,7 +262,8 @@ export const usePlantsStore = defineStore('plants', {
                     img: 'plant_eight.png',
                     type: 'House Plants',
                     size: 'medium',
-                    // avaliableSizes: ['small', 'medium', 'large']
+                    productStatus: 'All Plants',
+                    rate: 5,
                 },
                 {
                     id: '9',
@@ -267,7 +275,8 @@ export const usePlantsStore = defineStore('plants', {
                     img: 'plant_nine.png',
                     type: 'House Plants',
                     size: 'medium',
-                    // avaliableSizes: ['small', 'medium', 'large']
+                    rate: 4,
+                    productStatus: 'All Plants',
                 },
                 {
                     id: '10',
@@ -279,7 +288,8 @@ export const usePlantsStore = defineStore('plants', {
                     img: 'plant_nine.png',
                     type: 'Potter Plants',
                     size: 'medium',
-                    // avaliableSizes: ['large']
+                    rate: 4,
+                    productStatus: 'All Plants',
                 },
                 {
                     id: '11',
@@ -291,7 +301,8 @@ export const usePlantsStore = defineStore('plants', {
                     img: 'plant_four.png',
                     type: 'Potter Plants',
                     size: 'medium',
-                    // avaliableSizes: ['small', 'medium', 'large']
+                    rate: 4,
+                    productStatus: 'All Plants',
                 },
                 {
                     id: '12',
@@ -672,6 +683,11 @@ export const usePlantsStore = defineStore('plants', {
             }
         },
         totalPlants: (state) => state.plants.length,
+        selectedPlant: (state) => {
+            return (id: string) => {
+                return state.plants.find(plant => plant.id === id)
+            }
+        }
     },
 
     actions: {
@@ -695,11 +711,28 @@ export const usePlantsStore = defineStore('plants', {
         },
 
         async changePcsInCart(id: string, increment: boolean) {
+            const isItemInCart =  this.cartItemsData.find(plant => plant.id == id)
+
+            if (!isItemInCart) {
+                const productToAdd = this.plants.find(plant => plant.id == id)
+                this.cartItemsData = [
+                    ...this.cartItemsData,
+                    {
+                        id: productToAdd!.id,
+                        title: productToAdd!.title,
+                        pcs: 1,
+                        img: productToAdd!.img,
+                        price: productToAdd!.price,
+                    }
+                   ]
+            }
+
             this.cartItemsData = this.cartItemsData.map(product => {
                 if (product.id == id) {
                     return {
                         ...product,
-                        pcs: increment ? product.pcs + 1 : product.pcs - 1,
+                        pcs: increment ? product.pcs + 1 :
+                            product.pcs > 0 ? product.pcs - 1 : 0,
                     }
                 } else {
                     return product

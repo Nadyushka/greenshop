@@ -56,6 +56,7 @@ const { id, img, date, length, title, text, shortForm, fullText } = defineProps<
 
 .blog__img {
   margin-bottom: 8px;
+  object-fit: contain;
 }
 
 .blog__wrapper {

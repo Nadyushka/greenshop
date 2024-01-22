@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {usePlantsStore} from "~/store/plants";
+import {useAuthStore} from "~/store/auth";
 
 interface PropsType {
   img: string
@@ -13,6 +14,8 @@ interface PropsType {
 }
 
 const plantsStore = usePlantsStore()
+const authStore = useAuthStore()
+const { isAuth, userRole} = storeToRefs(authStore)
 
 const props = defineProps<PropsType>()
 const {img, title, discount, saved, addedToCart, price, id, isTouched} = toRefs(props)
@@ -23,7 +26,7 @@ const router = useRouter()
 
 const openPlantItemPage = () => {
   setTimeout(() => {
-    router.push(`shop/${id}`)
+    router.push(`shop/${id.value}`)
   }, 500)
 
 }
@@ -78,6 +81,7 @@ const addRemoverProductToWishlist = async () => {
         </div>
 
         <div
+            v-if="isAuth && userRole == 'buyer'"
             class="plant__selected"
             @click="addRemoverProductToWishlist"
         >
@@ -161,7 +165,8 @@ const addRemoverProductToWishlist = async () => {
 .plant__actions {
   position: absolute;
   bottom: 5px;
-  left: 63px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   gap: 10px;
   opacity: 0;

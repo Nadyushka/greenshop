@@ -74,6 +74,7 @@ const openPlantCarePost = () => router.push(`/plant-care/${id.value}`)
   position: absolute;
   left: 50px;
   bottom: 50px;
+  object-fit: contain;
 }
 
 .care-block__data {
