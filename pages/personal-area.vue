@@ -60,9 +60,10 @@ onMounted(()=> checkIfUserAuthorised())
 <style scoped>
 .personal__breadCrumbs {
   display: flex;
-  gap: 16px;
+  gap: 20px;
   padding-top: 20px;
-  padding-bottom: 20px;
+  margin-bottom: 40px;
+  border-bottom: 1px solid rgba(70, 163, 88, 0.5);
 }
 
 .personal__item {
@@ -72,7 +73,7 @@ onMounted(()=> checkIfUserAuthorised())
   color: #3D3D3D;
   transition: 0.5s all;
   border-bottom: 1px solid transparent;
-  padding-bottom: 7px;
+  padding-bottom: 16px;
   cursor: pointer;
 }
 

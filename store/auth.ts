@@ -57,9 +57,8 @@ export const useAuthStore = defineStore('auth', {
                 return
             } else {
                 this.authError = 'There is no user with such email and password combination'
+                return this.authError
             }
-
-            return this.authError
         },
 
         async logout() {

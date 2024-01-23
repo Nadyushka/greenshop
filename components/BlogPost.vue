@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import {usePlantsStore} from "~/store/plants";
+
 interface PropsType {
   id: string
   title: string
@@ -8,9 +10,23 @@ interface PropsType {
   length: string
   fullText: string
   shortForm: boolean
+  adminMode?: boolean
 }
 
-const { id, img, date, length, title, text, shortForm, fullText } = defineProps<PropsType>()
+const props = defineProps<PropsType>()
+const { id, img, date, length, title, text, shortForm, fullText, adminMode } = toRefs(props)
+
+const plantsStore = usePlantsStore()
+
+const emit = defineEmits<{ (emit: 'edit-post', id: string): void}>()
+
+const deletePost = async () => {
+  await plantsStore.deleteBlogPost(id.value)
+}
+
+const editPost = () => {
+  emit('edit-post', id.value)
+}
 </script>
 
 <template>
@@ -30,10 +46,14 @@ const { id, img, date, length, title, text, shortForm, fullText } = defineProps<
       <NuxtLink
           :to="`/blogs/${id}`"
           class="block__read"
-          v-if="shortForm"
+          v-if="shortForm && !adminMode"
       >
         Read More
       </NuxtLink>
+      <div v-if="adminMode" class="blog__admin">
+        <img src="@/assets/svg/delete-icon.svg" @click="deletePost"/>
+        <img src="@/assets/svg/edit-icon.svg" @click="editPost"/>
+      </div>
       <p
           v-if="!shortForm"
           class="blog__full-text"
@@ -124,5 +144,21 @@ const { id, img, date, length, title, text, shortForm, fullText } = defineProps<
 
 .block__read:active {
   font-weight: 700;
+}
+
+.blog__admin {
+  display: flex;
+  justify-content: space-between;
+}
+
+.blog__admin img {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  transition: 0.5s all;
+}
+
+.blog__admin img:hover {
+  scale: 1.1;
 }
 </style>

@@ -1,4 +1,5 @@
 import {defineStore} from 'pinia'
+import type {PostCareType, PostType} from "~/utils/types";
 
 export const usePlantsStore = defineStore('plants', {
     state: () => {
@@ -77,7 +78,7 @@ export const usePlantsStore = defineStore('plants', {
                     img: 'main_care-one.png',
                     fullText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
                 },
-            ],
+            ] as PostCareType[],
             blogPostsData: [
                 {
                     id: '1',
@@ -159,7 +160,7 @@ export const usePlantsStore = defineStore('plants', {
                     fullText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
 
                 },
-            ],
+            ] as PostType[],
             plants: [
                 {
                     id: '1',
@@ -742,6 +743,16 @@ export const usePlantsStore = defineStore('plants', {
 
         async deleteProductFromCart(id: string) {
             this.cartItemsData = this.cartItemsData.filter(product => product.id !== id)
+            this.plants = this.plants.map(plant => {
+                if (plant.id === id) {
+                    return {
+                        ...plant,
+                        addedToCart: false
+                    }
+                } else {
+                    return plant
+                }
+            })
         },
 
         async addProductToCart(product: {
@@ -815,5 +826,52 @@ export const usePlantsStore = defineStore('plants', {
                 }
             })
         },
+
+        async deleteBlogPost (id: string) {
+            this.blogPostsData =  this.blogPostsData.filter(post => post.id !== id)
+        },
+
+        async savePostChanges (payload: PostType) {
+            this.blogPostsData = this.blogPostsData.map(post => {
+                if(post.id === payload.id) {
+                    return payload
+                } else {
+                    return post
+                }
+            })
+        },
+
+        async addPost(payload: PostType) {
+            const preparedPost = {
+                ...payload,
+                id: `${this.blogPostsData.length + 1}`,
+                img: 'main__post-one.png'
+            }
+            this.blogPostsData = [preparedPost, ...this.blogPostsData]
+        },
+
+        async deleteCarePost (id: string) {
+            this.plantCareData =  this.plantCareData.filter(post => post.id !== id)
+        },
+
+        async saveCarePostChanges (payload: PostCareType) {
+            this.plantCareData = this.plantCareData.map(post => {
+                if(post.id === payload.id) {
+                    return payload
+                } else {
+                    return post
+                }
+            })
+        },
+
+        async addCarePost(payload: PostCareType) {
+            const preparedPost = {
+                ...payload,
+                id: `${this.plantCareData.length + 1}`,
+                img: 'main_care-one.png'
+            }
+            this.plantCareData = [preparedPost, ...this.plantCareData]
+        },
+
     }
 })

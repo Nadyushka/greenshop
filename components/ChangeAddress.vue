@@ -64,6 +64,7 @@ const closeModal = () => {
           <input v-model="addressNameChange" class="personal__input"/>
         </div>
       </div>
+
       <div class="personal__row">
         <div>
           <div class="personal__label">Country / Region</div>
@@ -74,6 +75,7 @@ const closeModal = () => {
           <input v-model="cityChange" class="personal__input"/>
         </div>
       </div>
+
       <div class="personal__row">
         <div>
           <div class="personal__label">Street Address</div>
@@ -85,6 +87,7 @@ const closeModal = () => {
                  placeholder="Appartment, suite, unit, etc. (optional)"/>
         </div>
       </div>
+
       <div class="personal__row">
         <div>
           <div class="personal__label">State</div>
@@ -158,4 +161,5 @@ const closeModal = () => {
   margin-bottom: 10px;
   width: 300px;
 }
+
 </style>

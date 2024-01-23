@@ -97,6 +97,10 @@ const loginLogout = async () => {
     if (wasPressOnIcon.value) {
       await router.push('/personal-area')
     }
+
+    if (userRole.value === 'admin') {
+      await router.push('/admin')
+    }
   }
 }
 
@@ -118,18 +122,32 @@ watch(
 onMounted(() => {
   setCorrectHeaderActiveItem()
 })
+
+const openMainPage = () => {
+  if( userRole.value !== 'admin' ) {
+    openPage('/')
+  }
+}
 </script>
 
 <template>
   <header class="header">
-    <div class="header__wrapper">
+    <div
+        class="header__wrapper"
+        :class="{
+             'header__wrapper-admin': userRole === 'admin'
+           }">
       <img
           src="../assets/svg/logo.svg"
           alt="logo"
           class="header__logo"
-          @click="openPage('/')"
+          @click="openMainPage"
       />
-      <nav class="header__nav">
+
+      <nav
+          class="header__nav"
+          v-if="userRole !== 'admin'"
+      >
         <ul class="header__list">
           <li
               v-for="list in headerListItems"
@@ -140,12 +158,17 @@ onMounted(() => {
           </li>
         </ul>
       </nav>
+
       <div class="header__login">
-        <div class="header__cart" @click="openPage('/shop/cart')">
+        <div
+            v-if="userRole !== 'admin'"
+            class="header__cart"
+            @click="openPage('/shop/cart')">
           <img src="../assets/svg/cart-icon.svg" alt="cart icon"/>
           <div class="header__purchases"> {{ cartItemsData.length }}</div>
         </div>
         <img
+            v-if="userRole !== 'admin'"
             class="header__home"
             src="../assets/svg/home-icon.svg"
             alt="home icon"
@@ -203,6 +226,11 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.header__wrapper-admin {
+  padding-top: 25px;
+  padding-bottom: 15px;
 }
 
 .header__logo {

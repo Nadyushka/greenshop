@@ -45,6 +45,10 @@ const addToCart = () => {
   plantsStore.addProductToCart(plantInfo)
 }
 
+const removeFromCart = () => {
+  plantsStore.removeProductFromCart(plantId)
+}
+
 const increasePcsInCart = () => {
   plantsStore.changePcsInCart(plantId, true)
 }
@@ -102,7 +106,8 @@ const increasePcsInCart = () => {
             <div class="order__more" @click="increasePcsInCart">+</div>
           </div>
           <NButton btn-title="Buy NOW"/>
-          <button class="plant__add-btn" @click="addToCart">Add to cart</button>
+          <button v-if="!plantData.addedToCart" class="plant__add-btn" @click="addToCart">Add to cart</button>
+          <button v-if="plantData.addedToCart" class="plant__add-btn" @click="removeFromCart">Added to cart</button>
 
           <div
               v-if="isAuth && userRole === 'buyer'"

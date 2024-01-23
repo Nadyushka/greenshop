@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import NButton from "~/components/ui/NButton.vue"
+import {usePlantsStore} from "~/store/plants";
 
 interface PropsType {
   title: string
@@ -8,14 +9,27 @@ interface PropsType {
   img: string
   shortForm: boolean
   fullText: string
+  adminMode?: boolean
 }
 
 const props = defineProps<PropsType>()
-const { title, text, id, shortForm, fullText, img } = toRefs(props)
+const { title, text, id, shortForm, fullText, img, adminMode } = toRefs(props)
 
 const router = useRouter()
 
 const openPlantCarePost = () => router.push(`/plant-care/${id.value}`)
+
+const plantsStore = usePlantsStore()
+
+const emit = defineEmits<{ (emit: 'edit-post', id: string): void}>()
+
+const deletePost = async () => {
+  await plantsStore.deleteCarePost(id.value)
+}
+
+const editPost = () => {
+  emit('edit-post', id.value)
+}
 </script>
 
 <template>
@@ -32,13 +46,19 @@ const openPlantCarePost = () => router.push(`/plant-care/${id.value}`)
       >
         <h3 class="care-block__title">{{ title }}</h3>
         <p class="care-block__text"> {{ text }}</p>
-        <div class="care-block__btn-wrapper" v-if="shortForm">
+        <div class="care-block__btn-wrapper" v-if="shortForm && !adminMode">
           <NButton
               btn-title="Find More"
               right-icon="arrow"
               @btn-click="openPlantCarePost"
           />
         </div>
+
+        <div v-if="adminMode" class="blog__admin">
+          <img src="@/assets/svg/delete-icon.svg" @click="deletePost"/>
+          <img src="@/assets/svg/edit-icon.svg" @click="editPost"/>
+        </div>
+
         <p
             class="care-block__full-text"
             v-if="!shortForm"
@@ -81,6 +101,7 @@ const openPlantCarePost = () => router.push(`/plant-care/${id.value}`)
   padding-left: 50%;
   padding-top: 37px;
   text-align: right;
+  width: 50%;
 }
 
 .care-block__data__full-text {
@@ -104,7 +125,6 @@ const openPlantCarePost = () => router.push(`/plant-care/${id.value}`)
   font-size: 14px;
   font-family: 'CeraPro-Regular', sans-serif;
   line-height: 24px;
-
   margin-bottom: 25px;
 }
 
@@ -117,5 +137,22 @@ const openPlantCarePost = () => router.push(`/plant-care/${id.value}`)
 .care-block__btn-wrapper {
   display: flex;
   justify-content: flex-end;
+}
+
+.blog__admin {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 10%;
+}
+
+.blog__admin img {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  transition: 0.5s all;
+}
+
+.blog__admin img:hover {
+  scale: 1.1;
 }
 </style>
