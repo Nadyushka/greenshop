@@ -58,6 +58,8 @@ const openPage = (page: string, pressOnIcon?: boolean) => {
 }
 
 const setCorrectHeaderActiveItem = () => {
+  if (route.path.slice(1) === 'admin') return
+
   if (route.path.slice(1) === 'personal-area') {
     activeListItem.value = ''
     return

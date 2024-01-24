@@ -1,16 +1,17 @@
 import {defineStore} from 'pinia'
-import type {PostCareType, PostType} from "~/utils/types";
+import type {PlantType, PostCareType, PostType, ProductInCart} from "~/utils/types";
 
 export const usePlantsStore = defineStore('plants', {
     state: () => {
         return {
-            currentPage: 1,
-            limit: 9,
+            currentPage: 1 as number,
+            limit: 9 as number,
             plantType: null as null | string,
             minPrice: 0 as null | number,
             maxPrice: 100000 as null | number,
             size: null as null | string,
             productStatus: null as null | string,
+            plantTitle: null as null | string,
             paymentMethodId: 3,
             paymentMethods: [
                 {
@@ -48,7 +49,7 @@ export const usePlantsStore = defineStore('plants', {
                     pcs: 1,
                     img: 'plant_four.png',
                 }
-            ],
+            ] as ProductInCart[],
             plantCareData: [
                 {
                     id: '1',
@@ -628,13 +629,13 @@ export const usePlantsStore = defineStore('plants', {
                     size: 'small',
                     productStatus: 'All Plants',
                 },
-            ],
+            ] as PlantType[],
         }
     },
 
     getters: {
-        wishlist: (state) => state.plants.filter(plant => plant.saved),
-        shownPlants: (state) => {
+        wishlist: (state):PlantType[] => state.plants.filter(plant => plant.saved),
+        shownPlants: (state):PlantType[] => {
             const totalAndFilteredPlants = {
                 length: 0,
                 plants: [],
@@ -671,6 +672,15 @@ export const usePlantsStore = defineStore('plants', {
                         return true;
                     }
                 )
+                .filter(plant => {
+
+                    if (state.plantTitle) {
+                        return plant.title.toLowerCase().includes(state.plantTitle.toLowerCase())
+                    }
+                    return true;
+                })
+
+
             totalAndFilteredPlants.length = filteredPlants.length;
             totalAndFilteredPlants.plants = filteredPlants
                 .slice((state.currentPage - 1) * state.limit, (state.currentPage - 1) * state.limit + state.limit)
@@ -678,15 +688,15 @@ export const usePlantsStore = defineStore('plants', {
             return totalAndFilteredPlants
 
         },
-        filteredPlants: state => {
+        filteredPlants: (state): number => {
             return (filterData: { filterType: string, filterValue: string }) => {
                 return [...state.plants].filter(plant => plant[filterData.filterType] === filterData.filterValue).length
             }
         },
-        totalPlants: (state) => state.plants.length,
-        selectedPlant: (state) => {
-            return (id: string) => {
-                return state.plants.find(plant => plant.id === id)
+        totalPlants: (state): number => state.plants.length,
+        selectedPlant: (state): (id: string) => PlantType => {
+            return (id: string): PlantType => {
+                return state.plants.find(plant => plant.id === id)!
             }
         }
     },
@@ -715,17 +725,15 @@ export const usePlantsStore = defineStore('plants', {
             const isItemInCart =  this.cartItemsData.find(plant => plant.id == id)
 
             if (!isItemInCart) {
-                const productToAdd = this.plants.find(plant => plant.id == id)
-                this.cartItemsData = [
-                    ...this.cartItemsData,
-                    {
-                        id: productToAdd!.id,
-                        title: productToAdd!.title,
-                        pcs: 1,
-                        img: productToAdd!.img,
-                        price: productToAdd!.price,
-                    }
-                   ]
+                const productToAdd: PlantType = this.plants.find(plant => plant.id == id)!
+                const preparedProduct: ProductInCart=  {
+                    id: productToAdd.id!,
+                    title: productToAdd!.title,
+                    pcs: 1,
+                    img: productToAdd!.img,
+                    price: productToAdd!.price,
+                }
+                this.cartItemsData = [...this.cartItemsData, preparedProduct]
             }
 
             this.cartItemsData = this.cartItemsData.map(product => {
@@ -755,13 +763,7 @@ export const usePlantsStore = defineStore('plants', {
             })
         },
 
-        async addProductToCart(product: {
-            id: string
-            title: string
-            img: string
-            price: number
-            pcs: number
-        }) {
+        async addProductToCart(product: ProductInCart) {
             this.cartItemsData = [...this.cartItemsData, product]
             this.plants = this.plants.map(plant => {
                 if (plant.id === product.id) {
@@ -871,6 +873,31 @@ export const usePlantsStore = defineStore('plants', {
                 img: 'main_care-one.png'
             }
             this.plantCareData = [preparedPost, ...this.plantCareData]
+        },
+
+        async deletePlant (id: string) {
+            this.plants =  this.plants.filter(plant => plant.id !== id)
+        },
+
+        async savePlantChanges (payload: PlantType) {
+            this.plants = this.plants.map(plant => {
+                if(plant.id === payload.id) {
+                    return payload
+                } else {
+                    return plant
+                }
+            })
+        },
+
+        async addPlant(payload: PlantType) {
+            const preparedPlant = {
+                ...payload,
+                id: `${this.plants.length + 1}`,
+                img: 'plant_eight.png',
+                addedToCart: false,
+                saved: false,
+            }
+            this.plants = [preparedPlant, ...this.plants]
         },
 
     }

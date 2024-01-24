@@ -1,3 +1,25 @@
+export interface PlantType {
+    id: string | null
+    title: string
+    price: number | undefined
+    discount: number | undefined
+    addedToCart: boolean
+    saved: boolean
+    img: string
+    type: string
+    size: string
+    productStatus: string
+    rate: number | null
+}
+
+export interface ProductInCart {
+    id: string
+    title: string
+    img: string
+    price: number
+    pcs: number
+}
+
 export interface addressDataType {
     id: string | null
     addressName: string

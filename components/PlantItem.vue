@@ -11,16 +11,17 @@ interface PropsType {
   saved: boolean
   id: string
   isTouched: boolean
+  adminMode?: boolean
 }
 
 const plantsStore = usePlantsStore()
 const authStore = useAuthStore()
-const { isAuth, userRole} = storeToRefs(authStore)
+const {isAuth, userRole} = storeToRefs(authStore)
 
 const props = defineProps<PropsType>()
 const {img, title, discount, saved, addedToCart, price, id, isTouched} = toRefs(props)
 
-const currentPrice = computed(() => discount ? (price.value * (100 - discount.value) / 100).toFixed(0) : price)
+const currentPrice = computed(() => discount.value ? (+price.value * (100 - +discount.value) / 100).toFixed(0) : +price.value)
 
 const router = useRouter()
 
@@ -41,7 +42,7 @@ const addRemoverProductToCart = async () => {
       id: id.value,
       title: title.value,
       img: img.value,
-      price: price.value,
+      price: +price.value,
       pcs: 1,
     }
     await plantsStore.addProductToCart(productData)
@@ -55,6 +56,16 @@ const addRemoverProductToWishlist = async () => {
     await plantsStore.addProductToWishlist(id.value)
   }
 }
+
+const emit = defineEmits<{ (emit: 'edit-post', id: string): void }>()
+
+const deletePost = async () => {
+  await plantsStore.deletePlant(id.value)
+}
+
+const editPost = () => {
+  emit('edit-post', id.value)
+}
 </script>
 
 <template>
@@ -64,6 +75,7 @@ const addRemoverProductToWishlist = async () => {
       <div class="plant__actions" :class="{'plant__actions_visible': isTouched}">
 
         <div
+            v-if="!adminMode"
             class="plant__cart"
             @click="addRemoverProductToCart"
         >
@@ -81,7 +93,7 @@ const addRemoverProductToWishlist = async () => {
         </div>
 
         <div
-            v-if="isAuth && userRole == 'buyer'"
+            v-if="isAuth && userRole == 'buyer' && !adminMode"
             class="plant__selected"
             @click="addRemoverProductToWishlist"
         >
@@ -99,7 +111,7 @@ const addRemoverProductToWishlist = async () => {
           </svg>
         </div>
 
-        <div class="plant__watch">
+        <div v-if="!adminMode" class="plant__watch">
           <svg
               width="20"
               height="20"
@@ -121,6 +133,11 @@ const addRemoverProductToWishlist = async () => {
           </svg>
         </div>
 
+        <div v-if="adminMode" class="plant__admin">
+          <img src="@/assets/svg/delete-icon.svg" @click="deletePost"/>
+          <img src="@/assets/svg/edit-icon.svg" @click="editPost"/>
+        </div>
+
       </div>
     </div>
     <h3 class="plant__title"> {{ title }}</h3>
@@ -138,6 +155,7 @@ const addRemoverProductToWishlist = async () => {
   cursor: pointer;
   transition: 0.5s all;
   border-top: 2px solid transparent;
+  justify-self: center;
 }
 
 .plant_selected {
@@ -234,5 +252,22 @@ path {
   color: #A5A5A5;
   text-decoration: line-through;
   font-size: 18px;
+}
+
+.plant__admin {
+  display: flex;
+  justify-content: space-between;
+  gap: 60px;
+}
+
+.plant__admin img {
+  width: 21px;
+  height: 21px;
+  cursor: pointer;
+  transition: 0.5s all;
+}
+
+.plant__admin img:hover {
+  scale: 1.1;
 }
 </style>
