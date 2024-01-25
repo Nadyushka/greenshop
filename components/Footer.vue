@@ -1,7 +1,5 @@
 <script setup lang="ts">
-
-
-import NButton from "~/components/ui/NButton.vue";
+import NButton from "~/components/ui/NButton.vue"
 
 const aboutUsItems: { title: string, text: string, img: string }[] = [
   {

@@ -60,6 +60,10 @@ const clearFilters = () => {
     plantSize: '',
   })
 }
+
+onMounted(async () => {
+  await plantsStore.removeAllFilters()
+})
 </script>
 
 <template>

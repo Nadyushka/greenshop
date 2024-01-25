@@ -1,67 +1,62 @@
 <script setup lang="ts">
-
 import NButton from "~/components/ui/NButton.vue"
 import {usePlantsStore} from "~/store/plants"
-import type {PlantType, PostType} from "~/utils/types"
-
+import type {PlantType} from "~/utils/types"
+import {validationSchema} from "~/utils/validation"
 
 const plantsStore = usePlantsStore()
 const {plants} = storeToRefs(plantsStore)
 
 const emit = defineEmits<{ (emit: 'close-modal'): void }>()
 
-const closeModal = () => emit('close-modal')
-
 const props = defineProps<{ id: string | null }>()
-const {id} = toRefs(props)
+const { id } = toRefs(props)
 
-const formData = reactive({
-  title: '',
-  price: undefined,
-  discount: undefined,
-  addedToCart: false,
-  saved: false,
-  img: '',
-  type: '',
-  size: '',
-  productStatus: '',
-  rate: null
-} as PlantType)
-
-onMounted(() => {
-  if (id.value) {
-    const plant = plants.value.find(post => post.id === id.value)
-
-    formData.id = plant.id
-    formData.title = plant.title
-    formData.price = plant.price
-    formData.discount = plant.discount
-    formData.addedToCart = plant.addedToCart
-    formData.saved = plant.saved
-    formData.img = plant.img
-    formData.type = plant.type
-    formData.size = plant.size
-    formData.productStatus = plant.productStatus
-    formData.rate = plant.rate
-  }
+const {
+  handleSubmit,
+  errors,
+  values,
+  setValues,
+  setFieldValue,
+} = useForm({
+  validationSchema,
 })
 
-const saveFormData = async () => {
-  const preparedFormData = {
-    ...formData,
-    size: formData.size.toLowerCase(),
-    price: formData.price && +formData.price,
-    discount: formData.discount ? +formData.discount : undefined,
-  }
+const title = useField('title', validationSchema)
+const price = useField('price', validationSchema)
+const discount = useField('discount', validationSchema)
+const addedToCart = useField('addedToCart', undefined, {initialValue: false})
+const saved = useField('saved', undefined, {initialValue: false})
+const img = useField('img')
+const type = useField('type', validationSchema)
+const size = useField('size', validationSchema)
+const rate = useField('rate', validationSchema, {initialValue: null})
 
-  if (id.value) {
-    await plantsStore.savePlantChanges(preparedFormData)
-  } else {
-    await plantsStore.addPlant(preparedFormData)
-  }
+const selectedPlant = ref({} as PlantType)
+const closeModal = () => emit('close-modal')
 
-  emit('close-modal')
-}
+const onSubmit = handleSubmit(async formValues => {
+
+      const preparedFormData = {
+        ...formValues,
+        addedToCart: formValues.addedToCart,
+        saved: formValues.saved,
+        id: selectedPlant.value.id?? undefined,
+        size: formValues.size.toLowerCase(),
+        price: formValues.price && +formValues.price,
+        discount: formValues.discount ? +formValues.discount : undefined,
+        img: formValues.img,
+      } as PlantType
+
+      if (selectedPlant.value.id) {
+        await plantsStore.savePlantChanges(preparedFormData)
+      } else {
+        await plantsStore.addPlant(preparedFormData)
+      }
+
+      emit('close-modal')
+    }
+)
 
 const categories = ["House Plants", "Potter Plants", "Seeds", "Small Plants", "Big Plants", "Succulents", "Trerrariums"]
 
@@ -69,60 +64,96 @@ const isCategoriesListVisible = ref(false)
 const toggleCategoriesList = (isVisible: boolean) => isCategoriesListVisible.value = isVisible
 
 const setCategory = (category: string) => {
-  formData.type = category
+  setFieldValue('type', category)
   toggleCategoriesList(false)
 }
 
 const isSizeListVisible = ref(false)
-const toggleSizeList = (isVisible: boolean) =>  {
+const toggleSizeList = (isVisible: boolean) => {
   toggleCategoriesList(false)
   isSizeListVisible.value = isVisible
 }
 
 const setSize = (size: string) => {
-  formData.size = size
+  setFieldValue('size', size)
   toggleSizeList(false)
 }
+
+onMounted(() => {
+  if (id.value) {
+    selectedPlant.value = plants.value.find(plant => plant.id === id.value)!
+
+    setValues({
+      'title': selectedPlant.value.title,
+      'price': selectedPlant.value.price,
+      'discount': selectedPlant.value.discount,
+      'addedToCart': selectedPlant.value.addedToCart,
+      'saved': selectedPlant.value.saved,
+      'img': selectedPlant.value.img,
+      'type': selectedPlant.value.type,
+      'size': selectedPlant.value.size,
+      'rate': selectedPlant.value.rate,
+    })
+  }
+})
 </script>
 
 <template>
-  <div class="post">
-    <div class="post__modal-overlay">
-      <div class="post__modal-body">
-        <div class="post__modal-close" @click="closeModal">
-          <img src="@/assets/svg/close-icon.svg" class="post__modal-close-icon"/>
+  <div class="plant">
+    <div class="plant__modal-overlay">
+      <form @submit.prevent="onSubmit" class="plant__modal-body">
+        <div class="plant__modal-close" @click="closeModal">
+          <img src="@/assets/svg/close-icon.svg" class="plant__modal-close-icon"/>
         </div>
 
-        <div class="post__row">
+        <div class="plant__row">
           <div>
-            <div class="post__label">Title</div>
-            <input v-model="formData.title" class="post__input"/>
-          </div>
-        </div>
-
-        <div class="post__row">
-          <div>
-            <div class="post__label">Price</div>
-            <input v-model="formData.price" class="post__input"/>
-          </div>
-        </div>
-
-        <div class="post__row">
-          <div>
-            <div class="post__label">Discount</div>
-            <input v-model="formData.discount" class="post__input"/>
-          </div>
-        </div>
-
-        <div class="post__row plant__row-type">
-          <div>
-            <div class="post__label">Type</div>
+            <div class="plant__label">Title</div>
             <input
-                :value="formData.type"
-                class="post__input post__input-type"
+                v-model="title.value.value"
+                class="plant__input"
+                :class="{
+                  'plant__input_error': errors.title
+            }"
+            />
+            <div v-if="errors.title" class="plant__error">{{ errors.title }}</div>
+          </div>
+        </div>
+
+        <div class="plant__row">
+          <div>
+            <div class="plant__label">Price</div>
+            <input
+                v-model="price.value.value"
+                class="plant__input"
+                :class="{
+                  'plant__input_error': errors.price
+            }"
+            />
+            <div v-if="errors.price" class="plant__error"> {{ errors.price }}</div>
+          </div>
+        </div>
+
+        <div class="plant__row">
+          <div>
+            <div class="plant__label">Discount</div>
+            <input v-model="discount.value.value" class="plant__input"/>
+          </div>
+        </div>
+
+        <div class="plant__row plant__row-type">
+          <div>
+            <div class="plant__label">Type</div>
+            <input
+                :value="type.value.value"
+                class="plant__input plant__input-type"
                 @focus="toggleCategoriesList(true)"
                 readonly
+                :class="{
+                  'plant__input_error': errors.type
+            }"
             />
+            <div v-if="errors.type" class="plant__error"> {{ errors.type }}</div>
           </div>
 
           <ul class="plant__list" v-if="isCategoriesListVisible">
@@ -137,15 +168,19 @@ const setSize = (size: string) => {
 
         </div>
 
-        <div class="post__row plant__row-size">
+        <div class="plant__row plant__row-size">
           <div>
-            <div class="post__label">Size</div>
+            <div class="plant__label">Size</div>
             <input
-                :value="formData.size"
+                :value="size.value.value"
                 readonly
-                class="post__input"
+                class="plant__input"
                 @focus="toggleSizeList(true)"
+                :class="{
+                  'plant__input_error': errors.size
+            }"
             />
+            <div v-if="errors.size" class="plant__error"> {{ errors.size }}</div>
           </div>
 
           <ul class="plant__list" v-if="isSizeListVisible">
@@ -160,23 +195,26 @@ const setSize = (size: string) => {
 
         </div>
 
-        <div class="post__row">
+        <div class="plant__row">
           <div>
-            <div class="post__label">Rate</div>
-            <input v-model="formData.rate" class="post__input"/>
+            <div class="plant__label">Rate</div>
+            <input v-model="rate.value.value" class="plant__input"/>
           </div>
         </div>
 
-        <NButton btn-title="Save" @btn-click="saveFormData"/>
+        <NButton
+            attr-type="submit"
+            type="submit"
+            btn-title="Save"/>
 
-      </div>
-      <div class="post_transparent"/>
+      </form>
+      <div class="plant_transparent"/>
     </div>
   </div>
 </template>
 
 <style scoped>
-.post {
+.plant {
   position: fixed;
   top: 0;
   bottom: 0;
@@ -185,7 +223,7 @@ const setSize = (size: string) => {
   background-color: rgba(229, 229, 229, 0.4);
 }
 
-.post__modal-overlay {
+.plant__modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -196,7 +234,7 @@ const setSize = (size: string) => {
   overflow-y: auto;
 }
 
-.post__modal-body {
+.plant__modal-body {
   position: absolute;
   top: 10%;
   background-color: #E5E5E5;
@@ -207,29 +245,29 @@ const setSize = (size: string) => {
   transform: translateX(-50%);
 }
 
-.post__modal-close {
+.plant__modal-close {
   display: flex;
   justify-content: flex-end;
   cursor: pointer;
 }
 
-.post__modal-close-icon {
+.plant__modal-close-icon {
   width: 20px;
   height: 20px;
   transition: 0.5s all;
 }
 
-.post__modal-close-icon:hover {
+.plant__modal-close-icon:hover {
   scale: 1.1;
 }
 
-.post__row {
+.plant__row {
   display: flex;
   gap: 10px;
   width: 50%;
 }
 
-.post__label {
+.plant__label {
   font-size: 15px;
   font-family: 'CeraPro-Regular', sans-serif;
   font-weight: 400;
@@ -237,34 +275,29 @@ const setSize = (size: string) => {
   margin-bottom: 10px;
 }
 
-.post__input {
+.plant__input {
   border-radius: 3px;
   border: 1px solid #EAEAEA;
   margin-bottom: 10px;
   width: 500px;
   color: #727272;
+  transition: 0.5s all;
 }
 
-.post_transparent {
+.plant_transparent {
   height: 50px;
   background-color: transparent;
 }
 
-.post__input:focus {
+.plant__input:focus {
   border: 1px solid #46A358;
 }
 
-.post__textarea {
-  min-height: 152px;
-  width: 490px;
-  border: 1px solid #EAEAEA;
-  border-radius: 4px;
-  margin-bottom: 10px;
-  color: #727272;
-  padding: 16px;
+.plant__input_error {
+  border: 1px solid rgba(255, 0, 0, 0.6);;
 }
 
-.post__input::placeholder {
+.plant__input::placeholder {
   color: #A5A5A5;
 }
 
@@ -294,5 +327,11 @@ const setSize = (size: string) => {
 .plant__item:hover {
   scale: 1.02;
   color: #46A358;
+}
+
+.plant__error {
+  margin-top: -5px;
+  margin-bottom: 10px;
+  color: rgba(255, 0, 0, 0.6);
 }
 </style>

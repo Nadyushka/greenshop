@@ -20,7 +20,7 @@ watch(
 const editPlantId = ref()
 const isModalOpen = ref(false)
 
-const isTouchedPlant = ref(shownPlants.value.plants[0].id)
+const isTouchedPlant = ref(shownPlants.value.plants[0]?.id ?? undefined)
 const setTouchedPlant = (id: string) => isTouchedPlant.value = id
 
 const editPostData = (id: string) => {
@@ -34,6 +34,16 @@ const closeModal = () => {
 }
 
 const addPost = () => isModalOpen.value = true
+
+watch(() => isModalOpen.value,
+    (value) => {
+      const body = document.body
+      if (value) {
+        body.style.overflow = 'hidden'
+      } else {
+        body.style.overflow = 'auto'
+      }
+    })
 </script>
 
 <template>

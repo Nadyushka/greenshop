@@ -6,7 +6,7 @@ interface PropsType {
   img: string
   title: string
   price: number
-  discount: number
+  discount: number | undefined
   addedToCart: boolean
   saved: boolean
   id: string

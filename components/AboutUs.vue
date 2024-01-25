@@ -6,7 +6,7 @@ interface PropsType {
   lastItem: boolean
 }
 
-const {title, text, img, lastItem} = defineProps<PropsType>()
+const { title, text, img, lastItem } = defineProps<PropsType>()
 const imgUrl = () => `http://localhost:3000/_nuxt/assets/svg/${img}.svg`
 </script>
 

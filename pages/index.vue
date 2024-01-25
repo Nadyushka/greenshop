@@ -66,7 +66,9 @@ const setSelectedType = async (type: string) => {
                 @click="setTouchedPlant(plant.id)"
             />
           </div>
-          <ShopPagination/>
+          <ShopPagination v-if="shownPlants.length"/>
+
+          <div v-if="!shownPlants.length" class="main__no-data">No plants were found :(</div>
         </div>
       </div>
 
@@ -223,5 +225,13 @@ const setSelectedType = async (type: string) => {
 .main__blogs-block {
   display: flex;
   justify-content: space-between;
+}
+
+.main__no-data {
+  font-family: 'CeraPro-Regular', sans-serif;
+  color: #727272;
+  font-size: 20px;
+  width: 900px;
+ text-align: center;
 }
 </style>

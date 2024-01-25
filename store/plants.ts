@@ -12,7 +12,7 @@ export const usePlantsStore = defineStore('plants', {
             size: null as null | string,
             productStatus: null as null | string,
             plantTitle: null as null | string,
-            paymentMethodId: 3,
+            paymentMethodId: 1,
             paymentMethods: [
                 {
                     id: 1,
@@ -634,8 +634,8 @@ export const usePlantsStore = defineStore('plants', {
     },
 
     getters: {
-        wishlist: (state):PlantType[] => state.plants.filter(plant => plant.saved),
-        shownPlants: (state):PlantType[] => {
+        wishlist: (state): PlantType[] => state.plants.filter(plant => plant.saved),
+        shownPlants: (state): PlantType[] => {
             const totalAndFilteredPlants = {
                 length: 0,
                 plants: [],
@@ -722,11 +722,11 @@ export const usePlantsStore = defineStore('plants', {
         },
 
         async changePcsInCart(id: string, increment: boolean) {
-            const isItemInCart =  this.cartItemsData.find(plant => plant.id == id)
+            const isItemInCart = this.cartItemsData.find(plant => plant.id == id)
 
             if (!isItemInCart) {
                 const productToAdd: PlantType = this.plants.find(plant => plant.id == id)!
-                const preparedProduct: ProductInCart=  {
+                const preparedProduct: ProductInCart = {
                     id: productToAdd.id!,
                     title: productToAdd!.title,
                     pcs: 1,
@@ -829,13 +829,13 @@ export const usePlantsStore = defineStore('plants', {
             })
         },
 
-        async deleteBlogPost (id: string) {
-            this.blogPostsData =  this.blogPostsData.filter(post => post.id !== id)
+        async deleteBlogPost(id: string) {
+            this.blogPostsData = this.blogPostsData.filter(post => post.id !== id)
         },
 
-        async savePostChanges (payload: PostType) {
+        async savePostChanges(payload: PostType) {
             this.blogPostsData = this.blogPostsData.map(post => {
-                if(post.id === payload.id) {
+                if (post.id === payload.id) {
                     return payload
                 } else {
                     return post
@@ -852,13 +852,13 @@ export const usePlantsStore = defineStore('plants', {
             this.blogPostsData = [preparedPost, ...this.blogPostsData]
         },
 
-        async deleteCarePost (id: string) {
-            this.plantCareData =  this.plantCareData.filter(post => post.id !== id)
+        async deleteCarePost(id: string) {
+            this.plantCareData = this.plantCareData.filter(post => post.id !== id)
         },
 
-        async saveCarePostChanges (payload: PostCareType) {
+        async saveCarePostChanges(payload: PostCareType) {
             this.plantCareData = this.plantCareData.map(post => {
-                if(post.id === payload.id) {
+                if (post.id === payload.id) {
                     return payload
                 } else {
                     return post
@@ -875,13 +875,13 @@ export const usePlantsStore = defineStore('plants', {
             this.plantCareData = [preparedPost, ...this.plantCareData]
         },
 
-        async deletePlant (id: string) {
-            this.plants =  this.plants.filter(plant => plant.id !== id)
+        async deletePlant(id: string) {
+            this.plants = this.plants.filter(plant => plant.id !== id)
         },
 
-        async savePlantChanges (payload: PlantType) {
+        async savePlantChanges(payload: PlantType) {
             this.plants = this.plants.map(plant => {
-                if(plant.id === payload.id) {
+                if (plant.id === payload.id) {
                     return payload
                 } else {
                     return plant
@@ -899,6 +899,15 @@ export const usePlantsStore = defineStore('plants', {
             }
             this.plants = [preparedPlant, ...this.plants]
         },
+
+        async removeAllFilters() {
+            this.minPrice = 0
+            this.maxPrice = 100000
+            this.size = ''
+            this.productStatus = ''
+            this.plantTitle = ''
+            this.plantType = ''
+        }
 
     }
 })

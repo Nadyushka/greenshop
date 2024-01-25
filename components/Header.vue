@@ -44,7 +44,8 @@ const openPage = (page: string, pressOnIcon?: boolean) => {
   pressOnIcon && (wasPressOnIcon.value = pressOnIcon)
 
   if (route.path != '/' && page == '/') {
-    router.push('/')
+    if (userRole.value != 'admin')
+      router.push('/')
   } else if (page == '/personal-area') {
 
     if (isAuth.value && userRole.value === 'buyer') {
@@ -58,9 +59,7 @@ const openPage = (page: string, pressOnIcon?: boolean) => {
 }
 
 const setCorrectHeaderActiveItem = () => {
-  if (route.path.slice(1) === 'admin') return
-
-  if (route.path.slice(1) === 'personal-area') {
+  if (route.path.slice(1) === 'personal-area' || route.path.slice(1) === 'admin') {
     activeListItem.value = ''
     return
   }
@@ -95,13 +94,14 @@ const loginLogout = async () => {
     const res = await authStore.login({email: email.value, password: password.value})
     if (!res) {
       toggleModal(false)
-    }
-    if (wasPressOnIcon.value) {
-      await router.push('/personal-area')
-    }
 
-    if (userRole.value === 'admin') {
-      await router.push('/admin')
+      if (wasPressOnIcon.value) {
+        await router.push('/personal-area')
+      }
+
+      if (userRole.value === 'admin') {
+        await router.push('/admin')
+      }
     }
   }
 }
@@ -124,12 +124,6 @@ watch(
 onMounted(() => {
   setCorrectHeaderActiveItem()
 })
-
-const openMainPage = () => {
-  if( userRole.value !== 'admin' ) {
-    openPage('/')
-  }
-}
 </script>
 
 <template>
@@ -143,7 +137,7 @@ const openMainPage = () => {
           src="../assets/svg/logo.svg"
           alt="logo"
           class="header__logo"
-          @click="openMainPage"
+          @click="openPage('/')"
       />
 
       <nav

@@ -1,24 +1,26 @@
 <script setup lang="ts">
-
-import {useAuthStore} from "~/store/auth";
+import { useAuthStore } from "~/store/auth";
 
 import PlantsAdmin from "~/components/admin/PlantsAdmin.vue";
 import PlantsCareAdmin from "~/components/admin/PlantsCareAdmin.vue";
 import BlogsAdmin from "~/components/admin/BlogsAdmin.vue";
+import { usePlantsStore } from "~/store/plants";
 
 definePageMeta({
   layout: 'admin'
 })
 
+const authStore = useAuthStore()
+const {isAuth, userRole} = storeToRefs(authStore)
+
+const plantsStore = usePlantsStore()
+
+const router = useRouter()
+
 const breadCrumbs = ['Plants', 'Plant Care', 'Blogs']
 const selectedBreadCrumb = ref('Plants')
 
 const setSelectedBreadCrumb = (breadCrumb: string) => selectedBreadCrumb.value = breadCrumb
-
-const authStore = useAuthStore()
-const {isAuth, userRole} = storeToRefs(authStore)
-
-const router = useRouter()
 
 const checkIfUserAuthorised = () => {
   if (!isAuth.value || userRole.value !== 'admin') {
@@ -31,7 +33,10 @@ watch(() => [userRole.value, isAuth.value],
       checkIfUserAuthorised()
     })
 
-onMounted(() => checkIfUserAuthorised())
+onMounted(async () => {
+  await plantsStore.removeAllFilters()
+  checkIfUserAuthorised()
+})
 
 </script>
 
