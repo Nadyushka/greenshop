@@ -9,8 +9,8 @@ const {plants} = storeToRefs(plantsStore)
 
 const emit = defineEmits<{ (emit: 'close-modal'): void }>()
 
-const props = defineProps<{ id: string | null }>()
-const { id } = toRefs(props)
+const props = defineProps<{ id: string | null | undefined}>()
+const {id} = toRefs(props)
 
 const {
   handleSubmit,
@@ -39,23 +39,20 @@ const onSubmit = handleSubmit(async formValues => {
 
       const preparedFormData = {
         ...formValues,
-        addedToCart: formValues.addedToCart,
-        saved: formValues.saved,
-        id: selectedPlant.value.id?? undefined,
+        id: id.value ?? undefined,
         size: formValues.size.toLowerCase(),
         price: formValues.price && +formValues.price,
         discount: formValues.discount ? +formValues.discount : undefined,
-        img: formValues.img,
       } as PlantType
 
-      if (selectedPlant.value.id) {
+      if (id.value) {
         await plantsStore.savePlantChanges(preparedFormData)
       } else {
         await plantsStore.addPlant(preparedFormData)
       }
 
       emit('close-modal')
-    }
+    }, error => console.error(error)
 )
 
 const categories = ["House Plants", "Potter Plants", "Seeds", "Small Plants", "Big Plants", "Succulents", "Trerrariums"]
@@ -84,15 +81,15 @@ onMounted(() => {
     selectedPlant.value = plants.value.find(plant => plant.id === id.value)!
 
     setValues({
-      'title': selectedPlant.value.title,
-      'price': selectedPlant.value.price,
-      'discount': selectedPlant.value.discount,
-      'addedToCart': selectedPlant.value.addedToCart,
-      'saved': selectedPlant.value.saved,
-      'img': selectedPlant.value.img,
-      'type': selectedPlant.value.type,
-      'size': selectedPlant.value.size,
-      'rate': selectedPlant.value.rate,
+      title: selectedPlant.value.title,
+      price: selectedPlant.value.price,
+      discount: selectedPlant.value.discount,
+      addedToCart: selectedPlant.value.addedToCart,
+      saved: selectedPlant.value.saved,
+      img: selectedPlant.value.img,
+      type: selectedPlant.value.type,
+      size: selectedPlant.value.size,
+      rate: selectedPlant.value.rate,
     })
   }
 })
@@ -101,114 +98,119 @@ onMounted(() => {
 <template>
   <div class="plant">
     <div class="plant__modal-overlay">
-      <form @submit.prevent="onSubmit" class="plant__modal-body">
-        <div class="plant__modal-close" @click="closeModal">
-          <img src="@/assets/svg/close-icon.svg" class="plant__modal-close-icon"/>
-        </div>
+      <div class="plant__modal-body">
+        <form @submit.prevent="onSubmit" class="plant__modal-form">
 
-        <div class="plant__row">
-          <div>
-            <div class="plant__label">Title</div>
-            <input
-                v-model="title.value.value"
-                class="plant__input"
-                :class="{
+          <div class="plant__modal-close" @click="closeModal">
+            <img src="@/assets/svg/close-icon.svg" class="plant__modal-close-icon"/>
+          </div>
+
+          <div class="plant__row">
+            <div>
+              <div class="plant__label">Title</div>
+              <input
+                  v-model="title.value.value"
+                  class="plant__input"
+                  :class="{
                   'plant__input_error': errors.title
             }"
-            />
-            <div v-if="errors.title" class="plant__error">{{ errors.title }}</div>
+              />
+              <div v-if="errors.title" class="plant__error">{{ errors.title }}</div>
+            </div>
           </div>
-        </div>
 
-        <div class="plant__row">
-          <div>
-            <div class="plant__label">Price</div>
-            <input
-                v-model="price.value.value"
-                class="plant__input"
-                :class="{
-                  'plant__input_error': errors.price
-            }"
-            />
-            <div v-if="errors.price" class="plant__error"> {{ errors.price }}</div>
+          <div class="plant__row">
+            <div>
+              <div class="plant__label">Price</div>
+              <input
+                  v-model="price.value.value"
+                  class="plant__input"
+                  :class="{
+                    'plant__input_error': errors.price
+                  }"
+              />
+              <div v-if="errors.price" class="plant__error"> {{ errors.price }}</div>
+            </div>
           </div>
-        </div>
 
-        <div class="plant__row">
-          <div>
-            <div class="plant__label">Discount</div>
-            <input v-model="discount.value.value" class="plant__input"/>
+          <div class="plant__row">
+            <div>
+              <div class="plant__label">Discount</div>
+              <input v-model="discount.value.value" class="plant__input"/>
+            </div>
           </div>
-        </div>
 
-        <div class="plant__row plant__row-type">
-          <div>
-            <div class="plant__label">Type</div>
-            <input
-                :value="type.value.value"
-                class="plant__input plant__input-type"
-                @focus="toggleCategoriesList(true)"
-                readonly
-                :class="{
+          <div class="plant__row plant__row-type">
+            <div>
+              <div class="plant__label">Type</div>
+              <input
+                  :value="type.value.value"
+                  class="plant__input plant__input-type"
+                  @focus="toggleCategoriesList(true)"
+                  readonly
+                  :class="{
                   'plant__input_error': errors.type
             }"
-            />
-            <div v-if="errors.type" class="plant__error"> {{ errors.type }}</div>
+              />
+              <div v-if="errors.type" class="plant__error"> {{ errors.type }}</div>
+            </div>
+
+            <ul class="plant__list" v-if="isCategoriesListVisible">
+              <li
+                  v-for="category in categories"
+                  :key="category"
+                  class="plant__item"
+                  @click="setCategory(category)"
+              > {{ category }}
+              </li>
+            </ul>
+
           </div>
 
-          <ul class="plant__list" v-if="isCategoriesListVisible">
-            <li
-                v-for="category in categories"
-                :key="category"
-                class="plant__item"
-                @click="setCategory(category)"
-            > {{ category }}
-            </li>
-          </ul>
-
-        </div>
-
-        <div class="plant__row plant__row-size">
-          <div>
-            <div class="plant__label">Size</div>
-            <input
-                :value="size.value.value"
-                readonly
-                class="plant__input"
-                @focus="toggleSizeList(true)"
-                :class="{
+          <div class="plant__row plant__row-size">
+            <div>
+              <div class="plant__label">Size</div>
+              <input
+                  :value="size.value.value"
+                  readonly
+                  class="plant__input"
+                  @focus="toggleSizeList(true)"
+                  :class="{
                   'plant__input_error': errors.size
             }"
-            />
-            <div v-if="errors.size" class="plant__error"> {{ errors.size }}</div>
+              />
+              <div v-if="errors.size" class="plant__error"> {{ errors.size }}</div>
+            </div>
+
+            <ul class="plant__list" v-if="isSizeListVisible">
+              <li
+                  v-for="size in ['Small', 'Medium', 'Large']"
+                  :key="size"
+                  class="plant__item"
+                  @click="setSize(size)"
+              > {{ size }}
+              </li>
+            </ul>
+
           </div>
 
-          <ul class="plant__list" v-if="isSizeListVisible">
-            <li
-                v-for="size in ['Small', 'Medium', 'Large']"
-                :key="size"
-                class="plant__item"
-                @click="setSize(size)"
-            > {{ size }}
-            </li>
-          </ul>
-
-        </div>
-
-        <div class="plant__row">
-          <div>
-            <div class="plant__label">Rate</div>
-            <input v-model="rate.value.value" class="plant__input"/>
+          <div class="plant__row">
+            <div>
+              <div class="plant__label">Rate</div>
+              <input v-model="rate.value.value" class="plant__input"/>
+            </div>
           </div>
-        </div>
 
-        <NButton
-            attr-type="submit"
-            type="submit"
-            btn-title="Save"/>
+          <NButton
+              attr-type="submit"
+              type="submit"
+              btn-title="Save"/>
 
-      </form>
-      <div class="plant_transparent"/>
+        </form>
+        <div class="bottom"/>
+      </div>
+
+
     </div>
   </div>
 </template>
@@ -237,12 +239,15 @@ onMounted(() => {
 .plant__modal-body {
   position: absolute;
   top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.plant__modal-form {
   background-color: #E5E5E5;
   display: inline-block;
   padding: 32px;
   border-radius: 14px;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
 .plant__modal-close {

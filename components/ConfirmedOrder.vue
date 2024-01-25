@@ -310,11 +310,6 @@ const data = ref([
   line-height: 22px;
 }
 
-.bottom {
-  height: 50px;
-  background-color: transparent;
-}
-
 .confirmed__img {
   width: 70px;
   height: 70px;

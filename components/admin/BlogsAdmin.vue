@@ -31,6 +31,16 @@ const closeModal = () => {
 }
 
 const addPost = () =>  isModalOpen.value = true
+
+watch(() => isModalOpen.value,
+    (value) => {
+      const body = document.body
+      if (value) {
+        body.style.overflow = 'hidden'
+      } else {
+        body.style.overflow = 'auto'
+      }
+    })
 </script>
 
 <template>

@@ -149,6 +149,7 @@ const editPost = () => {
 .blog__admin {
   display: flex;
   justify-content: space-between;
+  margin-top: auto;
 }
 
 .blog__admin img {

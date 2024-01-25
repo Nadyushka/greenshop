@@ -1,5 +1,5 @@
 export interface PlantType {
-    id: string | null
+    id: string | undefined | null
     title: string
     price: number | undefined
     discount: number | undefined
@@ -21,7 +21,7 @@ export interface ProductInCart {
 }
 
 export interface addressDataType {
-    id: string | null
+    id: string | undefined | null
     addressName: string
     streetHouse: string
     city: string
@@ -32,7 +32,7 @@ export interface addressDataType {
 }
 
 export interface PostType {
-    id: string
+    id: string | undefined | null
     date: string
     length: string
     title: string
@@ -42,7 +42,7 @@ export interface PostType {
 }
 
 export interface PostCareType {
-    id: string
+    id: string | undefined | null
     title: string
     text: string
     fullText: string

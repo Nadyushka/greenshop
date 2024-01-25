@@ -53,6 +53,11 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0;
 }
 
+.bottom {
+    height: 50px;
+    background-color: transparent;
+}
+
 @font-face {
     font-family: 'CeraPro-Black';
     src: url('@/assets/fonts/CeraPro-Black.ttf') format('truetype');

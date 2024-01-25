@@ -1,21 +1,12 @@
 <script setup lang="ts">
-
 import NButton from "~/components/ui/NButton.vue"
 import {usePlantsStore} from "~/store/plants";
 import PlantForm from "~/components/admin/PlantForm.vue";
-
 
 const plantsStore = usePlantsStore()
 const { shownPlants } = storeToRefs(plantsStore)
 
 const plantInput = ref('')
-
-watch(
-    () => plantInput.value,
-    () => {
-      isTouchedPlant.value = shownPlants.value.plants[0].id
-      plantsStore.$patch(state => state.plantTitle = plantInput.value)
-    })
 
 const editPlantId = ref()
 const isModalOpen = ref(false)
@@ -43,6 +34,13 @@ watch(() => isModalOpen.value,
       } else {
         body.style.overflow = 'auto'
       }
+    })
+
+watch(
+    () => plantInput.value,
+    () => {
+      isTouchedPlant.value = shownPlants.value.plants[0].id ?? undefined
+      plantsStore.$patch(state => state.plantTitle = plantInput.value)
     })
 </script>
 
