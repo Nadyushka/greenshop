@@ -41,7 +41,7 @@ const wasPressOnIcon = ref(false)
 
 const openPage = (page: string, pressOnIcon?: boolean) => {
 
-  pressOnIcon && (wasPressOnIcon.value = pressOnIcon)
+  wasPressOnIcon.value = pressOnIcon ?? false
 
   if (route.path != '/' && page == '/') {
     if (userRole.value != 'admin')

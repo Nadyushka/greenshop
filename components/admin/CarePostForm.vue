@@ -220,6 +220,6 @@ onMounted(() => {
 }
 
 .post__input_error {
-  border: 1px solid rgba(255, 0, 0, 0.6);
+  border: 1px solid rgba(255, 0, 0, 0.6) !important;
 }
 </style>

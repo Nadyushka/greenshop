@@ -2,69 +2,118 @@
 
 import NButton from "~/components/ui/NButton.vue";
 import {useAuthStore} from "~/store/auth";
+import {personalDataValidationSchema} from "~/utils/validation";
 
 const authStore = useAuthStore()
-const { users, isAuth, userRole } = storeToRefs(authStore)
+const {users, isAuth, userRole} = storeToRefs(authStore)
 
-const firstName = ref()
-const secondName = ref()
-const password = ref()
-const email = ref()
-const phone = ref()
+const {
+  handleSubmit,
+  errors,
+  values,
+  setValues,
+  setFieldValue,
+} = useForm({
+  validationSchema: personalDataValidationSchema,
+})
 
-onMounted(()=> {
-  if (  isAuth.value  && userRole.value === 'buyer') {
-    firstName.value = users.value.buyer.firstName
-    secondName.value = users.value.buyer.secondName
-    password.value = users.value.buyer.password
-    email.value = users.value.buyer.email
-    phone.value = users.value.buyer.phone
+const firstName = useField('firstName')
+const secondName = useField('secondName')
+const password = useField('password')
+const email = useField('email')
+const phone = useField('phone')
+
+
+onMounted(() => {
+  if (isAuth.value && userRole.value === 'buyer') {
+    setValues({
+      firstName: users.value.buyer.firstName,
+      secondName: users.value.buyer.secondName,
+      password: users.value.buyer.password,
+      email: users.value.buyer.email,
+      phone: users.value.buyer.phone,
+    })
   }
 })
 
-const savePersonalData = () => {
+const onSubmit = handleSubmit(async formValues => {
   const data = {
-    firstName: firstName.value,
-    secondName: secondName.value,
-    password: password.value,
-    email: email.value,
-    phone: phone.value,
+    firstName: formValues.firstName,
+    secondName: formValues.secondName,
+    password: formValues.password,
+    email: formValues.email,
+    phone: formValues.phone,
   }
   authStore.savePersonalData(data)
-}
+})
 </script>
 
 <template>
   <div class="personal">
-    <div class="personal__row">
+    <form @click.prevent="onSubmit" class="personal__row">
       <div>
         <div class="personal__label">First Name</div>
-        <input v-model="firstName" class="personal__input"/>
+        <input
+            v-model="firstName.value.value"
+            class="personal__input"
+            :class="{
+              'personal__input_error': errors.firstName
+            }"
+        />
+        <div v-if="errors.firstName" class="personal__error"> {{ errors.firstName }}</div>
       </div>
       <div>
         <div class="personal__label">Last Name</div>
-        <input v-model="secondName" class="personal__input"/>
+        <input
+            v-model="secondName.value.value"
+            class="personal__input"
+            :class="{
+              'personal__input_error': errors.secondName
+            }"
+        />
+        <div v-if="errors.secondName" class="personal__error"> {{ errors.secondName }}</div>
       </div>
       <div>
         <div class="personal__label">Phone</div>
-        <input v-model="phone" class="personal__input"/>
+        <input
+            v-model="phone.value.value"
+            class="personal__input"
+            :class="{
+              'personal__input_error': errors.phone
+            }"
+        />
+        <div v-if="errors.phone" class="personal__error"> {{ errors.phone }}</div>
       </div>
-    </div>
+    </form>
     <div class="personal__row">
       <div>
         <div class="personal__label">Email</div>
-        <input v-model="email" class="personal__input"/>
+        <input
+            v-model="email.value.value"
+            class="personal__input"
+            :class="{
+              'personal__input_error': errors.email
+            }"
+        />
+        <div v-if="errors.email" class="personal__error"> {{ errors.email }}</div>
       </div>
       <div>
         <div class="personal__label">Password</div>
-        <input v-model="password" class="personal__input"/>
+        <input
+            v-model="password.value.value"
+            class="personal__input"
+            :class="{
+              'personal__input_error': errors.password
+            }"
+        />
+        <div v-if="errors.password" class="personal__error"> {{ errors.password }}</div>
       </div>
     </div>
 
     <NButton
         btn-title="Save Personal Data"
-        style="margin-bottom: 16px"
-        @btn-click="savePersonalData"/>
+        class="personal__btn"
+        type="submit"/>
   </div>
 </template>
 
@@ -87,5 +136,25 @@ const savePersonalData = () => {
   border: 1px solid #EAEAEA;
   margin-bottom: 10px;
   width: 300px;
+  cursor: pointer;
+}
+
+.personal__input:focus {
+  border: 1px solid #46A358;
+}
+
+.personal__btn {
+  margin-top: 8px;
+  margin-bottom: 32px;
+}
+
+.personal__input_error {
+  border: 1px solid rgba(255, 0, 0, 0.6) !important;
+}
+
+.personal__error {
+  margin-top: -5px;
+  margin-bottom: 10px;
+  color: rgba(255, 0, 0, 0.6);
 }
 </style>

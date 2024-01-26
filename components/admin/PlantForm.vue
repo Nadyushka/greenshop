@@ -112,8 +112,8 @@ onMounted(() => {
                   v-model="title.value.value"
                   class="plant__input"
                   :class="{
-                  'plant__input_error': errors.title
-            }"
+                    'plant__input_error': errors.title
+                  }"
               />
               <div v-if="errors.title" class="plant__error">{{ errors.title }}</div>
             </div>
@@ -289,17 +289,12 @@ onMounted(() => {
   transition: 0.5s all;
 }
 
-.plant_transparent {
-  height: 50px;
-  background-color: transparent;
-}
-
 .plant__input:focus {
   border: 1px solid #46A358;
 }
 
 .plant__input_error {
-  border: 1px solid rgba(255, 0, 0, 0.6);;
+  border: 1px solid rgba(255, 0, 0, 0.6) !important;
 }
 
 .plant__input::placeholder {

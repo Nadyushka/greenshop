@@ -101,6 +101,12 @@ onMounted(async () => {
             type="number"/>
       </div>
 
+
+      <div class="filters__btns">
+        <button @click="clearFilters" class="filters__clear">Clear</button>
+        <NButton btn-title="Filter" @btn-click="setFilters"/>
+      </div>
+
       <h3 class="filters__title">Size</h3>
       <div
           v-for="(size,idx) in sizes"
@@ -119,13 +125,7 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="filters__btns">
-        <button @click="clearFilters" class="filters__clear">Clear</button>
-        <NButton btn-title="Filter" @btn-click="setFilters"/>
       </div>
-
-
-    </div>
     <img src="~/assets/png/sale_baner.png" alt="sale image"/>
   </div>
 </template>

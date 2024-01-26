@@ -52,6 +52,13 @@ const removeFromCart = () => {
 const increasePcsInCart = () => {
   plantsStore.changePcsInCart(plantId, true)
 }
+
+const router = useRouter()
+
+const buyNow = async () => {
+  await plantsStore.buyPlantNow(plantId, plantQuantity.value)
+  await router.push('/shop/cart')
+}
 </script>
 
 <template>
@@ -105,7 +112,7 @@ const increasePcsInCart = () => {
             <div class="order__pcs">{{ plantQuantity }}</div>
             <div class="order__more" @click="increasePcsInCart">+</div>
           </div>
-          <NButton btn-title="Buy NOW"/>
+          <NButton btn-title="Buy NOW" @click="buyNow"/>
           <button v-if="!plantData.addedToCart" class="plant__add-btn" @click="addToCart">Add to cart</button>
           <button v-if="plantData.addedToCart" class="plant__add-btn" @click="removeFromCart">Added to cart</button>
 

@@ -907,7 +907,32 @@ export const usePlantsStore = defineStore('plants', {
             this.productStatus = ''
             this.plantTitle = ''
             this.plantType = ''
-        }
+        },
 
+        async buyPlantNow(id: string, pcs: number) {
+            const selectedProduct = this.plants.find(plant => plant.id == id)!
+            this.plants = this.plants.map(plant => {
+                if (plant.id === id) {
+                    return {
+                        ...plant,
+                        addedToCart: true
+                    }
+                } else {
+                    return {
+                        ...plant,
+                        addedToCart: false
+                    }
+                }
+            })
+            const preparedProduct: ProductInCart = {
+                id: '1',
+                title: selectedProduct.title,
+                img: selectedProduct.img,
+                price: selectedProduct.price,
+                pcs: pcs,
+            }
+            this.cartItemsData = [preparedProduct]
+        }
     }
+
 })
