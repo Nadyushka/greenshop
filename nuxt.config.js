@@ -6,6 +6,8 @@ import * as path from "path";
 export default defineNuxtConfig({
     devtools: {enabled: true},
     app: {
+        baseURL: '/greenshop/',
+        buildAssetsDir: 'assets',
         head: {
             charset: 'utf-8',
             viewport: 'width=device-width, initial-scale=1',

@@ -18,7 +18,7 @@ const openPage = (page: string) => router.push(page)
     <div class="cart__bread-crumbs"><span>Home</span> / Shop / Shopping Cart</div>
 
     <div v-if="!cartItemsData.length" class="cart__empty-cart">
-      <img src="@/assets/png/empty-cart.png"/>
+      <img src="~/assets/png/empty-cart.png"/>
       <p>Your cart is empty</p>
       <NButton btn-title="Go shopping" @btn-click="openPage('/shop')"/>
     </div>

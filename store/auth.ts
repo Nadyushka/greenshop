@@ -5,6 +5,7 @@ import {PersonalAddressType} from "~/utils/types";
 export const useAuthStore = defineStore('auth', {
     state: () => {
         return {
+            baseURl: '',
             isAuth: false,
             userRole: null as null | 'admin' | 'buyer',
             authError: null as null | string,

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { useAuthStore } from "~/store/auth";
+import { useAuthStore } from "~/store/auth"
 
-import PlantsAdmin from "~/components/admin/PlantsAdmin.vue";
-import PlantsCareAdmin from "~/components/admin/PlantsCareAdmin.vue";
-import BlogsAdmin from "~/components/admin/BlogsAdmin.vue";
-import { usePlantsStore } from "~/store/plants";
+import PlantsAdmin from "~/components/admin/PlantsAdmin.vue"
+import PlantsCareAdmin from "~/components/admin/PlantsCareAdmin.vue"
+import BlogsAdmin from "~/components/admin/BlogsAdmin.vue"
+import { usePlantsStore } from "~/store/plants"
 
 definePageMeta({
   layout: 'admin'
