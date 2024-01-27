@@ -7,9 +7,11 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
+    "gh-pages": "^6.1.1",
     "nuxt": "^3.6.5",
     "vue": "^3.4.6",
     "vue-router": "^4.2.5"
@@ -18,6 +20,7 @@
     "@nuxt/image": "^1.2.0",
     "@pinia/nuxt": "^0.5.1",
     "@vee-validate/nuxt": "^4.12.4",
+    "@vee-validate/yup": "^4.12.4",
     "normalize.css": "^8.0.1",
     "pinia": "^2.1.7",
     "vee-validate": "^4.12.4",
