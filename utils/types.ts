@@ -48,3 +48,21 @@ export interface PostCareType {
     fullText: string
     img: string
 }
+
+export interface PersonalDataType {
+    firstName: string
+    secondName: string
+    password: string
+    email: string
+    phone: number
+}
+
+export interface PersonalAddressType {
+    id: string,
+    addressName: string
+    streetHouse: string
+    city: string
+    state: string
+    country: string
+    zip: string
+}

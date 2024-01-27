@@ -1,5 +1,6 @@
 import {defineStore} from 'pinia'
-import type {addressDataType} from "~/utils/types";
+import type {addressDataType, PersonalDataType} from "~/utils/types";
+import {PersonalAddressType} from "~/utils/types";
 
 export const useAuthStore = defineStore('auth', {
     state: () => {
@@ -66,13 +67,9 @@ export const useAuthStore = defineStore('auth', {
             this.userRole = null
         },
 
-        async savePersonalData(payload: {
-            firstName: string
-            secondName: string
-            password: string
-            email: string
-            phone: number
-        }) {
+        async savePersonalData(payload: PersonalDataType) {
+
+            console.log(payload)
             this.users = {
                 ...this.users,
                 buyer: {
@@ -117,15 +114,7 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
-        async addAddress(newAddress: {
-            id: string
-            addressName: string
-            streetHouse: string
-            city: string
-            state: string
-            country: string
-            zip: string
-        }) {
+        async addAddress(newAddress: PersonalAddressType) {
             this.users = {
                 ...this.users,
                 buyer: {

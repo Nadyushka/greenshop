@@ -1,8 +1,8 @@
 <script setup lang="ts">
-
-import NButton from "~/components/ui/NButton.vue";
-import {useAuthStore} from "~/store/auth";
-import {personalDataValidationSchema} from "~/utils/validation";
+import NButton from "~/components/ui/NButton.vue"
+import {useAuthStore} from "~/store/auth"
+import {personalDataValidationSchema} from "~/utils/validation"
+import type {PersonalDataType} from "~/utils/types"
 
 const authStore = useAuthStore()
 const {users, isAuth, userRole} = storeToRefs(authStore)
@@ -12,7 +12,6 @@ const {
   errors,
   values,
   setValues,
-  setFieldValue,
 } = useForm({
   validationSchema: personalDataValidationSchema,
 })
@@ -23,6 +22,18 @@ const password = useField('password')
 const email = useField('email')
 const phone = useField('phone')
 
+const onSubmit = handleSubmit(async formValues => {
+  debugger
+  const data: PersonalDataType = {
+    firstName: formValues.firstName,
+    secondName: formValues.secondName,
+    password: formValues.password,
+    email: formValues.email,
+    phone: formValues.phone,
+  }
+  debugger
+  await authStore.savePersonalData(data)
+}, error => console.error(error))
 
 onMounted(() => {
   if (isAuth.value && userRole.value === 'buyer') {
@@ -35,22 +46,11 @@ onMounted(() => {
     })
   }
 })
-
-const onSubmit = handleSubmit(async formValues => {
-  const data = {
-    firstName: formValues.firstName,
-    secondName: formValues.secondName,
-    password: formValues.password,
-    email: formValues.email,
-    phone: formValues.phone,
-  }
-  authStore.savePersonalData(data)
-})
 </script>
 
 <template>
-  <div class="personal">
-    <form @click.prevent="onSubmit" class="personal__row">
+  <form @submit.prevent="onSubmit" class="personal">
+    <div class="personal__row">
       <div>
         <div class="personal__label">First Name</div>
         <input
@@ -84,7 +84,7 @@ const onSubmit = handleSubmit(async formValues => {
         />
         <div v-if="errors.phone" class="personal__error"> {{ errors.phone }}</div>
       </div>
-    </form>
+    </div>
     <div class="personal__row">
       <div>
         <div class="personal__label">Email</div>
@@ -111,10 +111,11 @@ const onSubmit = handleSubmit(async formValues => {
     </div>
 
     <NButton
+        attr-type="submit"
         btn-title="Save Personal Data"
         class="personal__btn"
         type="submit"/>
-  </div>
+  </form>
 </template>
 
 <style scoped>

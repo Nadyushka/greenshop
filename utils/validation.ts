@@ -43,3 +43,12 @@ export const personalDataValidationSchema = yup.object().shape({
     phone: yup.number().typeError('Only numbers are allowed').required('Field is required'),
 })
 
+export const personalAddressValidationSchema = yup.object().shape({
+    addressName: yup.string().required('Field is required'),
+    streetHouse: yup.string().required('Field is required'),
+    city: yup.string().required('Field is required'),
+    state: yup.string().required('Field is required'),
+    country: yup.string().required('Field is required'),
+    zip: yup.number().typeError('Only numbers are allowed'),
+})
+
