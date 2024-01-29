@@ -35,7 +35,7 @@ const editPost = () => {
   <div class="blog" :class="{'blog-post_active': !shortForm}">
     <img
         v-if="shortForm"
-        :src="`${baseUrl}/assets/png/${img}`"
+        :src="`http://localhost:3000/_nuxt/assets/png/${img}`"
         class="blog__img" alt="blog img"
     />
     <div class="blog__wrapper">
