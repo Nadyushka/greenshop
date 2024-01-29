@@ -16,6 +16,8 @@ interface PropsType {
 }
 
 const plantsStore = usePlantsStore()
+const { baseUrl} = storeToRefs(plantsStore)
+
 const authStore = useAuthStore()
 const {isAuth, userRole} = storeToRefs(authStore)
 
@@ -80,7 +82,7 @@ const editPost = () => {
 
 <template>
   <div class="plant" :class="{ 'plant_selected': isTouched}">
-    <div class="plant__top" :style="{backgroundImage: `url(http://localhost:3000/_nuxt/assets/png/plants/${img})`}">
+    <div class="plant__top" :style="{backgroundImage: `url(${baseUrl}/assets/png/plants/${img})`}">
       <div class="plant__discount" v-if="discount"> {{ discount }}% OFF</div>
       <div class="plant__actions" :class="{'plant__actions_visible': isTouched}">
 
