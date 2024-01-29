@@ -75,7 +75,7 @@ const buyNow = async () => {
         <div class="plant__small-imgs">
           <img
               v-for="degree in degrees"
-              :src="`http://localhost:3000/_nuxt/assets/png/plants/${plantData.img}`"
+              :src="`/plants/${plantData.img}`"
               alt="plant image"
               class="plant__small-img"
               :class="{
@@ -86,7 +86,7 @@ const buyNow = async () => {
         </div>
         <img
             class="plant__main-img"
-            :src="`http://localhost:3000/_nuxt/assets/png/plants/${plantData.img}`"
+            :src="`/plants/${plantData.img}`"
             :style="{
                transform: `rotate(${mainImg})`
         }"
@@ -99,8 +99,8 @@ const buyNow = async () => {
           <div class="plant__price">${{ plantData.price }},00</div>
           <div class="plant__rate" v-if="plantData.rate">
             <div v-for="star in stars">
-              <img v-if="star <= plantData.rate" src="@/assets/svg/filled-star.svg"/>
-              <img v-else src="@/assets/svg/empty-star.svg"/>
+              <img v-if="star <= plantData.rate" src="/svg/filled-star.svg"/>
+              <img v-else src="/svg/empty-star.svg"/>
             </div>
           </div>
         </div>

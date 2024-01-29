@@ -630,10 +630,6 @@ export const usePlantsStore = defineStore('plants', {
                     productStatus: 'All Plants',
                 },
             ] as PlantType[],
-            baseUrl: process.env.NODE_ENV === 'development'
-                ? 'http://localhost:3000/_nuxt/'
-                : 'https://greenshop-nadyushka.vercel.app/_nuxt/'
-            ,
         }
     },
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import LoginLogout from '~/assets/svg/LoginLogout.svg'
-import ArrowIcon from '~/assets/svg/arrow-icon.svg'
+import LoginLogout from 'public/svg/LoginLogout.svg'
+import ArrowIcon from 'public/svg/arrow-icon.svg'
 
 interface PropsType {
   leftIcon?: 'login' | 'logout'

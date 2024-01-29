@@ -166,7 +166,7 @@ onMounted(() => {
              'header__wrapper-admin': userRole === 'admin'
            }">
       <img
-          src="@/assets/svg/logo.svg"
+          src="/svg/logo.svg"
           alt="logo"
           class="header__logo"
           @click="openPage( ERouteName.PAGE_HOME)"
@@ -192,13 +192,13 @@ onMounted(() => {
             v-if="userRole !== 'admin'"
             class="header__cart"
             @click="openPage(ERouteName.PAGE_SHOP_CART)">
-          <img src="@/assets/svg/cart-icon.svg" alt="cart icon"/>
+          <img src="/svg/cart-icon.svg" alt="cart icon"/>
           <div class="header__purchases"> {{ cartItemsData.length }}</div>
         </div>
         <img
             v-if="userRole !== 'admin'"
             class="header__home"
-            src="@/assets/svg/home-icon.svg"
+            src="/svg/home-icon.svg"
             alt="home icon"
             @click="openPage(ERouteName.PAGE_PERSONAL_AREA, true)"
         />
@@ -212,7 +212,7 @@ onMounted(() => {
     <div class="modal" v-if="isLoginModalOpen && !isAuth">
       <div class="modal__body">
         <img
-            src="@/assets/svg/close-icon.svg"
+            src="/svg/close-icon.svg"
             class="modal__close"
             @click="toggleModal(false)"/>
         <h2 class="modal__title">Login</h2>
