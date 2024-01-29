@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import NButton from "~/components/ui/NButton.vue"
-import {usePlantsStore} from "~/store/plants";
-import {ERouteName} from "~/shared/routes";
+import { usePlantsStore } from "~/store/plants"
+import { ERouteName } from "~/shared/routes"
 
 interface PropsType {
   title: string
@@ -14,7 +14,7 @@ interface PropsType {
 }
 
 const props = defineProps<PropsType>()
-const {title, text, id, shortForm, fullText, img, adminMode} = toRefs(props)
+const { title, text, id, shortForm, fullText, img, adminMode } = toRefs(props)
 
 const router = useRouter()
 

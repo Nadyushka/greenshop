@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {usePlantsStore} from "~/store/plants";
-import {useAuthStore} from "~/store/auth";
-import {ERouteName} from "~/shared/routes";
+import { usePlantsStore } from "~/store/plants"
+import { useAuthStore } from "~/store/auth"
+import { ERouteName } from "~/shared/routes"
 
 interface PropsType {
   img: string
