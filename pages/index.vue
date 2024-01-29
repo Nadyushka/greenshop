@@ -41,7 +41,7 @@ const setSelectedType = async (type: string) => {
             btn-title="SHOP NOW"
             @btn-click="openShopPage"/>
       </div>
-      <img src="@/assets/png/main_intro.png" alt="plant picture"/>
+      <img src="/png/main_intro.png" alt="plant picture"/>
     </section>
     <section class="main__shop">
       <div class="main__shop-wrapper">

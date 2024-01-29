@@ -42,7 +42,7 @@ const aboutUsItems: { title: string, text: string, img: string }[] = [
       </div>
     </div>
     <div class="footer__contact">
-      <img src="@/assets/svg/logo.svg" class="footer__logo"/>
+      <img src="/svg/logo.svg" class="footer__logo"/>
       <div class="footer__address">70 West Buckingham Ave. Farmingdale, NY 11735</div>
       <div class="footer__email">contact@greenshop.com</div>
       <div class="footer__phone">+88 01911 717 490</div>
@@ -82,16 +82,16 @@ const aboutUsItems: { title: string, text: string, img: string }[] = [
         <div class="footer__media">
           <h4 class="footer__media-title">Social Media</h4>
           <div class="footer__media-list">
-            <img class="footer__media-item" alt="facebook" src="../assets/svg/facebook.svg"/>
-            <img class="footer__media-item" alt="instagram" src="../assets/svg/instagram.svg"/>
-            <img class="footer__media-item" alt="twitter" src="../assets/svg/twitter.svg"/>
-            <img class="footer__media-item" alt="linkedin" src="../assets/svg/linkedin.svg"/>
-            <img class="footer__media-item" alt="youtube" src="../assets/svg/youtube.svg"/>
+            <img class="footer__media-item" alt="facebook" src="/svg/facebook.svg"/>
+            <img class="footer__media-item" alt="instagram" src="/svg/instagram.svg"/>
+            <img class="footer__media-item" alt="twitter" src="/svg/twitter.svg"/>
+            <img class="footer__media-item" alt="linkedin" src="/svg/linkedin.svg"/>
+            <img class="footer__media-item" alt="youtube" src="/svg/youtube.svg"/>
           </div>
         </div>
         <div class="footer__payment">
           <h4 class="footer__payment-title">We accept</h4>
-          <img src="../assets/png/payments.png"/>
+          <img src="/png/payments.png"/>
         </div>
       </div>
     </div>
@@ -168,15 +168,15 @@ const aboutUsItems: { title: string, text: string, img: string }[] = [
 }
 
 .footer__address {
-  background-image: url('@/assets/svg/address-icon.svg');
+  background-image: url('/svg/address-icon.svg');
 }
 
 .footer__email {
-  background-image: url('@/assets/svg/email-icon.svg');
+  background-image: url('/svg/email-icon.svg');
 }
 
 .footer__phone {
-  background-image: url('@/assets/svg/phone-icon.svg');
+  background-image: url('/svg/phone-icon.svg');
 }
 
 .footer__nav {

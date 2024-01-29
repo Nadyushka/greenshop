@@ -126,7 +126,7 @@ onMounted(async () => {
       </div>
 
       </div>
-    <img src="~/assets/png/sale_baner.png" alt="sale image"/>
+    <img src="/png/sale_baner.png" alt="sale image"/>
   </div>
 </template>
 

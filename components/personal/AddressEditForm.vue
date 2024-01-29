@@ -57,7 +57,7 @@ const closeModal = () => {
     <div class="addresses__modal-overlay">
       <form @submit.prevent="onSubmit" class="addresses__modal-body">
         <div class="addresses__modal-close" @click="closeModal">
-          <img src="../../assets/svg/close-icon.svg" class="addresses__modal-close-icon"/>
+          <img src="../../public/svg/close-icon.svg" class="addresses__modal-close-icon"/>
         </div>
 
         <div class="personal__row">

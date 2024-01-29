@@ -25,7 +25,7 @@ const openPage = (page: string) => router.push(page)
     <div class="cart__bread-crumbs"><span>Home</span> / Shop / Shopping Cart</div>
 
     <div v-if="!cartItemsData.length" class="cart__empty-cart">
-      <img src="http://localhost:3000/_nuxt/assets/png/empty-cart.png"/>
+      <img src="/empty-cart.png"/>
       <p>Your cart is empty</p>
       <NButton btn-title="Go shopping" @btn-click="openPage('/shop')"/>
     </div>
@@ -44,7 +44,7 @@ const openPage = (page: string) => router.push(page)
             v-for="product in cartItemsData"
         >
           <div class="cart__product">
-            <img class="cart__img" :src="`http://localhost:3000/_nuxt/assets/png/plants/${product.img}`"/>
+            <img class="cart__img" :src="`/plants/${product.img}`"/>
             <div class="cart__data">
               <div class="cart__title">{{ product.title }}</div>
               <div class="cart__sku">SKU: <span> {{ product.id }} </span></div>
@@ -60,7 +60,7 @@ const openPage = (page: string) => router.push(page)
           <img
               @click="plantsStore.deleteProductFromCart(product.id)"
               class="cart__delete cart__delete-item"
-              src="@/assets/svg/delete-icon.svg"/>
+              src="/svg/delete-icon.svg"/>
         </div>
       </div>
 

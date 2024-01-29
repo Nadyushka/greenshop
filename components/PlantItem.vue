@@ -82,7 +82,7 @@ const editPost = () => {
 
 <template>
   <div class="plant" :class="{ 'plant_selected': isTouched}">
-    <div class="plant__top" :style="{backgroundImage: `url(@/assets/png/plants/${img})`}">
+    <div class="plant__top" :style="{backgroundImage: `url(/plants/${img})`}">
       <div class="plant__discount" v-if="discount"> {{ discount }}% OFF</div>
       <div class="plant__actions" :class="{'plant__actions_visible': isTouched}">
 
@@ -146,8 +146,8 @@ const editPost = () => {
         </div>
 
         <div v-if="adminMode" class="plant__admin">
-          <img src="@/assets/svg/delete-icon.svg" @click="deletePost"/>
-          <img src="@/assets/svg/edit-icon.svg" @click="editPost"/>
+          <img src="/svg/delete-icon.svg" @click="deletePost"/>
+          <img src="/svg/edit-icon.svg" @click="editPost"/>
         </div>
 
       </div>
