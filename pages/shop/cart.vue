@@ -2,6 +2,13 @@
 import NButton from "~/components/ui/NButton.vue";
 import RelatedProducts from "~/components/RelatedProducts.vue";
 import {usePlantsStore} from "~/store/plants";
+import {ERouteName} from "~/shared/routes";
+
+definePageMeta({
+  name: ERouteName.PAGE_SHOP_CART,
+  middleware: ['auth'],
+  layout: "default",
+})
 
 const plantsStore = usePlantsStore()
 const {cartItemsData} = storeToRefs(plantsStore)

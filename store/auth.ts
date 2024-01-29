@@ -47,14 +47,30 @@ export const useAuthStore = defineStore('auth', {
     },
 
     actions: {
+        async me() {
+            const role = localStorage.getItem('role')
+            const isAuth = localStorage.getItem('isAuth')
+
+            if (role && isAuth) {
+                this.isAuth = JSON.parse(isAuth)
+                this.userRole = role
+            }
+
+
+        },
+
         async login(payload: { email: string, password: string }) {
             if (payload.email === this.users.admin.email && payload.password === this.users.admin.password) {
+                localStorage.setItem('isAuth', 'true')
+                localStorage.setItem('role', 'admin')
                 this.isAuth = true
                 this.userRole = 'admin'
                 return
             } else if (payload.email === this.users.buyer.email && payload.password === this.users.buyer.password) {
                 this.isAuth = true
                 this.userRole = 'buyer'
+                localStorage.setItem('isAuth', 'true')
+                localStorage.setItem('role', 'buyer')
                 return
             } else {
                 this.authError = 'There is no user with such email and password combination'
@@ -65,11 +81,12 @@ export const useAuthStore = defineStore('auth', {
         async logout() {
             this.isAuth = false
             this.userRole = null
+            localStorage.removeItem('isAuth')
+            localStorage.removeItem('role')
         },
 
         async savePersonalData(payload: PersonalDataType) {
 
-            console.log(payload)
             this.users = {
                 ...this.users,
                 buyer: {
@@ -124,7 +141,7 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
-        async setSelectedAddressId (id: string) {
+        async setSelectedAddressId(id: string) {
             this.selectedAddressId = id
         }
     }

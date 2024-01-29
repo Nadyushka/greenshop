@@ -1,8 +1,14 @@
 <script setup lang="ts">
-
 import NButton from "~/components/ui/NButton.vue"
 import {usePlantsStore} from "~/store/plants";
 import {useAuthStore} from "~/store/auth";
+import {ERouteName} from "~/shared/routes";
+
+definePageMeta({
+  name: ERouteName.PAGE_SHOP_ID,
+  middleware: ['auth'],
+  layout: "default",
+})
 
 const plantsStore = usePlantsStore()
 const {cartItemsData} = storeToRefs(plantsStore)

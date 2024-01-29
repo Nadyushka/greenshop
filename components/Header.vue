@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import NButton from "~/components/ui/NButton.vue"
-import {useAuthStore} from "~/store/auth";
-import {usePlantsStore} from "~/store/plants";
-import {storeToRefs} from "pinia";
+import {useAuthStore} from "~/store/auth"
+import {usePlantsStore} from "~/store/plants"
+import {storeToRefs} from "pinia"
+import {ERouteName} from "~/shared/routes"
 
 const authStore = useAuthStore()
 const {isAuth, userRole, authError} = storeToRefs(authStore)
 
 const plantStore = usePlantsStore()
-const {cartItemsData} = storeToRefs(plantStore)
+const { cartItemsData } = storeToRefs(plantStore)
 
 const route = useRoute()
 const router = useRouter()
@@ -27,13 +28,24 @@ const password = ref('buyer123')
 const loginBtnData = computed<'Login' | 'Logout'>(() => !isAuth.value ? 'Login' : 'Logout')
 
 const linkTransformer = (link: string) => {
+  activeListItem.value = link
+
   if (link === 'Home') {
-    activeListItem.value = 'Home'
-    router.push('/')
+    router.push({
+      name: ERouteName.PAGE_HOME
+    })
   } else if (link === 'Plant Care') {
-    router.push('/plant-care')
-  } else {
-    router.push(`/${link.toLowerCase()}`)
+    router.push({
+      name: ERouteName.PAGE_PLANT_CARE,
+    })
+  } else if (link === 'Shop') {
+    router.push({
+      name: ERouteName.PAGE_SHOP,
+    })
+  } else if (link === 'Blogs') {
+    router.push({
+      name: ERouteName.PAGE_BLOGS,
+    })
   }
 }
 
@@ -43,19 +55,28 @@ const openPage = (page: string, pressOnIcon?: boolean) => {
 
   wasPressOnIcon.value = pressOnIcon ?? false
 
-  if (route.path != '/' && page == '/') {
+  if (route.path != ERouteName.PAGE_HOME && page == ERouteName.PAGE_HOME) {
     if (userRole.value != 'admin')
-      router.push('/')
-  } else if (page == '/personal-area') {
+      router.push({
+        name: ERouteName.PAGE_HOME,
+      })
+
+  } else if (page == ERouteName.PAGE_PERSONAL_AREA) {
 
     if (isAuth.value && userRole.value === 'buyer') {
-      router.push('/personal-area')
+      router.push({
+        name: ERouteName.PAGE_PERSONAL_AREA,
+      })
     } else {
       toggleModal(true)
     }
-  } else {
-    router.push(page)
+
+  } else if (page == ERouteName.PAGE_SHOP_CART) {
+    router.push({
+      name: ERouteName.PAGE_SHOP_CART,
+    })
   }
+
 }
 
 const setCorrectHeaderActiveItem = () => {
@@ -87,8 +108,10 @@ const changeRole = (role: string) => {
 const loginLogout = async () => {
   if (isAuth.value) {
     await authStore.logout()
-    if (route.path === '/personal-area') {
-      await router.push('/')
+    if (route.path === ERouteName.PAGE_PERSONAL_AREA || route.path === ERouteName.PAGE_ADMIN) {
+      await router.push({
+        name: ERouteName.PAGE_HOME,
+      })
     }
   } else {
     const res = await authStore.login({email: email.value, password: password.value})
@@ -96,11 +119,15 @@ const loginLogout = async () => {
       toggleModal(false)
 
       if (wasPressOnIcon.value) {
-        await router.push('/personal-area')
+        await router.push({
+          name: ERouteName.PAGE_PERSONAL_AREA,
+        })
       }
 
       if (userRole.value === 'admin') {
-        await router.push('/admin')
+        await router.push({
+          name: ERouteName.PAGE_ADMIN,
+        })
       }
     }
   }
@@ -137,7 +164,7 @@ onMounted(() => {
           src="../assets/svg/logo.svg"
           alt="logo"
           class="header__logo"
-          @click="openPage('/')"
+          @click="openPage( ERouteName.PAGE_HOME)"
       />
 
       <nav
@@ -159,7 +186,7 @@ onMounted(() => {
         <div
             v-if="userRole !== 'admin'"
             class="header__cart"
-            @click="openPage('/shop/cart')">
+            @click="openPage(ERouteName.PAGE_SHOP_CART)">
           <img src="../assets/svg/cart-icon.svg" alt="cart icon"/>
           <div class="header__purchases"> {{ cartItemsData.length }}</div>
         </div>
@@ -168,10 +195,10 @@ onMounted(() => {
             class="header__home"
             src="../assets/svg/home-icon.svg"
             alt="home icon"
-            @click="openPage('/personal-area', true)"
+            @click="openPage(ERouteName.PAGE_PERSONAL_AREA, true)"
         />
         <NButton :btn-title="loginBtnData"
-                 :left-icon="loginBtnData.toLocaleLowerCase()"
+                 :left-icon="loginBtnData.toLowerCase()"
                  @btn-click="openModalAndLogout"/>
       </div>
     </div>
