@@ -37,6 +37,8 @@ const deletePost = async () => {
 const editPost = () => {
   emit('edit-post', id.value)
 }
+
+onMounted(()=> console.log(process.env))
 </script>
 
 <template>
@@ -46,7 +48,7 @@ const editPost = () => {
       :class="{'care-block__full-text': !shortForm}">
     <div class="care-block__wrapper">
       <img src="../assets/png/main_plant-care.png" class="care-block__left-img"/>
-      <img :src="`${baseUrl}/assets/png/${img}`" class="care-block__plant-img"/>
+      <img :src="`http://localhost:3000/_nuxt/assets/png/${img}`" class="care-block__plant-img"/>
       <div
           class="care-block__data"
           :class="{'care-block__data__full-text': !shortForm}"
