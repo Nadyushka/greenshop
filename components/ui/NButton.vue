@@ -8,7 +8,7 @@ interface PropsType {
   btnTitle: string
 }
 
-const {leftIcon , rightIcon, btnTitle} = defineProps<PropsType>()
+const { leftIcon , rightIcon, btnTitle } = defineProps<PropsType>()
 
 defineEmits<{ (emit: 'btnClick'): void }>()
 
@@ -22,17 +22,17 @@ defineEmits<{ (emit: 'btnClick'): void }>()
     <LoginLogout
         v-if="leftIcon"
         :style="{
-          transform: this.leftIcon === 'logout' ? 'scaleX(-1)' : 'none'
+          transform: leftIcon === 'logout' ? 'scaleX(-1)' : 'none'
         }"
         class="button__left-icon"
-        filled="none"/>
+        :filled="false"/>
 
     {{ btnTitle }}
 
     <ArrowIcon
         v-if="rightIcon === 'arrow'"
         class="button__right-icon"
-        filled="none"
+        :filled="false"
     />
 
   </button>
