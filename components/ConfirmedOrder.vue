@@ -25,9 +25,9 @@ const data = ref([
 <template>
   <div class="wrapper">
     <div class="confirmed">
-      <img src="@/assets/svg/close-icon.svg" class="confirmed__close" @click="closeModal"/>
+      <img src="/svg/close-icon.svg" class="confirmed__close" @click="closeModal"/>
       <div class="confirmed__head">
-        <img src="@/assets/svg/confirmed-order.svg" class="confirmed__head-img"/>
+        <img src="/svg/confirmed-order.svg" class="confirmed__head-img"/>
         <h2 class="confirmed__title">Your order has been received</h2>
       </div>
 
@@ -53,7 +53,7 @@ const data = ref([
             v-for="product in cartItemsData"
         >
           <div class="confirmed__product">
-            <img :src="`http://localhost:3000/_nuxt/assets/png/plants/${product.img}`" class="confirmed__img"/>
+            <img :src="`/png/plants/${product.img}`" class="confirmed__img"/>
             <div class="checkout__data">
               <div class="confirmed__item-title">{{ product.title }}</div>
               <div class="confirmed__sku">SKU: <span> {{ product.id }} </span></div>

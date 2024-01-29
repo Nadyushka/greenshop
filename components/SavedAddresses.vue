@@ -44,8 +44,8 @@ const fullAddress = (address: addressDataType) => {
         v-if="props.deleteEdit"
         class="addresses__actions"
     >
-      <img src="@/assets/svg/delete-icon.svg" @click="deleteAddress(address.id)" alt="delete icon"/>
-      <img src="@/assets/svg/edit-icon.svg" @click="openModal(address.id)" alt="edit icon"/>
+      <img src="/svg/delete-icon.svg" @click="deleteAddress(address.id)" alt="delete icon"/>
+      <img src="/svg/edit-icon.svg" @click="openModal(address.id)" alt="edit icon"/>
     </div>
 
     <div
@@ -53,8 +53,8 @@ const fullAddress = (address: addressDataType) => {
         class="addresses__actions"
         @click="setSelectedAddress(address.addressName)"
     >
-      <img v-if="selectedAddress !== address.addressName" src="@/assets/svg/radio-icon.svg" alt/>
-      <img v-else src="@/assets/svg/radio-icon_active.svg" alt/>
+      <img v-if="selectedAddress !== address.addressName" src="/svg/radio-icon.svg" alt/>
+      <img v-else src="/svg/radio-icon_active.svg" alt/>
     </div>
 
     <div class="addresses__name"> {{ address.addressName }}</div>
