@@ -82,7 +82,7 @@ const editPost = () => {
 
 <template>
   <div class="plant" :class="{ 'plant_selected': isTouched}">
-    <div class="plant__top" :style="{backgroundImage: `url(http://localhost:3000/_nuxt/assets/png/plants/${img})`}">
+    <div class="plant__top" :style="{backgroundImage: `url(https://greenshop-nuxt.vercel.app/assets/png/plants/${img})`}">
       <div class="plant__discount" v-if="discount"> {{ discount }}% OFF</div>
       <div class="plant__actions" :class="{'plant__actions_visible': isTouched}">
 
