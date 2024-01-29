@@ -304,7 +304,7 @@ const imageAddressUrl = computed(() => {
   color: #3D3D3D;
   margin-bottom: 10px;
   padding-right: 14px;
-  background-image: url('@/assets/svg/star-icon.svg');
+  background-image: url('/svg/star-icon.svg');
   background-repeat: no-repeat;
   background-position: right top;
   display: inline-block;
