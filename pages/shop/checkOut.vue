@@ -102,9 +102,9 @@ watch(() => isAuth.value,
 
 const imageAddressUrl = computed(() => {
   if (selectedAddress.value === 'Use another address') {
-    return 'http://localhost:3000/_nuxt/assets/svg/radio-icon_active.svg'
+    return '/svg/radio-icon_active.svg'
   } else {
-    return 'http://localhost:3000/_nuxt/assets/svg/radio-icon.svg'
+    return '/svg/radio-icon.svg'
   }
 })
 </script>
