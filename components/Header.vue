@@ -6,10 +6,10 @@ import {storeToRefs} from "pinia"
 import {ERouteName} from "~/shared/routes"
 
 const authStore = useAuthStore()
-const {isAuth, userRole, authError} = storeToRefs(authStore)
+const {isAuth, authError} = storeToRefs(authStore)
 
 const plantStore = usePlantsStore()
-const { cartItemsData } = storeToRefs(plantStore)
+const {cartItemsData} = storeToRefs(plantStore)
 
 const route = useRoute()
 const router = useRouter()
@@ -17,7 +17,7 @@ const router = useRouter()
 const isLoginModalOpen = ref<boolean>(false)
 
 const headerListItems = ['Home', 'Shop', 'Plant Care', 'Blogs']
-const activeListItem = ref('Home')
+const activeListItem = ref('')
 
 const roles = ['Buyer', 'Admin']
 const selectedRole = ref('Buyer')
@@ -25,7 +25,9 @@ const selectedRole = ref('Buyer')
 const email = ref('buyer@gmail.com')
 const password = ref('buyer123')
 
-const loginBtnData = computed<'Login' | 'Logout'>(() => !isAuth.value ? 'Login' : 'Logout')
+const userRole = useCookie('userRole')
+
+const loginBtnData = computed<'Login' | 'Logout'>(() => !userRole.value ? 'Login' : 'Logout')
 
 const linkTransformer = (link: string) => {
   activeListItem.value = link
@@ -80,12 +82,18 @@ const openPage = (page: string, pressOnIcon?: boolean) => {
 }
 
 const setCorrectHeaderActiveItem = () => {
-  if (route.path.slice(1) === 'personal-area' || route.path.slice(1) === 'admin') {
+  const routeWithoutDash = route.path.slice(1)
+
+  if (routeWithoutDash === 'personal-area' || routeWithoutDash === 'admin') {
     activeListItem.value = ''
     return
   }
+  if (!routeWithoutDash) {
+    activeListItem.value = 'Home'
+    return
+  }
 
-  if (activeListItem.value.toLowerCase() !== route.path.slice(1).toLowerCase()) {
+  if (activeListItem.value.toLowerCase() !== routeWithoutDash.toLowerCase()) {
     const activeHeaderItem = [...headerListItems].filter(item => item.includes(route.path.slice(2, 4)))
     activeListItem.value = activeHeaderItem[0]
   }
@@ -107,12 +115,9 @@ const changeRole = (role: string) => {
 
 const loginLogout = async () => {
   if (isAuth.value) {
+
     await authStore.logout()
-    if (route.path === ERouteName.PAGE_PERSONAL_AREA || route.path === ERouteName.PAGE_ADMIN) {
-      await router.push({
-        name: ERouteName.PAGE_HOME,
-      })
-    }
+
   } else {
     const res = await authStore.login({email: email.value, password: password.value})
     if (!res) {

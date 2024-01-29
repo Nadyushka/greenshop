@@ -1,7 +1,4 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
-
-import {resolve} from "path"
-import * as path from "path";
+import { resolve } from "path"
 
 export default defineNuxtConfig({
     devtools: {enabled: true},
@@ -22,7 +19,7 @@ export default defineNuxtConfig({
         '@': resolve(__dirname, './'),
     },
     css: [
-        "~/assets/css/main.css",
+        "~/assets/styles/main.scss",
         "normalize.css/normalize.css"
     ],
     router: {

@@ -5,11 +5,13 @@ import {ERouteName} from '~/shared/routes'
 
 export default defineNuxtRouteMiddleware((to) => {
     const authStore = useAuthStore()
-    const {isAuth, userRole} = storeToRefs(authStore)
+    const {isAuth} = storeToRefs(authStore)
 
-    console.log(to.name, isAuth.value )
+    const userRole = useCookie('userRole')
 
-    if (false) {
+    if (to.name === ERouteName.PAGE_PERSONAL_AREA
+        && !isAuth.value
+        && userRole.value !== 'buyer') {
 
         return navigateTo({name: ERouteName.PAGE_HOME})
     } else if (to.name === ERouteName.PAGE_ADMIN

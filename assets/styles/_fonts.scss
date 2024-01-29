@@ -1,0 +1,16 @@
+@mixin font($font-name, $font-style, $font-weight, $font-url) {
+  @font-face {
+    font-display: swap;
+    font-family: $font-name;
+    font-style: $font-style;
+    font-weight: $font-weight;
+    src: url($font-url) format('truetype');
+  }
+}
+
+@include font('CeraPro-Black', normal, 900, '~/assets/fonts/CeraPro-Black.ttf');
+@include font('CeraPro-Bold', normal, 700, '~/assets/fonts/CeraPro-Bold.ttf');
+@include font('CeraPro-Medium', normal, 500, '~/assets/fonts/CeraPro-Medium.ttf');
+@include font('CeraPro-Regular', normal, 400, '~/assets/fonts/CeraPro-Regular.ttf');
+@include font('CeraPro-Light', normal, 300, '~/assets/fonts/CeraPro-Regular.ttf');
+@include font('CeraPro-Thin', normal, 100, '~/assets/fonts/CeraPro-Regular.ttf');
