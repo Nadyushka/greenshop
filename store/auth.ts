@@ -42,14 +42,14 @@ export const useAuthStore = defineStore('auth', {
                         },
                     ],
                 }
-            }
+            },
         }
     },
 
     getters: {
         isAuth: (state) => {
             return !!state.userRole
-        }
+        },
     },
 
     actions: {
