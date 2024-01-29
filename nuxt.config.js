@@ -15,6 +15,9 @@ export default defineNuxtConfig({
         '@vueuse/nuxt',
         'nuxt-svgo'
     ],
+    alias: {
+        '@': resolve(__dirname, './'),
+    },
     css: [
         "~/assets/styles/main.scss",
         "normalize.css/normalize.css"
