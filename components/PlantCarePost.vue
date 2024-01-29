@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import NButton from "~/components/ui/NButton.vue"
-import {usePlantsStore} from "~/store/plants";
+import { usePlantsStore } from "~/store/plants"
+import { ERouteName } from "~/shared/routes"
 
 interface PropsType {
   title: string
@@ -17,11 +18,16 @@ const { title, text, id, shortForm, fullText, img, adminMode } = toRefs(props)
 
 const router = useRouter()
 
-const openPlantCarePost = () => router.push(`/plant-care/${id.value}`)
+const openPlantCarePost = () => router.push({
+  name: ERouteName.PAGE_PLANT_CARE_ID,
+  params: {
+    id: id.value
+  }
+})
 
 const plantsStore = usePlantsStore()
 
-const emit = defineEmits<{ (emit: 'edit-post', id: string): void}>()
+const emit = defineEmits<{ (emit: 'edit-post', id: string): void }>()
 
 const deletePost = async () => {
   await plantsStore.deleteCarePost(id.value)

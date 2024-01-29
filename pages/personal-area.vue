@@ -3,6 +3,13 @@
 import PersonalData from "~/components/personal/PersonalData.vue";
 import {useAuthStore} from "~/store/auth";
 import FavoritesPlants from "~/components/personal/FavoritesPlants.vue";
+import {ERouteName} from "~/shared/routes";
+
+definePageMeta({
+  name: ERouteName.PAGE_PERSONAL_AREA,
+  middleware: ['auth'],
+  layout: "default",
+})
 
 const breadCrumbs = ['Personal Data', 'Addresses', 'Wishlist']
 const selectedBreadCrumb = ref('Personal Data')
@@ -15,7 +22,7 @@ const {isAuth, userRole} = storeToRefs(authStore)
 const router = useRouter()
 
 const checkIfUserAuthorised = () => {
-  if (!isAuth.value || userRole.value !== 'buyer') {
+  if (!isAuth.value && userRole.value !== 'buyer') {
     router.push('/')
   }
 }
@@ -23,14 +30,13 @@ const checkIfUserAuthorised = () => {
 watch(() => [userRole.value, isAuth.value],
     () => {
       checkIfUserAuthorised()
-})
-
-onMounted(()=> checkIfUserAuthorised())
+    })
 
 </script>
 
 <template>
   <main class="personal">
+
     <div class="personal__breadCrumbs">
       <div
           v-for="breadCrumb in breadCrumbs"

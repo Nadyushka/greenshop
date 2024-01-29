@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {usePlantsStore} from "~/store/plants";
+import {ERouteName} from "~/shared/routes";
 
 interface PropsType {
   id: string
@@ -14,11 +15,11 @@ interface PropsType {
 }
 
 const props = defineProps<PropsType>()
-const { id, img, date, length, title, text, shortForm, fullText, adminMode } = toRefs(props)
+const {id, img, date, length, title, text, shortForm, fullText, adminMode} = toRefs(props)
 
 const plantsStore = usePlantsStore()
 
-const emit = defineEmits<{ (emit: 'edit-post', id: string): void}>()
+const emit = defineEmits<{ (emit: 'edit-post', id: string): void }>()
 
 const deletePost = async () => {
   await plantsStore.deleteBlogPost(id.value)
@@ -35,7 +36,7 @@ const editPost = () => {
         v-if="shortForm"
         :src="`http://localhost:3000/_nuxt/assets/png/${img}`"
         class="blog__img" alt="blog img"
-        />
+    />
     <div class="blog__wrapper">
       <div class="blog__date-length">
         <div class="blog__date">{{ date }}</div>
@@ -44,7 +45,12 @@ const editPost = () => {
       <h3 class="blog__title"> {{ title }}</h3>
       <p class="blog__text">{{ text }}</p>
       <NuxtLink
-          :to="`/blogs/${id}`"
+          :to="{
+            name: ERouteName.PAGE_BLOGS_ID,
+            params: {
+              id
+             }
+          }"
           class="block__read"
           v-if="shortForm && !adminMode"
       >

@@ -1,12 +1,12 @@
 import {defineStore} from 'pinia'
-import type {addressDataType, PersonalDataType} from "~/utils/types";
-import {PersonalAddressType} from "~/utils/types";
+import type {addressDataType, PersonalDataType} from "~/utils/types"
+import {PersonalAddressType} from "~/utils/types"
+import {useStorage} from '@vueuse/core'
 
 export const useAuthStore = defineStore('auth', {
     state: () => {
         return {
-            isAuth: false,
-            userRole: null as null | 'admin' | 'buyer',
+            userRole: useCookie<'' | 'admin' | 'buyer'>(''),
             authError: null as null | string,
             selectedAddressId: null as string | null,
             users: {
@@ -46,15 +46,36 @@ export const useAuthStore = defineStore('auth', {
         }
     },
 
+    getters: {
+        isAuth: (state) => {
+            return !!state.userRole
+        }
+    },
+
     actions: {
+        async me() {
+            const userRoleCookie = useCookie('userRole') as any
+
+            if (userRoleCookie.value) {
+                this.userRole = userRoleCookie.value
+            }
+
+        },
+
         async login(payload: { email: string, password: string }) {
+            const accessTokenCookie = useCookie('userRole') as any
+
             if (payload.email === this.users.admin.email && payload.password === this.users.admin.password) {
-                this.isAuth = true
+
+                accessTokenCookie.value = 'admin'
                 this.userRole = 'admin'
+
                 return
             } else if (payload.email === this.users.buyer.email && payload.password === this.users.buyer.password) {
-                this.isAuth = true
+
+                accessTokenCookie.value = 'buyer'
                 this.userRole = 'buyer'
+
                 return
             } else {
                 this.authError = 'There is no user with such email and password combination'
@@ -63,13 +84,18 @@ export const useAuthStore = defineStore('auth', {
         },
 
         async logout() {
-            this.isAuth = false
-            this.userRole = null
+
+            const accessTokenCookie = useCookie('userRole') as any
+            accessTokenCookie.value = null
+
+            this.userRole = ''
+
+            localStorage.removeItem('isAuth')
+            localStorage.removeItem('role')
         },
 
         async savePersonalData(payload: PersonalDataType) {
 
-            console.log(payload)
             this.users = {
                 ...this.users,
                 buyer: {
@@ -124,7 +150,7 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
-        async setSelectedAddressId (id: string) {
+        async setSelectedAddressId(id: string) {
             this.selectedAddressId = id
         }
     }

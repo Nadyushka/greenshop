@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import NButton from "~/components/ui/NButton.vue"
-import {useAuthStore} from "~/store/auth";
-import {usePlantsStore} from "~/store/plants";
-import {storeToRefs} from "pinia";
+import {useAuthStore} from "~/store/auth"
+import {usePlantsStore} from "~/store/plants"
+import {storeToRefs} from "pinia"
+import {ERouteName} from "~/shared/routes"
 
 const authStore = useAuthStore()
-const {isAuth, userRole, authError} = storeToRefs(authStore)
+const {isAuth, authError} = storeToRefs(authStore)
 
 const plantStore = usePlantsStore()
 const {cartItemsData} = storeToRefs(plantStore)
@@ -16,7 +17,7 @@ const router = useRouter()
 const isLoginModalOpen = ref<boolean>(false)
 
 const headerListItems = ['Home', 'Shop', 'Plant Care', 'Blogs']
-const activeListItem = ref('Home')
+const activeListItem = ref('')
 
 const roles = ['Buyer', 'Admin']
 const selectedRole = ref('Buyer')
@@ -24,16 +25,29 @@ const selectedRole = ref('Buyer')
 const email = ref('buyer@gmail.com')
 const password = ref('buyer123')
 
-const loginBtnData = computed<'Login' | 'Logout'>(() => !isAuth.value ? 'Login' : 'Logout')
+const userRole = useCookie('userRole')
+
+const loginBtnData = computed<'Login' | 'Logout'>(() => !userRole.value ? 'Login' : 'Logout')
 
 const linkTransformer = (link: string) => {
+  activeListItem.value = link
+
   if (link === 'Home') {
-    activeListItem.value = 'Home'
-    router.push('/')
+    router.push({
+      name: ERouteName.PAGE_HOME
+    })
   } else if (link === 'Plant Care') {
-    router.push('/plant-care')
-  } else {
-    router.push(`/${link.toLowerCase()}`)
+    router.push({
+      name: ERouteName.PAGE_PLANT_CARE,
+    })
+  } else if (link === 'Shop') {
+    router.push({
+      name: ERouteName.PAGE_SHOP,
+    })
+  } else if (link === 'Blogs') {
+    router.push({
+      name: ERouteName.PAGE_BLOGS,
+    })
   }
 }
 
@@ -43,28 +57,43 @@ const openPage = (page: string, pressOnIcon?: boolean) => {
 
   wasPressOnIcon.value = pressOnIcon ?? false
 
-  if (route.path != '/' && page == '/') {
+  if (route.path != ERouteName.PAGE_HOME && page == ERouteName.PAGE_HOME) {
     if (userRole.value != 'admin')
-      router.push('/')
-  } else if (page == '/personal-area') {
+      router.push({
+        name: ERouteName.PAGE_HOME,
+      })
+
+  } else if (page == ERouteName.PAGE_PERSONAL_AREA) {
 
     if (isAuth.value && userRole.value === 'buyer') {
-      router.push('/personal-area')
+      router.push({
+        name: ERouteName.PAGE_PERSONAL_AREA,
+      })
     } else {
       toggleModal(true)
     }
-  } else {
-    router.push(page)
+
+  } else if (page == ERouteName.PAGE_SHOP_CART) {
+    router.push({
+      name: ERouteName.PAGE_SHOP_CART,
+    })
   }
+
 }
 
 const setCorrectHeaderActiveItem = () => {
-  if (route.path.slice(1) === 'personal-area' || route.path.slice(1) === 'admin') {
+  const routeWithoutDash = route.path.slice(1)
+
+  if (routeWithoutDash === 'personal-area' || routeWithoutDash === 'admin') {
     activeListItem.value = ''
     return
   }
+  if (!routeWithoutDash) {
+    activeListItem.value = 'Home'
+    return
+  }
 
-  if (activeListItem.value.toLowerCase() !== route.path.slice(1).toLowerCase()) {
+  if (activeListItem.value.toLowerCase() !== routeWithoutDash.toLowerCase()) {
     const activeHeaderItem = [...headerListItems].filter(item => item.includes(route.path.slice(2, 4)))
     activeListItem.value = activeHeaderItem[0]
   }
@@ -86,21 +115,24 @@ const changeRole = (role: string) => {
 
 const loginLogout = async () => {
   if (isAuth.value) {
+
     await authStore.logout()
-    if (route.path === '/personal-area') {
-      await router.push('/')
-    }
+
   } else {
     const res = await authStore.login({email: email.value, password: password.value})
     if (!res) {
       toggleModal(false)
 
       if (wasPressOnIcon.value) {
-        await router.push('/personal-area')
+        await router.push({
+          name: ERouteName.PAGE_PERSONAL_AREA,
+        })
       }
 
       if (userRole.value === 'admin') {
-        await router.push('/admin')
+        await router.push({
+          name: ERouteName.PAGE_ADMIN,
+        })
       }
     }
   }
@@ -137,7 +169,7 @@ onMounted(() => {
           src="../assets/svg/logo.svg"
           alt="logo"
           class="header__logo"
-          @click="openPage('/')"
+          @click="openPage( ERouteName.PAGE_HOME)"
       />
 
       <nav
@@ -159,7 +191,7 @@ onMounted(() => {
         <div
             v-if="userRole !== 'admin'"
             class="header__cart"
-            @click="openPage('/shop/cart')">
+            @click="openPage(ERouteName.PAGE_SHOP_CART)">
           <img src="../assets/svg/cart-icon.svg" alt="cart icon"/>
           <div class="header__purchases"> {{ cartItemsData.length }}</div>
         </div>
@@ -168,10 +200,10 @@ onMounted(() => {
             class="header__home"
             src="../assets/svg/home-icon.svg"
             alt="home icon"
-            @click="openPage('/personal-area', true)"
+            @click="openPage(ERouteName.PAGE_PERSONAL_AREA, true)"
         />
         <NButton :btn-title="loginBtnData"
-                 :left-icon="loginBtnData.toLocaleLowerCase()"
+                 :left-icon="loginBtnData.toLowerCase()"
                  @btn-click="openModalAndLogout"/>
       </div>
     </div>

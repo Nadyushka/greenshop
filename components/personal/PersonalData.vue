@@ -23,7 +23,7 @@ const email = useField('email')
 const phone = useField('phone')
 
 const onSubmit = handleSubmit(async formValues => {
-  debugger
+
   const data: PersonalDataType = {
     firstName: formValues.firstName,
     secondName: formValues.secondName,
@@ -36,7 +36,6 @@ const onSubmit = handleSubmit(async formValues => {
 }, error => console.error(error))
 
 onMounted(() => {
-  if (isAuth.value && userRole.value === 'buyer') {
     setValues({
       firstName: users.value.buyer.firstName,
       secondName: users.value.buyer.secondName,
@@ -44,7 +43,6 @@ onMounted(() => {
       email: users.value.buyer.email,
       phone: users.value.buyer.phone,
     })
-  }
 })
 </script>
 

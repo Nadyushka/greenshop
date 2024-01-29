@@ -1,7 +1,4 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
-
-import {resolve} from "path"
-import * as path from "path";
+import { resolve } from "path"
 
 export default defineNuxtConfig({
     devtools: {enabled: true},
@@ -13,16 +10,16 @@ export default defineNuxtConfig({
         }
     },
     modules: [
-        '@nuxt/image',
         '@pinia/nuxt',
-        '@vee-validate/nuxt'
-        //     '@vueuse/nuxt',
+        '@vee-validate/nuxt',
+        '@vueuse/nuxt',
+        'nuxt-svgo'
     ],
     alias: {
         '@': resolve(__dirname, './'),
     },
     css: [
-        "~/assets/css/main.css",
+        "~/assets/styles/main.scss",
         "normalize.css/normalize.css"
     ],
     router: {

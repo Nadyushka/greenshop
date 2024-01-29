@@ -5,9 +5,12 @@ import PlantsAdmin from "~/components/admin/PlantsAdmin.vue"
 import PlantsCareAdmin from "~/components/admin/PlantsCareAdmin.vue"
 import BlogsAdmin from "~/components/admin/BlogsAdmin.vue"
 import { usePlantsStore } from "~/store/plants"
+import {ERouteName} from "~/shared/routes";
 
 definePageMeta({
-  layout: 'admin'
+  name: ERouteName.PAGE_ADMIN,
+  middleware: ['auth'],
+  layout: "admin",
 })
 
 const authStore = useAuthStore()
@@ -23,7 +26,7 @@ const selectedBreadCrumb = ref('Plants')
 const setSelectedBreadCrumb = (breadCrumb: string) => selectedBreadCrumb.value = breadCrumb
 
 const checkIfUserAuthorised = () => {
-  if (!isAuth.value || userRole.value !== 'admin') {
+   if (!isAuth.value && userRole.value !== 'admin') {
     router.push('/')
   }
 }
@@ -35,7 +38,6 @@ watch(() => [userRole.value, isAuth.value],
 
 onMounted(async () => {
   await plantsStore.removeAllFilters()
-  checkIfUserAuthorised()
 })
 
 </script>
