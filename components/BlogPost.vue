@@ -18,6 +18,7 @@ const props = defineProps<PropsType>()
 const {id, img, date, length, title, text, shortForm, fullText, adminMode} = toRefs(props)
 
 const plantsStore = usePlantsStore()
+const { baseUrl } = storeToRefs(plantsStore)
 
 const emit = defineEmits<{ (emit: 'edit-post', id: string): void }>()
 
@@ -34,7 +35,7 @@ const editPost = () => {
   <div class="blog" :class="{'blog-post_active': !shortForm}">
     <img
         v-if="shortForm"
-        :src="`http://localhost:3000/_nuxt/assets/png/${img}`"
+        :src="`${baseUrl}/assets/png/${img}`"
         class="blog__img" alt="blog img"
     />
     <div class="blog__wrapper">

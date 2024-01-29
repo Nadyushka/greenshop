@@ -26,6 +26,7 @@ const openPlantCarePost = () => router.push({
 })
 
 const plantsStore = usePlantsStore()
+const { baseUrl } = storeToRefs(plantsStore)
 
 const emit = defineEmits<{ (emit: 'edit-post', id: string): void }>()
 
@@ -45,7 +46,7 @@ const editPost = () => {
       :class="{'care-block__full-text': !shortForm}">
     <div class="care-block__wrapper">
       <img src="../assets/png/main_plant-care.png" class="care-block__left-img"/>
-      <img :src="`http://localhost:3000/_nuxt/assets/png/${img}`" class="care-block__plant-img"/>
+      <img :src="`${baseUrl}/assets/png/${img}`" class="care-block__plant-img"/>
       <div
           class="care-block__data"
           :class="{'care-block__data__full-text': !shortForm}"

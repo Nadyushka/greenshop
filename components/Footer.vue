@@ -82,16 +82,16 @@ const aboutUsItems: { title: string, text: string, img: string }[] = [
         <div class="footer__media">
           <h4 class="footer__media-title">Social Media</h4>
           <div class="footer__media-list">
-            <img class="footer__media-item" alt="facebook" src="@/assets/svg/facebook.svg"/>
-            <img class="footer__media-item" alt="instagram" src="@/assets/svg/instagram.svg"/>
-            <img class="footer__media-item" alt="twitter" src="@/assets/svg/twitter.svg"/>
-            <img class="footer__media-item" alt="linkedin" src="@/assets/svg/linkedin.svg"/>
-            <img class="footer__media-item" alt="youtube" src="@/assets/svg/youtube.svg"/>
+            <img class="footer__media-item" alt="facebook" src="../assets/svg/facebook.svg"/>
+            <img class="footer__media-item" alt="instagram" src="../assets/svg/instagram.svg"/>
+            <img class="footer__media-item" alt="twitter" src="../assets/svg/twitter.svg"/>
+            <img class="footer__media-item" alt="linkedin" src="../assets/svg/linkedin.svg"/>
+            <img class="footer__media-item" alt="youtube" src="../assets/svg/youtube.svg"/>
           </div>
         </div>
         <div class="footer__payment">
           <h4 class="footer__payment-title">We accept</h4>
-          <img src="@/assets/png/payments.png"/>
+          <img src="../assets/png/payments.png"/>
         </div>
       </div>
     </div>
