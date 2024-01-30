@@ -73,7 +73,7 @@ onMounted(() => {
       <div class="post__modal-body">
         <form @submit.prevent="onSubmit" class="post__modal-form">
           <div class="post__modal-close" @click="closeModal">
-            <img src="@/assets/svg/close-icon.svg" class="post__modal-close-icon"/>
+            <img src="/svg/close-icon.svg" class="post__modal-close-icon"/>
           </div>
 
           <div class="post__row">
