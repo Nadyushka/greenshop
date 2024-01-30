@@ -129,7 +129,7 @@ const loginLogout = async () => {
         })
       }
 
-      if (userRole.value === 'admin') {
+      if (selectedRole.value.toLowerCase() === 'admin') {
         await router.push({
           name: ERouteName.PAGE_ADMIN,
         })
@@ -239,7 +239,7 @@ onMounted(() => {
         <NButton
             btn-title="Login"
             class="modal__btn"
-            @btn-click="loginLogout"/>
+            @btn-click="loginLogout()"/>
       </div>
     </div>
   </header>
