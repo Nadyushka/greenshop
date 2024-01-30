@@ -5,7 +5,7 @@ import {usePlantsStore} from "~/store/plants";
 import CarePostForm from "~/components/admin/CarePostForm.vue";
 
 const plantsStore = usePlantsStore()
-const { plantCareData } = storeToRefs(plantsStore)
+const {plantCareData} = storeToRefs(plantsStore)
 
 const blogInput = ref('')
 
@@ -30,7 +30,7 @@ const closeModal = () => {
   isModalOpen.value = false
 }
 
-const addPost = () =>  isModalOpen.value = true
+const addPost = () => isModalOpen.value = true
 
 watch(() => isModalOpen.value,
     (value) => {
@@ -76,7 +76,7 @@ watch(() => isModalOpen.value,
     <div
         v-if="!selectedPost.length"
         class="blogs__mo-data">
-      No data was found :(
+      No posts were found :(
     </div>
 
     <CarePostForm

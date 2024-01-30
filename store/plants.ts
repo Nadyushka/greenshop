@@ -635,7 +635,7 @@ export const usePlantsStore = defineStore('plants', {
 
     getters: {
         wishlist: (state): PlantType[] => state.plants.filter(plant => plant.saved),
-        shownPlants: (state): PlantType[] => {
+        shownPlants: (state): { length: number, plants: PlantType[]} => {
             const totalAndFilteredPlants = {
                 length: 0,
                 plants: [],
