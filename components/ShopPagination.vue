@@ -117,7 +117,7 @@ watch(() => page.value,
 .pagination__next {
   background-repeat: no-repeat;
   background-position: center center;
-  background-image: url('@/assets/svg/page_next.svg');
+  background-image: url('/svg/page_next.svg');
 }
 
 .pagination__prev {

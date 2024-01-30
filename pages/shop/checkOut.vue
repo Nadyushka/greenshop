@@ -102,9 +102,9 @@ watch(() => isAuth.value,
 
 const imageAddressUrl = computed(() => {
   if (selectedAddress.value === 'Use another address') {
-    return 'http://localhost:3000/_nuxt/assets/svg/radio-icon_active.svg'
+    return '/svg/radio-icon_active.svg'
   } else {
-    return 'http://localhost:3000/_nuxt/assets/svg/radio-icon.svg'
+    return '/svg/radio-icon.svg'
   }
 })
 </script>
@@ -199,7 +199,7 @@ const imageAddressUrl = computed(() => {
             v-for="product in cartItemsData"
         >
           <div class="checkout__product">
-            <img :src="`http://localhost:3000/_nuxt/assets/png/plants/${product.img}`" class="checkout__img"/>
+            <img :src="`/png/plants/${product.img}`" class="checkout__img"/>
             <div class="checkout__data">
               <div class="checkout__title">{{ product.title }}</div>
               <div class="checkout__sku">SKU: <span> {{ product.id }} </span></div>
@@ -235,7 +235,7 @@ const imageAddressUrl = computed(() => {
               :class="{'checkout__payment-radio_active': payment.id == paymentMethodId}"
           />
           <div v-if="payment.title !== 'Card'"> {{ payment.title }}</div>
-          <img src="@/assets/png/payments.png" v-else/>
+          <img src="/png/payments.png" v-else/>
         </div>
 
         <NButton btn-title="Place Order" @click="toggleModalConfirmedOrder(true)"/>
@@ -304,7 +304,7 @@ const imageAddressUrl = computed(() => {
   color: #3D3D3D;
   margin-bottom: 10px;
   padding-right: 14px;
-  background-image: url('@/assets/svg/star-icon.svg');
+  background-image: url('/svg/star-icon.svg');
   background-repeat: no-repeat;
   background-position: right top;
   display: inline-block;
@@ -527,7 +527,7 @@ const imageAddressUrl = computed(() => {
 .checkout__payment-radio {
   width: 16px;
   height: 16px;
-  background-image: url('@/assets/svg/radio-icon.svg');
+  background-image: url('/svg/radio-icon.svg');
   background-position: center center;
   background-repeat: no-repeat;
 }
@@ -541,7 +541,7 @@ const imageAddressUrl = computed(() => {
 
 .checkout__payment-radio_active {
   transition: 0.5s all;
-  background-image: url('@/assets/svg/radio-icon_active.svg');
+  background-image: url('/svg/radio-icon_active.svg');
 }
 
 .checkout__modal {

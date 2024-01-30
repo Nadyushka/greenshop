@@ -102,7 +102,7 @@ onMounted(() => {
         <form @submit.prevent="onSubmit" class="plant__modal-form">
 
           <div class="plant__modal-close" @click="closeModal">
-            <img src="@/assets/svg/close-icon.svg" class="plant__modal-close-icon"/>
+            <img src="/svg/close-icon.svg" class="plant__modal-close-icon"/>
           </div>
 
           <div class="plant__row">

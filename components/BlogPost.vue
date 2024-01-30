@@ -135,7 +135,7 @@ const editPost = () => {
   font-family: 'CeraPro-Medium', sans-serif;
   font-size: 14px;
   color: #3D3D3D;
-  background-image: url('@/assets/svg/blogs-arrow.svg');
+  background-image: url('/svg/blogs-arrow.svg');
   background-position: 80px 5px;
   background-repeat: no-repeat;
   cursor: pointer;
