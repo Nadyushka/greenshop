@@ -11,7 +11,7 @@ const plantInput = ref('')
 const editPlantId = ref()
 const isModalOpen = ref(false)
 
-const isTouchedPlant = ref(shownPlants.value.plants[0]?.id ?? undefined)
+const isTouchedPlant = ref(shownPlants.value?.plants[0]?.id ?? undefined)
 const setTouchedPlant = (id: string) => isTouchedPlant.value = id
 
 const editPostData = (id: string) => {
@@ -39,7 +39,7 @@ watch(() => isModalOpen.value,
 watch(
     () => plantInput.value,
     () => {
-      isTouchedPlant.value = shownPlants.value.plants[0].id ?? undefined
+      isTouchedPlant.value = shownPlants.value?.plants[0]?.id ?? undefined
       plantsStore.$patch(state => state.plantTitle = plantInput.value)
     })
 </script>
@@ -84,7 +84,7 @@ watch(
     <div
         v-if="!shownPlants.length"
         class="blogs__mo-data">
-      No data was found :(
+      No plants were found :(
     </div>
 
 

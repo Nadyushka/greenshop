@@ -78,7 +78,7 @@ watch(() => isModalOpen.value,
     <div
         v-if="!selectedPost.length"
         class="blogs__mo-data">
-      No data was found :(
+      No posts were found :(
     </div>
 
     <BlogPostForm
