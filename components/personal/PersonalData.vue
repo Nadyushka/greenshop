@@ -3,9 +3,10 @@ import NButton from "~/components/ui/NButton.vue"
 import {useAuthStore} from "~/store/auth"
 import {personalDataValidationSchema} from "~/utils/validation"
 import type {PersonalDataType} from "~/utils/types"
+import NInput from "~/components/ui/NInput.vue"
 
 const authStore = useAuthStore()
-const {users, isAuth, userRole} = storeToRefs(authStore)
+const {users} = storeToRefs(authStore)
 
 const {
   handleSubmit,
@@ -36,76 +37,58 @@ const onSubmit = handleSubmit(async formValues => {
 }, error => console.error(error))
 
 onMounted(() => {
-    setValues({
-      firstName: users.value.buyer.firstName,
-      secondName: users.value.buyer.secondName,
-      password: users.value.buyer.password,
-      email: users.value.buyer.email,
-      phone: users.value.buyer.phone,
-    })
+  setValues({
+    firstName: users.value.buyer.firstName,
+    secondName: users.value.buyer.secondName,
+    password: users.value.buyer.password,
+    email: users.value.buyer.email,
+    phone: users.value.buyer.phone,
+  })
 })
 </script>
 
 <template>
   <form @submit.prevent="onSubmit" class="personal">
     <div class="personal__row">
-      <div>
-        <div class="personal__label">First Name</div>
-        <input
-            v-model="firstName.value.value"
-            class="personal__input"
-            :class="{
-              'personal__input_error': errors.firstName
-            }"
-        />
-        <div v-if="errors.firstName" class="personal__error"> {{ errors.firstName }}</div>
-      </div>
-      <div>
-        <div class="personal__label">Last Name</div>
-        <input
-            v-model="secondName.value.value"
-            class="personal__input"
-            :class="{
-              'personal__input_error': errors.secondName
-            }"
-        />
-        <div v-if="errors.secondName" class="personal__error"> {{ errors.secondName }}</div>
-      </div>
-      <div>
-        <div class="personal__label">Phone</div>
-        <input
-            v-model="phone.value.value"
-            class="personal__input"
-            :class="{
-              'personal__input_error': errors.phone
-            }"
-        />
-        <div v-if="errors.phone" class="personal__error"> {{ errors.phone }}</div>
-      </div>
+
+      <NInput
+          title="First Name"
+          v-model:input-value="firstName.value.value"
+          :errors="errors.firstName"
+          class="personal__input"
+      />
+
+      <NInput
+          title="Last Name"
+          v-model:input-value="secondName.value.value"
+          :errors="errors.secondName"
+          class="personal__input"
+      />
+
+      <NInput
+          title="Phone"
+          v-model:input-value="phone.value.value"
+          :errors="errors.phone"
+          class="personal__input"
+      />
+
     </div>
     <div class="personal__row">
-      <div>
-        <div class="personal__label">Email</div>
-        <input
-            v-model="email.value.value"
-            class="personal__input"
-            :class="{
-              'personal__input_error': errors.email
-            }"
-        />
-        <div v-if="errors.email" class="personal__error"> {{ errors.email }}</div>
-      </div>
-      <div>
-        <div class="personal__label">Password</div>
-        <input
-            v-model="password.value.value"
-            class="personal__input"
-            :class="{
-              'personal__input_error': errors.password
-            }"
-        />
-        <div v-if="errors.password" class="personal__error"> {{ errors.password }}</div>
-      </div>
+
+      <NInput
+          title="Email"
+          v-model:input-value="email.value.value"
+          :errors="errors.email"
+          class="personal__input"
+      />
+
+      <NInput
+          title="Password"
+          v-model:input-value="password.value.value"
+          :errors="errors.password"
+          class="personal__input"
+      />
+
     </div>
 
     <NButton
@@ -119,27 +102,7 @@ onMounted(() => {
 <style scoped>
 .personal__row {
   display: flex;
-  gap: 10px;
-}
-
-.personal__label {
-  font-size: 15px;
-  font-family: 'CeraPro-Regular', sans-serif;
-  font-weight: 400;
-  color: #3D3D3D;
-  margin-bottom: 10px;
-}
-
-.personal__input {
-  border-radius: 3px;
-  border: 1px solid #EAEAEA;
-  margin-bottom: 10px;
-  width: 300px;
-  cursor: pointer;
-}
-
-.personal__input:focus {
-  border: 1px solid #46A358;
+  gap: 20px;
 }
 
 .personal__btn {
@@ -147,13 +110,8 @@ onMounted(() => {
   margin-bottom: 32px;
 }
 
-.personal__input_error {
-  border: 1px solid rgba(255, 0, 0, 0.6) !important;
+:deep(.input__body) {
+  width: 300px;
 }
 
-.personal__error {
-  margin-top: -5px;
-  margin-bottom: 10px;
-  color: rgba(255, 0, 0, 0.6);
-}
 </style>

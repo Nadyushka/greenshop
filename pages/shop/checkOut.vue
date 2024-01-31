@@ -91,7 +91,7 @@ const setAddress = (addressType: string) => {
 
 const setUserData = () => {
   if (isAuth.value && userRole.value === 'buyer') {
-  
+
     setFieldValue('firstName', users.value.buyer.firstName)
     setFieldValue('lastName', users.value.buyer.secondName)
     setFieldValue('email', users.value.buyer.email)

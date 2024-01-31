@@ -3,13 +3,14 @@ import NButton from "~/components/ui/NButton.vue"
 import {usePlantsStore} from "~/store/plants"
 import type {PlantType} from "~/utils/types"
 import {validationSchema} from "~/utils/validation"
+import NInput from "~/components/ui/NInput.vue";
 
 const plantsStore = usePlantsStore()
 const {plants} = storeToRefs(plantsStore)
 
 const emit = defineEmits<{ (emit: 'close-modal'): void }>()
 
-const props = defineProps<{ id: string | null | undefined}>()
+const props = defineProps<{ id: string | null | undefined }>()
 const {id} = toRefs(props)
 
 const {
@@ -58,16 +59,19 @@ const onSubmit = handleSubmit(async formValues => {
 const categories = ["House Plants", "Potter Plants", "Seeds", "Small Plants", "Big Plants", "Succulents", "Trerrariums"]
 
 const isCategoriesListVisible = ref(false)
-const toggleCategoriesList = (isVisible: boolean) => isCategoriesListVisible.value = isVisible
+const toggleCategoriesList = (isVisible: boolean) => {
+  isSizeListVisible.value && toggleSizeList(false)
+  isCategoriesListVisible.value = isVisible
+}
 
-const setCategory = (category: string) => {
-  setFieldValue('type', category)
+const setCategory = (type: string) => {
+  setFieldValue('type', type)
   toggleCategoriesList(false)
 }
 
 const isSizeListVisible = ref(false)
 const toggleSizeList = (isVisible: boolean) => {
-  toggleCategoriesList(false)
+  isCategoriesListVisible.value && toggleCategoriesList(false)
   isSizeListVisible.value = isVisible
 }
 
@@ -106,54 +110,33 @@ onMounted(() => {
           </div>
 
           <div class="plant__row">
-            <div>
-              <div class="plant__label">Title</div>
-              <input
-                  v-model="title.value.value"
-                  class="plant__input"
-                  :class="{
-                    'plant__input_error': errors.title
-                  }"
-              />
-              <div v-if="errors.title" class="plant__error">{{ errors.title }}</div>
-            </div>
+            <NInput
+                title="Title"
+                v-model:input-value="title.value.value"
+                :errors="errors.title"/>
           </div>
 
           <div class="plant__row">
-            <div>
-              <div class="plant__label">Price</div>
-              <input
-                  v-model="price.value.value"
-                  class="plant__input"
-                  :class="{
-                    'plant__input_error': errors.price
-                  }"
-              />
-              <div v-if="errors.price" class="plant__error"> {{ errors.price }}</div>
-            </div>
+            <NInput
+                title="Price"
+                v-model:input-value="price.value.value"
+                :errors="errors.price"/>
           </div>
 
           <div class="plant__row">
-            <div>
-              <div class="plant__label">Discount</div>
-              <input v-model="discount.value.value" class="plant__input"/>
-            </div>
+            <NInput
+                title="Discount"
+                v-model:input-value="discount.value.value"
+            />
           </div>
 
           <div class="plant__row plant__row-type">
-            <div>
-              <div class="plant__label">Type</div>
-              <input
-                  :value="type.value.value"
-                  class="plant__input plant__input-type"
-                  @focus="toggleCategoriesList(true)"
-                  readonly
-                  :class="{
-                  'plant__input_error': errors.type
-            }"
-              />
-              <div v-if="errors.type" class="plant__error"> {{ errors.type }}</div>
-            </div>
+            <NInput
+                @input-focus="toggleCategoriesList(true)"
+                readonly
+                title="Type"
+                v-model:input-value="type.value.value"
+                :errors="errors.type"/>
 
             <ul class="plant__list" v-if="isCategoriesListVisible">
               <li
@@ -168,19 +151,12 @@ onMounted(() => {
           </div>
 
           <div class="plant__row plant__row-size">
-            <div>
-              <div class="plant__label">Size</div>
-              <input
-                  :value="size.value.value"
-                  readonly
-                  class="plant__input"
-                  @focus="toggleSizeList(true)"
-                  :class="{
-                  'plant__input_error': errors.size
-            }"
-              />
-              <div v-if="errors.size" class="plant__error"> {{ errors.size }}</div>
-            </div>
+            <NInput
+                @input-focus="toggleSizeList(true)"
+                readonly
+                title="Size"
+                v-model:input-value="size.value.value"
+                :errors="errors.size"/>
 
             <ul class="plant__list" v-if="isSizeListVisible">
               <li
@@ -195,10 +171,10 @@ onMounted(() => {
           </div>
 
           <div class="plant__row">
-            <div>
-              <div class="plant__label">Rate</div>
-              <input v-model="rate.value.value" class="plant__input"/>
-            </div>
+            <NInput
+                title="Rate"
+                v-model:input-value="rate.value.value"
+            />
           </div>
 
           <NButton

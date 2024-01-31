@@ -3,6 +3,7 @@ import NButton from "~/components/ui/NButton.vue"
 import {usePlantsStore} from "~/store/plants"
 import type {PostCareType} from "~/utils/types"
 import {carePostValidationSchema} from "~/utils/validation"
+import NInput from "~/components/ui/NInput.vue";
 
 const plantsStore = usePlantsStore()
 const {plantCareData} = storeToRefs(plantsStore)
@@ -12,7 +13,7 @@ const emit = defineEmits<{ (emit: 'close-modal'): void }>()
 const closeModal = () => emit('close-modal')
 
 const props = defineProps<{ id: string | null | undefined }>()
-const {id} = toRefs(props)
+const { id } = toRefs(props)
 
 const {
   handleSubmit,
@@ -22,7 +23,6 @@ const {
 } = useForm({
   validationSchema: carePostValidationSchema,
 })
-
 
 const title = useField('title')
 const text = useField('text')
@@ -72,30 +72,17 @@ onMounted(() => {
           </div>
 
           <div class="post__row">
-            <div>
-              <div class="post__label">Title</div>
-              <input
-                  v-model="title.value.value"
-                  class="post__input"
-                  :class="{
-                    'post__input_error': errors.title
-                  }"/>
-              <div v-if="errors.title" class="post__error"> {{ errors.title }}</div>
-            </div>
+            <NInput
+                title="Title"
+                v-model:input-value="title.value.value"
+                :errors="errors.title"/>
           </div>
 
           <div class="post__row">
-            <div>
-              <div class="post__label">Introduction</div>
-              <input
-                  v-model="text.value.value"
-                  class="post__input"
-                  :class="{
-                    'post__input_error': errors.text
-                  }"
-              />
-              <div v-if="errors.text" class="post__error"> {{ errors.text }}</div>
-            </div>
+            <NInput
+                title="Introduction"
+                v-model:input-value="text.value.value"
+                :errors="errors.text"/>
           </div>
 
           <div class="post__row">
@@ -186,15 +173,6 @@ onMounted(() => {
   margin-bottom: 10px;
 }
 
-.post__input {
-  border-radius: 3px;
-  border: 1px solid #EAEAEA;
-  margin-bottom: 10px;
-  width: 500px;
-  color: #727272;
-}
-
-.post__input:focus,
 .post__textarea:focus {
   border: 1px solid #46A358;
 }
@@ -209,14 +187,11 @@ onMounted(() => {
   padding: 16px;
 }
 
-.post__input::placeholder {
-  color: #A5A5A5;
-}
-
 .post__error {
-  margin-top: -5px;
+  margin-top: -10px;
   margin-bottom: 10px;
   color: rgba(255, 0, 0, 0.6);
+  font-size: 12px;
 }
 
 .post__input_error {
