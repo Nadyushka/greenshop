@@ -53,7 +53,7 @@ const data = ref([
             v-for="product in cartItemsData"
         >
           <div class="confirmed__product">
-            <img :src="`/png/plants/${product.img}`" class="confirmed__img"/>
+            <img :src="`/plants/${product.img}`" class="confirmed__img"/>
             <div class="checkout__data">
               <div class="confirmed__item-title">{{ product.title }}</div>
               <div class="confirmed__sku">SKU: <span> {{ product.id }} </span></div>
