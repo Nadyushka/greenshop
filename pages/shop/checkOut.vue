@@ -13,7 +13,7 @@ definePageMeta({
 })
 
 const plantsStore = usePlantsStore()
-const {cartItemsData, paymentMethodId, paymentMethods} = storeToRefs(plantsStore)
+const { cartItemsData, paymentMethodId, paymentMethods } = storeToRefs(plantsStore)
 
 const authStore = useAuthStore()
 const { isAuth, userRole, users } = storeToRefs(authStore)
@@ -22,7 +22,7 @@ const setPaymentMethod = (selectedPaymentId: number) => {
   plantsStore.setPaymentMethod(selectedPaymentId)
 }
 
-const totalWithoutShipping = computed(() => cartItemsData.value.reduce((acc, next) => acc + (next.pcs * next.price), 0));
+const totalWithoutShipping = computed(() => cartItemsData.value.reduce((acc, next) => acc + (next.pcs * next.price), 0))
 
 const {
   handleSubmit,

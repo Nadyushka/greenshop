@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import NButton from "~/components/ui/NButton.vue"
-import {useAuthStore} from "~/store/auth"
-import {usePlantsStore} from "~/store/plants"
-import {storeToRefs} from "pinia"
-import {ERouteName} from "~/shared/routes"
+import { useAuthStore } from "~/store/auth"
+import { usePlantsStore } from "~/store/plants"
+import { storeToRefs } from "pinia"
+import { ERouteName } from "~/shared/routes"
 
 const authStore = useAuthStore()
-const {isAuth, authError} = storeToRefs(authStore)
+const { isAuth, authError, users } = storeToRefs(authStore)
 
 const plantStore = usePlantsStore()
-const {cartItemsData} = storeToRefs(plantStore)
+const { cartItemsData } = storeToRefs(plantStore)
 
 const route = useRoute()
 const router = useRouter()
@@ -22,8 +22,8 @@ const activeListItem = ref('')
 const roles = ['Buyer', 'Admin']
 const selectedRole = ref('Buyer')
 
-const email = ref('buyer@gmail.com')
-const password = ref('buyer123')
+const email = ref(users.value.buyer.email)
+const password = ref(users.value.buyer.password)
 
 const userRole = useCookie('userRole')
 
@@ -105,11 +105,11 @@ const changeRole = (role: string) => {
   selectedRole.value = role
 
   if (role === 'Buyer') {
-    email.value = 'buyer@gmail.com'
-    password.value = 'buyer123'
+    email.value = users.value.buyer.email
+    password.value = users.value.buyer.password
   } else {
-    email.value = 'admin@gmail.com'
-    password.value = 'admin123'
+    email.value =  users.value.admin.email
+    password.value = users.value.admin.password
   }
 }
 
@@ -150,6 +150,16 @@ watch(
     () => route.path,
     () => {
       setCorrectHeaderActiveItem()
+    }
+)
+
+watch(
+    ()=> users.value.buyer,
+    ()=> {
+      email.value = users.value.buyer.email
+      password.value = users.value.buyer.password
+    }, {
+      deep: true
     }
 )
 
@@ -313,6 +323,7 @@ onMounted(() => {
   position: relative;
   z-index: 10;
   cursor: pointer;
+  transition: 0.5s all;
 }
 
 .header__home {
@@ -336,7 +347,7 @@ onMounted(() => {
   justify-content: center;
   border-radius: 100%;
   font-size: 10px;
-  font-family: 'CeraPro-Medium', sans-serif
+  font-family: 'CeraPro-Medium', sans-serif;
 }
 
 .modal {

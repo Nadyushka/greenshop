@@ -25,14 +25,14 @@ defineEmits<{ (emit: 'btnClick'): void }>()
           transform: leftIcon == 'logout' ? 'scaleX(-1)' : 'none'
         }"
         class="button__left-icon"
-        filled="none"/>
+        :filled="true"/>
 
     {{ btnTitle }}
 
     <ArrowIcon
         v-if="rightIcon === 'arrow'"
         class="button__right-icon"
-        filled="none"
+        :filled="true"
     />
 
   </button>
