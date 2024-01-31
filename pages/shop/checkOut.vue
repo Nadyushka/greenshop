@@ -3,6 +3,7 @@ import NButton from "~/components/ui/NButton.vue";
 import {usePlantsStore} from "~/store/plants";
 import {useAuthStore} from "~/store/auth";
 import {ERouteName} from "~/shared/routes";
+import {checkoutValidationSchema} from "~/utils/validation";
 
 definePageMeta({
   name: ERouteName.PAGE_SHOP_CHECKOUT,
@@ -22,19 +23,34 @@ const setPaymentMethod = (selectedPaymentId: number) => {
 
 const totalWithoutShipping = computed(() => cartItemsData.value.reduce((acc, next) => acc + (next.pcs * next.price), 0));
 
-const firstName = ref()
-const lastName = ref()
-const country = ref()
-const town = ref()
-const street = ref()
-const additionalAddress = ref()
-const state = ref()
-const zip = ref()
-const orderNotes = ref()
-const email = ref()
-const phone = ref()
+const {
+  handleSubmit,
+  errors,
+  values,
+  setValues,
+  setFieldValue,
+  resetField
+} = useForm({
+  validationSchema: checkoutValidationSchema,
+})
+
+const firstName = useField('firstName')
+const lastName = useField('lastName')
+const country = useField('country')
+const town = useField('town')
+const street = useField('street')
+const additionalAddress = useField('additionalAddress')
+const state = useField('state')
+const zip = useField('zip')
+const orderNotes = useField('orderNotes')
+const email = useField('email')
+const phone = useField('phone')
 
 const router = useRouter()
+
+const onSubmit = handleSubmit(async formValues => {
+  await toggleModalConfirmedOrder(true)
+}, error => console.log(error))
 
 const isModalConfirmedOrderOpen = ref(false)
 const toggleModalConfirmedOrder = async (isModalOpen: boolean) => {
@@ -48,25 +64,26 @@ const toggleModalConfirmedOrder = async (isModalOpen: boolean) => {
 const selectedAddress = ref('Use another address')
 
 const clearAddress = () => {
-  country.value = ''
-  town.value = ''
-  street.value = ''
-  additionalAddress.value = ''
-  state.value = ''
-  zip.value = ''
+  resetField('country')
+  resetField('town')
+  resetField('street')
+  resetField('additionalAddress')
+  resetField('state')
+  resetField('zip')
 }
 
 const setAddress = (addressType: string) => {
   selectedAddress.value = addressType
   if (addressType !== 'Use another address') {
-    const address = users.value.buyer.savedAddresses.find(address => address.addressName === selectedAddress.value)
+    const address = users.value.buyer.savedAddresses.find(address => address.addressName === selectedAddress.value)!
 
-    country.value = address.country
-    town.value = address.city
-    street.value = address.streetHouse
-    additionalAddress.value = address.appartment
-    state.value = address.state
-    zip.value = address.zip
+    setFieldValue('country', address.country)
+    setFieldValue('town', address.city)
+    setFieldValue('street', address.streetHouse)
+    setFieldValue('additionalAddress', address.appartment)
+    setFieldValue('zip', address.zip)
+    setFieldValue('state', address.state)
+
   } else {
     clearAddress()
   }
@@ -74,10 +91,12 @@ const setAddress = (addressType: string) => {
 
 const setUserData = () => {
   if (isAuth.value && userRole.value === 'buyer') {
-    firstName.value = users.value.buyer.firstName
-    lastName.value = users.value.buyer.secondName
-    email.value = users.value.buyer.email
-    phone.value = users.value.buyer.phone
+  
+    setFieldValue('firstName', users.value.buyer.firstName)
+    setFieldValue('lastName', users.value.buyer.secondName)
+    setFieldValue('email', users.value.buyer.email)
+    setFieldValue('phone', users.value.buyer.phone)
+
   }
 }
 
@@ -112,57 +131,127 @@ const imageAddressUrl = computed(() => {
 <template>
   <main class="checkout">
     <div class="checkout__bread-crumbs"><span>Home</span> / Shop / Checkout</div>
-    <div class="checkout__info">
+    <form @submit.prevent="onSubmit" class="checkout__info">
       <div class="checkout__billing">
         <div class="checkout__title">Billing Address</div>
         <div class="checkout__row">
           <div>
             <div class="checkout__label">First Name</div>
-            <input v-model="firstName" class="checkout__input"/>
+            <input
+                v-model="firstName.value.value"
+                class="checkout__input"
+                :class="{
+                    'checkout__input_error': errors.firstName
+                  }"
+            />
+            <div v-if="errors.firstName" class="checkout__error"> {{ errors.firstName }}</div>
           </div>
           <div>
             <div class="checkout__label">Last Name</div>
-            <input v-model="lastName" class="checkout__input"/>
+            <input
+                v-model="lastName.value.value"
+                class="checkout__input"
+                :class="{
+                    'checkout__input_error': errors.lastName
+                  }"
+            />
+            <div v-if="errors.lastName" class="checkout__error"> {{ errors.lastName }}</div>
           </div>
         </div>
         <div class="checkout__row">
           <div>
             <div class="checkout__label">Country / Region</div>
-            <input v-model="country" class="checkout__input"/>
+            <input
+                v-model="country.value.value"
+                class="checkout__input"
+                :class="{
+                    'checkout__input_error': errors.country
+                  }"
+            />
+            <div v-if="errors.country" class="checkout__error"> {{ errors.country }}</div>
           </div>
           <div>
             <div class="checkout__label">Town / City</div>
-            <input v-model="town" class="checkout__input"/>
+            <input
+                v-model="town.value.value"
+                class="checkout__input"
+                :class="{
+                    'checkout__input_error': errors.town
+                  }"
+            />
+            <div v-if="errors.town" class="checkout__error"> {{ errors.town }}</div>
           </div>
         </div>
         <div class="checkout__row">
           <div>
             <div class="checkout__label">Street Address</div>
-            <input v-model="street" class="checkout__input"/>
+            <input
+                v-model="street.value.value"
+                class="checkout__input"
+                :class="{
+                    'checkout__input_error': errors.street
+                  }"
+            />
+            <div v-if="errors.street" class="checkout__error"> {{ errors.street }}</div>
           </div>
           <div>
             <div class="checkout__label checkout__no-star">Additional Address</div>
-            <input v-model="additionalAddress" class="checkout__input"/>
+            <input
+                v-model="additionalAddress.value.value"
+                class="checkout__input"
+                :class="{
+                    'checkout__input_error': errors.additionalAddress
+                  }"
+            />
+            <div v-if="errors.additionalAddress" class="checkout__error"> {{ errors.additionalAddress }}</div>
           </div>
         </div>
         <div class="checkout__row">
           <div>
             <div class="checkout__label">State</div>
-            <input v-model="state" class="checkout__input"/>
+            <input
+                v-model="state.value.value"
+                class="checkout__input"
+                :class="{
+                    'checkout__input_error': errors.state
+                  }"
+            />
+            <div v-if="errors.state" class="checkout__error"> {{ errors.state }}</div>
           </div>
           <div>
             <div class="checkout__label">Zip</div>
-            <input v-model="zip" class="checkout__input"/>
+            <input
+                v-model="zip.value.value"
+                class="checkout__input"
+                :class="{
+                    'checkout__input_error': errors.zip
+                  }"
+            />
+            <div v-if="errors.zip" class="checkout__error"> {{ errors.zip }}</div>
           </div>
         </div>
         <div class="checkout__row">
           <div>
             <div class="checkout__label">Email address</div>
-            <input v-model="email" class="checkout__input"/>
+            <input
+                v-model="email.value.value"
+                class="checkout__input"
+                :class="{
+                    'checkout__input_error': errors.email
+                  }"
+            />
+            <div v-if="errors.email" class="checkout__error"> {{ errors.email }}</div>
           </div>
           <div>
             <div class="checkout__label">Phone Number</div>
-            <input v-model="phone" class="checkout__input"/>
+            <input
+                v-model="phone.value.value"
+                class="checkout__input"
+                :class="{
+                    'checkout__input_error': errors.phone
+                  }"
+            />
+            <div v-if="errors.phone" class="checkout__error"> {{ errors.phone }}</div>
           </div>
         </div>
 
@@ -181,7 +270,7 @@ const imageAddressUrl = computed(() => {
 
         <div class="checkout__additional checkout__additional-textarea">
           <div class="checkout__additional-label">Order notes (optional)</div>
-          <textarea class="checkout__additional-text" v-model="orderNotes"/>
+          <textarea class="checkout__additional-text" v-model="orderNotes.value.value"/>
         </div>
 
       </div>
@@ -199,7 +288,7 @@ const imageAddressUrl = computed(() => {
             v-for="product in cartItemsData"
         >
           <div class="checkout__product">
-            <img :src="`/png/plants/${product.img}`" class="checkout__img"/>
+            <img :src="`/plants/${product.img}`" class="checkout__img"/>
             <div class="checkout__data">
               <div class="checkout__title">{{ product.title }}</div>
               <div class="checkout__sku">SKU: <span> {{ product.id }} </span></div>
@@ -238,9 +327,9 @@ const imageAddressUrl = computed(() => {
           <img src="/png/payments.png" v-else/>
         </div>
 
-        <NButton btn-title="Place Order" @click="toggleModalConfirmedOrder(true)"/>
+        <NButton type="submit" btn-title="Place Order"/>
       </div>
-    </div>
+    </form>
     <div class="checkout__modal" v-if="isModalConfirmedOrderOpen">
       <div class="checkout__modal-overlay">
         <ConfirmedOrder @close-modal="toggleModalConfirmedOrder(false)"/>
@@ -592,5 +681,16 @@ const imageAddressUrl = computed(() => {
 
 .checkout__address img:hover {
   scale: 1.1;
+}
+
+.checkout__error {
+  margin-top: 5px;
+  margin-bottom: 0px;
+  color: rgba(255, 0, 0, 0.6);
+  font-size: 12px;
+}
+
+.checkout__input_error {
+  border: 1px solid rgba(255, 0, 0, 0.6) !important;
 }
 </style>

@@ -49,6 +49,29 @@ export const personalAddressValidationSchema = yup.object().shape({
     city: yup.string().required('Field is required'),
     state: yup.string().required('Field is required'),
     country: yup.string().required('Field is required'),
-    zip: yup.number().typeError('Only numbers are allowed'),
+    zip: yup.number().typeError('Only numbers are allowed').required('Field is required'),
+})
+
+
+export const checkoutValidationSchema = yup.object().shape({
+    firstName: yup.string().required('Field is required')
+        .matches(/^[a-zA-Zа-яА-ЯЁё ]*$/, 'Only letters are allowed'),
+    lastName: yup.string().required('Field is required')
+        .matches(/^[a-zA-Zа-яА-ЯЁё ]*$/, 'Only letters are allowed'),
+    email: yup.string()
+        .nullable()
+        .test('emailCheck', 'Invalid email', val => {
+            if (val === null || val === '' || val === undefined)
+                return true
+
+            return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(val)
+        })
+        .required('Field is required'),
+    phone: yup.number().typeError('Only numbers are allowed').required('Field is required'),
+    town: yup.string().required('Field is required'),
+    street: yup.string().required('Field is required'),
+    state: yup.string().required('Field is required'),
+    country: yup.string().required('Field is required'),
+    zip: yup.number().typeError('Only numbers are allowed').required('Field is required'),
 })
 
