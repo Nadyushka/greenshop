@@ -134,33 +134,8 @@ watch(() => isModalOpen.value,
   width: 50%;
 }
 
-.personal__label {
-  font-size: 15px;
-  font-family: 'CeraPro-Regular', sans-serif;
-  font-weight: 400;
-  color: #3D3D3D;
-  margin-bottom: 10px;
-}
-
-.personal__input {
-  border-radius: 3px;
-  border: 1px solid #EAEAEA;
-  margin-bottom: 10px;
-  width: 300px;
-}
-
 .personal__btn {
   margin-top: 16px;
   margin-bottom: 32px;
-}
-
-.personal__input_error {
-  border: 1px solid rgba(255, 0, 0, 0.6) !important;
-}
-
-.personal__error {
-  margin-top: -5px;
-  margin-bottom: 10px;
-  color: rgba(255, 0, 0, 0.6);
 }
 </style>

@@ -113,5 +113,4 @@ onMounted(() => {
 :deep(.input__body) {
   width: 300px;
 }
-
 </style>

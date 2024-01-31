@@ -3,10 +3,11 @@ interface PropsType {
   title: string
   inputValue: string
   errors: string | undefined
+  star?: boolean
 }
 
 const props = defineProps<PropsType>()
-const {title, inputValue} = toRefs(props)
+const { title, inputValue, star, errors } = toRefs(props)
 
 const emit = defineEmits<{
   (emit: 'update:inputValue', data: string): void,
@@ -17,7 +18,11 @@ const emit = defineEmits<{
 
 <template>
   <div class="input">
-    <div class="input__label">{{ title }}</div>
+    <div
+        class="input__label"
+        :class="{'input__star':star}"
+    >{{ title }}
+    </div>
     <input
         :value="inputValue"
         @input="$emit('update:inputValue', $event.target.value)"
@@ -65,5 +70,13 @@ const emit = defineEmits<{
 
 .input_error {
   border: 1px solid rgba(255, 0, 0, 0.6) !important;
+}
+
+.input__star {
+  padding-right: 14px;
+  background-image: url('/svg/star-icon.svg');
+  background-repeat: no-repeat;
+  background-position: right top;
+  display: inline-block;
 }
 </style>
