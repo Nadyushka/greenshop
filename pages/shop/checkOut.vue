@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import NButton from "~/components/ui/NButton.vue";
-import {usePlantsStore} from "~/store/plants";
-import {useAuthStore} from "~/store/auth";
-import {ERouteName} from "~/shared/routes";
-import {checkoutValidationSchema} from "~/utils/validation";
+import NButton from "~/components/ui/NButton.vue"
+import { usePlantsStore } from "~/store/plants"
+import { useAuthStore } from "~/store/auth"
+import { ERouteName } from "~/shared/routes"
+import { checkoutValidationSchema } from "~/utils/validation"
+import NInput from "~/components/ui/NInput.vue"
 
 definePageMeta({
   name: ERouteName.PAGE_SHOP_CHECKOUT,
@@ -12,22 +13,22 @@ definePageMeta({
 })
 
 const plantsStore = usePlantsStore()
-const {cartItemsData, paymentMethodId, paymentMethods} = storeToRefs(plantsStore)
+const { cartItemsData, paymentMethodId, paymentMethods } = storeToRefs(plantsStore)
 
 const authStore = useAuthStore()
-const {isAuth, userRole, users} = storeToRefs(authStore)
+const { isAuth, userRole, users } = storeToRefs(authStore)
 
 const setPaymentMethod = (selectedPaymentId: number) => {
   plantsStore.setPaymentMethod(selectedPaymentId)
 }
 
-const totalWithoutShipping = computed(() => cartItemsData.value.reduce((acc, next) => acc + (next.pcs * next.price), 0));
+const totalWithoutShipping = computed(() => cartItemsData.value.reduce((acc, next) => acc + (next.pcs * next.price), 0))
 
 const {
   handleSubmit,
   errors,
   values,
-  setValues,
+  resetForm,
   setFieldValue,
   resetField
 } = useForm({
@@ -91,7 +92,7 @@ const setAddress = (addressType: string) => {
 
 const setUserData = () => {
   if (isAuth.value && userRole.value === 'buyer') {
-  
+
     setFieldValue('firstName', users.value.buyer.firstName)
     setFieldValue('lastName', users.value.buyer.secondName)
     setFieldValue('email', users.value.buyer.email)
@@ -116,7 +117,11 @@ watch(() => isModalConfirmedOrderOpen.value,
 
 watch(() => isAuth.value,
     () => {
-      setUserData()
+      if (isAuth.value) {
+        setUserData()
+      } else {
+        resetForm()
+      }
     })
 
 const imageAddressUrl = computed(() => {
@@ -135,124 +140,89 @@ const imageAddressUrl = computed(() => {
       <div class="checkout__billing">
         <div class="checkout__title">Billing Address</div>
         <div class="checkout__row">
-          <div>
-            <div class="checkout__label">First Name</div>
-            <input
-                v-model="firstName.value.value"
-                class="checkout__input"
-                :class="{
-                    'checkout__input_error': errors.firstName
-                  }"
-            />
-            <div v-if="errors.firstName" class="checkout__error"> {{ errors.firstName }}</div>
-          </div>
-          <div>
-            <div class="checkout__label">Last Name</div>
-            <input
-                v-model="lastName.value.value"
-                class="checkout__input"
-                :class="{
-                    'checkout__input_error': errors.lastName
-                  }"
-            />
-            <div v-if="errors.lastName" class="checkout__error"> {{ errors.lastName }}</div>
-          </div>
+
+          <NInput
+              title="First Name"
+              v-model:input-value="firstName.value.value"
+              :errors="errors.firstName"
+              :star="true"
+          />
+
+          <NInput
+              title="Last Name"
+              v-model:input-value="lastName.value.value"
+              :errors="errors.lastName"
+              :star="true"
+          />
+
         </div>
         <div class="checkout__row">
-          <div>
-            <div class="checkout__label">Country / Region</div>
-            <input
-                v-model="country.value.value"
-                class="checkout__input"
-                :class="{
-                    'checkout__input_error': errors.country
-                  }"
-            />
-            <div v-if="errors.country" class="checkout__error"> {{ errors.country }}</div>
-          </div>
-          <div>
-            <div class="checkout__label">Town / City</div>
-            <input
-                v-model="town.value.value"
-                class="checkout__input"
-                :class="{
-                    'checkout__input_error': errors.town
-                  }"
-            />
-            <div v-if="errors.town" class="checkout__error"> {{ errors.town }}</div>
-          </div>
+
+          <NInput
+              title="Country / Region"
+              v-model:input-value="country.value.value"
+              :errors="errors.country"
+              :star="true"
+          />
+
+          <NInput
+              title="Town / City"
+              v-model:input-value="town.value.value"
+              :errors="errors.town"
+              :star="true"
+          />
+
         </div>
         <div class="checkout__row">
-          <div>
-            <div class="checkout__label">Street Address</div>
-            <input
-                v-model="street.value.value"
-                class="checkout__input"
-                :class="{
-                    'checkout__input_error': errors.street
-                  }"
-            />
-            <div v-if="errors.street" class="checkout__error"> {{ errors.street }}</div>
-          </div>
-          <div>
-            <div class="checkout__label checkout__no-star">Additional Address</div>
-            <input
-                v-model="additionalAddress.value.value"
-                class="checkout__input"
-                :class="{
-                    'checkout__input_error': errors.additionalAddress
-                  }"
-            />
-            <div v-if="errors.additionalAddress" class="checkout__error"> {{ errors.additionalAddress }}</div>
-          </div>
+
+          <NInput
+              title="Street Address"
+              v-model:input-value="street.value.value"
+              :errors="errors.street"
+              :star="true"
+          />
+
+          <NInput
+              title="Additional Address"
+              v-model:input-value="additionalAddress.value.value"
+              :errors="errors.additionalAddress"
+              :star="true"
+          />
+
         </div>
         <div class="checkout__row">
-          <div>
-            <div class="checkout__label">State</div>
-            <input
-                v-model="state.value.value"
-                class="checkout__input"
-                :class="{
-                    'checkout__input_error': errors.state
-                  }"
-            />
-            <div v-if="errors.state" class="checkout__error"> {{ errors.state }}</div>
-          </div>
-          <div>
-            <div class="checkout__label">Zip</div>
-            <input
-                v-model="zip.value.value"
-                class="checkout__input"
-                :class="{
-                    'checkout__input_error': errors.zip
-                  }"
-            />
-            <div v-if="errors.zip" class="checkout__error"> {{ errors.zip }}</div>
-          </div>
+
+          <NInput
+              title="State"
+              v-model:input-value="state.value.value"
+              :errors="errors.state"
+              :star="true"
+          />
+
+          <NInput
+              title="Zip"
+              v-model:input-value="zip.value.value"
+              :errors="errors.zip"
+              :star="true"
+          />
+
         </div>
         <div class="checkout__row">
-          <div>
-            <div class="checkout__label">Email address</div>
-            <input
-                v-model="email.value.value"
-                class="checkout__input"
-                :class="{
-                    'checkout__input_error': errors.email
-                  }"
-            />
-            <div v-if="errors.email" class="checkout__error"> {{ errors.email }}</div>
-          </div>
-          <div>
-            <div class="checkout__label">Phone Number</div>
-            <input
-                v-model="phone.value.value"
-                class="checkout__input"
-                :class="{
-                    'checkout__input_error': errors.phone
-                  }"
-            />
-            <div v-if="errors.phone" class="checkout__error"> {{ errors.phone }}</div>
-          </div>
+
+          <NInput
+              title="Email address"
+              v-model:input-value="email.value.value"
+              :errors="errors.email"
+              :star="true"
+          />
+
+          <NInput
+              title="Phone Number"
+              v-model:input-value="phone.value.value"
+              :errors="errors.phone"
+              :star="true"
+          />
+
         </div>
 
         <div
@@ -386,41 +356,8 @@ const imageAddressUrl = computed(() => {
   margin-bottom: 30px;
 }
 
-.checkout__label {
-  font-size: 15px;
-  font-family: 'CeraPro-Regular', sans-serif;
-  font-weight: 400;
-  color: #3D3D3D;
-  margin-bottom: 10px;
-  padding-right: 14px;
-  background-image: url('/svg/star-icon.svg');
-  background-repeat: no-repeat;
-  background-position: right top;
-  display: inline-block;
-}
-
-.checkout__no-star {
-  background-image: none;
-}
-
-.checkout__input {
-  border-radius: 3px;
-  border: 1px solid #EAEAEA;
+:deep(.input__body) {
   width: 300px;
-}
-
-.checkout__different {
-  margin-bottom: 54px;
-  display: flex;
-  gap: 7px;
-  align-items: center;
-}
-
-.checkout__different-address {
-  width: 15px;
-  height: 15px;
-  border: 2px solid #46A358;
-  border-radius: 15px;
 }
 
 .checkout__different div:nth-of-type(2) {
@@ -491,7 +428,6 @@ const imageAddressUrl = computed(() => {
   font-weight: 600;
   font-family: 'CeraPro-Medium', sans-serif;
   font-size: 16px;
-  margin-bottom: 6px;
   color: #3D3D3D;
 }
 
@@ -681,16 +617,5 @@ const imageAddressUrl = computed(() => {
 
 .checkout__address img:hover {
   scale: 1.1;
-}
-
-.checkout__error {
-  margin-top: 5px;
-  margin-bottom: 0px;
-  color: rgba(255, 0, 0, 0.6);
-  font-size: 12px;
-}
-
-.checkout__input_error {
-  border: 1px solid rgba(255, 0, 0, 0.6) !important;
 }
 </style>

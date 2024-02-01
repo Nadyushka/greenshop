@@ -3,6 +3,7 @@ import NButton from "~/components/ui/NButton.vue"
 import {usePlantsStore} from "~/store/plants"
 import type {PostType} from "~/utils/types"
 import {postValidationSchema} from "~/utils/validation";
+import NInput from "~/components/ui/NInput.vue";
 
 const plantsStore = usePlantsStore()
 const {blogPostsData} = storeToRefs(plantsStore)
@@ -77,60 +78,33 @@ onMounted(() => {
           </div>
 
           <div class="post__row">
-            <div>
-              <div class="post__label">Date</div>
-              <input
-                  v-model="date.value.value"
-                  class="post__input"
-                  :class="{
-                    'post__input_error': errors.date
-                  }"
-                  placeholder="example: September 12"/>
-              <div v-if="errors.date" class="post__error"> {{ errors.date }}</div>
-            </div>
+            <NInput
+                title="Date"
+                placeholder="example: September 12"
+                v-model:input-value="date.value.value"
+                :errors="errors.date"/>
           </div>
 
           <div class="post__row">
-            <div>
-              <div class="post__label">Time to read</div>
-              <input
-                  v-model="length.value.value"
-                  class="post__input"
-                  placeholder="example: Read in 6 minutes"
-                  :class="{
-                    'post__input_error': errors.length
-                  }"
-              />
-              <div v-if="errors.length" class="post__error"> {{ errors.length }}</div>
-            </div>
+            <NInput
+                title="Time to read"
+                placeholder="example: Read in 6 minutes"
+                v-model:input-value="length.value.value"
+                :errors="errors.length"/>
           </div>
 
           <div class="post__row">
-            <div>
-              <div class="post__label">Title</div>
-              <input
-                  v-model="title.value.value"
-                  class="post__input"
-                  :class="{
-                    'post__input_error': errors.title
-                  }"
-              />
-              <div v-if="errors.title" class="post__error"> {{ errors.title }}</div>
-            </div>
+            <NInput
+                title="Title"
+                v-model:input-value="title.value.value"
+                :errors="errors.title"/>
           </div>
 
           <div class="post__row">
-            <div>
-              <div class="post__label">Introduction</div>
-              <input
-                  v-model="text.value.value"
-                  class="post__input"
-                  :class="{
-                    'post__input_error': errors.text
-                  }"
-              />
-              <div v-if="errors.text" class="post__error"> {{ errors.text }}</div>
-            </div>
+            <NInput
+                title="Introduction"
+                v-model:input-value="text.value.value"
+                :errors="errors.text"/>
           </div>
 
           <div class="post__row">
@@ -145,6 +119,7 @@ onMounted(() => {
               />
               <div v-if="errors.fullText" class="post__error"> {{ errors.fullText }}</div>
             </div>
+
           </div>
 
           <NButton btn-title="Save" type="type"/>
@@ -221,20 +196,6 @@ onMounted(() => {
   margin-bottom: 10px;
 }
 
-.post__input {
-  border-radius: 3px;
-  border: 1px solid #EAEAEA;
-  margin-bottom: 10px;
-  width: 500px;
-  color: #727272;
-}
-
-.post_transparent {
-  height: 50px;
-  background-color: transparent;
-}
-
-.post__input:focus,
 .post__textarea:focus {
   border: 1px solid #46A358;
 }
@@ -249,14 +210,11 @@ onMounted(() => {
   padding: 16px;
 }
 
-.post__input::placeholder {
-  color: #A5A5A5;
-}
-
 .post__error {
-  margin-top: -5px;
+  margin-top: -10px;
   margin-bottom: 10px;
   color: rgba(255, 0, 0, 0.6);
+  font-size: 12px;
 }
 
 .post__input_error {
